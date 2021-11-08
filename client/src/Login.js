@@ -31,40 +31,40 @@ function Login() {
 
 
     return (
-        <div class="d-md-flex h-md-100 align-items-center">
-            <div class="col-md-6 p-0 bg-green h-md-100">
-                <div class="text-white d-md-flex align-items-center h-100 p-3 text-center justify-content-center">
-                    <div class="logoarea pt-1 pb-1">
+        <div className="d-md-flex h-md-100 align-items-center">
+            <div className="col-md-6 p-0 bg-green h-md-100">
+                <div className="text-white d-md-flex align-items-center h-100 p-3 text-center justify-content-center">
+                    <div className="logoarea pt-1 pb-1">
                         <p>
                             <img src={logo} />
                         </p>
-                        <h2 class="mb-10 mt-0 text-help">香港大學</h2>
-                        <h2 class="mb-0 text-help">THE UNIVERSITY OF HONG KONG</h2>
+                        <h2 className="mb-10 mt-0 text-help">香港大學</h2>
+                        <h2 className="mb-0 text-help">THE UNIVERSITY OF HONG KONG</h2>
 
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 p-0 bg-white h-md-100 loginarea">
-                <div class="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
+            <div className="col-md-6 p-0 bg-white h-md-100 loginarea">
+                <div className="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
                     <div>
-                        <h3 class="mb-4 title-style">INTERNSHIP PLACEMENT SYSTEM</h3>
-                        <form class="p-6">
-                            <div class="form-group p-2">
-                                <input type="text" id="username" class="form-control" placeholder="CS Username" required="" onChange={(e) => {
+                        <h3 className="mb-4 title-style">INTERNSHIP PLACEMENT SYSTEM</h3>
+                        <form className="p-6">
+                            <div className="form-group p-2">
+                                <input type="text" id="username" className="form-control" placeholder="CS Username" required="" onChange={(e) => {
                                     setUsername(e.target.value);
                                     setClickField("yes");
                                 }} />
                             </div>
-                            <div class="form-group p-2">
-                                <input type="password" id="password" class="form-control" placeholder="Password" required="" onChange={(e) => {
+                            <div className="form-group p-2">
+                                <input type="password" id="password" className="form-control" placeholder="Password" required="" onChange={(e) => {
                                     setPassword(e.target.value);
                                     setClickField("yes");
                                 }} />
                             </div>
-                            <button type="submit" class="btn btn-success shadow-sm m-3 btn-lg" disabled={!(username && password) ? true : false} onClick={login}>Login</button>
+                            <button type="submit" className="btn btn-success shadow-sm m-3 btn-lg" disabled={!(username && password) ? true : false} onClick={login}>Login</button>
                         </form>
-                        <div class={((username && password) || !(clickField == "yes")) ? "error" : "text-red"} >
+                        <div className={((username && password) || !(clickField === "yes")) ? "error" : "text-red"} >
                             Please complete all fields.
                         </div>
                     </div>
