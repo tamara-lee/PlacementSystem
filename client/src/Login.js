@@ -8,6 +8,8 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const [clickField, setClickField] = useState("");
+
     // for testing
     const [loginStatus, setLoginStatus] = useState("");
 
@@ -27,16 +29,17 @@ function Login() {
         });
     }
 
+
     return (
         <div class="d-md-flex h-md-100 align-items-center">
             <div class="col-md-6 p-0 bg-green h-md-100">
-                <div class="text-white d-md-flex align-items-center h-100 p-5 text-center justify-content-center">
-                    <div class="logoarea pt-5 pb-5">
+                <div class="text-white d-md-flex align-items-center h-100 p-3 text-center justify-content-center">
+                    <div class="logoarea pt-1 pb-1">
                         <p>
                             <img src={logo} />
                         </p>
                         <h2 class="mb-10 mt-0 text-help">香港大學</h2>
-                        <h2 class="mb-4 text-help">THE UNIVERSITY OF HONG KONG</h2>
+                        <h2 class="mb-0 text-help">THE UNIVERSITY OF HONG KONG</h2>
 
                     </div>
                 </div>
@@ -44,42 +47,33 @@ function Login() {
 
             <div class="col-md-6 p-0 bg-white h-md-100 loginarea">
                 <div class="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
-                    <div class="">
-                        <h3 class="mb-4 text-help title-style">INTERNSHIP PLACEMENT SYSTEM</h3>
+                    <div>
+                        <h3 class="mb-4 title-style">INTERNSHIP PLACEMENT SYSTEM</h3>
                         <form class="p-6">
                             <div class="form-group p-2">
-                                <input type="text" class="form-control" placeholder="CS Username" required="" onChange={(e) => {
+                                <input type="text" id="username" class="form-control" placeholder="CS Username" required="" onChange={(e) => {
                                     setUsername(e.target.value);
+                                    setClickField("yes");
                                 }} />
                             </div>
                             <div class="form-group p-2">
-                                <input type="password" class="form-control" placeholder="Password" required="" onChange={(e) => {
+                                <input type="password" id="password" class="form-control" placeholder="Password" required="" onChange={(e) => {
                                     setPassword(e.target.value);
+                                    setClickField("yes");
                                 }} />
                             </div>
-                            <button type="submit" class="btn btn-success shadow-sm m-3 btn-lg" onClick={login}>Login</button>
+                            <button type="submit" class="btn btn-success shadow-sm m-3 btn-lg" disabled={!(username && password) ? true : false} onClick={login}>Login</button>
                         </form>
-                        {/* to test if login is successful. map to homepage later */}
-                        <h1>{loginStatus}</h1>
+                        <div class={((username && password) || !(clickField == "yes")) ? "error" : "text-red"} >
+                            Please complete all fields.
+                        </div>
                     </div>
 
+                    {/* to test if login is successful. map to homepage later */}
+                    <h1>{loginStatus}</h1>
                 </div>
             </div>
         </div>
-
-        // <div>
-        //     <div class="split left flex-container">
-        //         <div class="helper">
-        //             <img src={logo}/>
-        //             <span class="logo-text">香港大學<br />THE UNIVERSITY OF HONG KONG</span>
-        //         </div>
-        //     </div>
-        //     <div class="split right">
-        //         details
-        //     </div>
-
-        // </div>
-
     );
 }
 
