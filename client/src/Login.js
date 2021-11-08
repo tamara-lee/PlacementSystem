@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./Login.css";
@@ -7,13 +7,12 @@ import logo from "./images/logo.png";
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
     const [clickField, setClickField] = useState("");
+
+    Axios.defaults.withCredentials = false;
 
     // for testing
     const [loginStatus, setLoginStatus] = useState("");
-
-
 
     const login = () => {
         Axios.post("http://localhost:3001/login", {
@@ -25,9 +24,14 @@ function Login() {
             } else {
                 setLoginStatus(response.data[0].username)
             }
-            console.log(response);
         });
     }
+
+    useEffect(() => {
+        Axios.get("http://localhost:3001/login").then((response) => {
+            setLoginStatus(response.data.user[0].username);
+        });
+    }, []);
 
 
     return (
@@ -40,7 +44,6 @@ function Login() {
                         </p>
                         <h2 className="mb-10 mt-0 text-help">香港大學</h2>
                         <h2 className="mb-0 text-help">THE UNIVERSITY OF HONG KONG</h2>
-
                     </div>
                 </div>
             </div>
@@ -62,15 +65,17 @@ function Login() {
                                     setClickField("yes");
                                 }} />
                             </div>
-                            <button type="submit" className="btn btn-success shadow-sm m-3 btn-lg" disabled={!(username && password) ? true : false} onClick={login}>Login</button>
+                            <button type="submit" className="btn btn-success shadow-sm m-3 btn-lg" disabled={!(username && password) ? true : false}
+                                onClick={(e) => { e.preventDefault(); login(); }}>Login</button>
                         </form>
                         <div className={((username && password) || !(clickField === "yes")) ? "error" : "text-red"} >
                             Please complete all fields.
                         </div>
+                        {/* to test if login is successful. map to homepage later */}
+                        <div class="text-red">{loginStatus}</div>
                     </div>
 
-                    {/* to test if login is successful. map to homepage later */}
-                    <h1>{loginStatus}</h1>
+
                 </div>
             </div>
         </div>
