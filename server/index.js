@@ -16,7 +16,7 @@ app.use(cors({
   credentials: true //allowing the cookie to be enabled
 }));
 app.use(cookieParser());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded( { extended: true } ));
 
 app.use(session({
   key: "userId", //name of cookie we're gonna create
@@ -74,6 +74,15 @@ connection.connect(err => {
 app.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
   });
+
+app.get("/login", (req, res)=> {
+  //question if there is a session with user object in our server
+  if (req.session.user){
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
+})
   
 app.post('/login', (req, res)=> {
 
