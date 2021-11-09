@@ -5,7 +5,7 @@ function Home(){
     return (
         <div>
             <NavBar />
-            <h1>This is the Home Page!</h1>
+            <h1>This is the Home Page! You have successfully logged in!</h1>
         </div>
     );
 }
