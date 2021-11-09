@@ -9,7 +9,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [clickField, setClickField] = useState("");
 
-    Axios.defaults.withCredentials = false;
+    Axios.defaults.withCredentials = true;
 
     // for testing
     const [loginStatus, setLoginStatus] = useState("");
@@ -29,7 +29,9 @@ function Login() {
 
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
-            setLoginStatus(response.data.user[0].username);
+            if (response.data.loggedIn === true) {
+                setLoginStatus(response.data.user[0].username);
+            }
         });
     }, []);
 
@@ -72,7 +74,7 @@ function Login() {
                             Please complete all fields.
                         </div>
                         {/* to test if login is successful. map to homepage later */}
-                        <div class="text-red">{loginStatus}</div>
+                        <div className="text-red">{loginStatus}</div>
                     </div>
 
 
