@@ -1,33 +1,23 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { useEffect } from "react";
 import "./App.css";
 import Login from "./Login";
 import Home from "./Home";
 import FAQ from "./FAQ";
-import { Routes, Route } from "react-router-dom";
-import NavBar from "./NavBar";
-
+import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
+// import NavBar from "./NavBar";
 
 function App() {
-  // const isNavBarHidden = false;
-  // const [data, setData] = React.useState(null);
-
-  // React.useEffect(() => {
-  //   fetch("/api")
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data.message));
-  // }, []);
 
   return (
     <div className="App">
       <Routes>
-        <Route exact path="/" element={<Login />} />
-        <Route exact path="/home" element={<Home />} />
-        <Route exact path="/faq" element={<FAQ />} />
+        <Switch>
+          <Route exact path="/" component={Login} />
+          {/* <Route exact path="/home" component={Home} /> */}
+          <Route exact path="/home" component={() => <Home authorized={global.loggedIn} />} />
+          <Route exact path="/faq" component={FAQ} />
+        </Switch>
       </ Routes>
-      {/* <Login />
-      <Home />
-      <FAQ /> */}
     </div>
   );
 }

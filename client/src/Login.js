@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from 'react-router-dom';
 import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./Login.css";
 import logo from "./images/logo.png";
 
 function Login() {
+    const history = useHistory();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [clickField, setClickField] = useState("");
@@ -20,9 +23,12 @@ function Login() {
             password: password
         }).then((response) => {
             if (response.data.message) {
-                setLoginStatus(response.data.message)
+                setLoginStatus(response.data.message);
             } else {
-                setLoginStatus(response.data[0].username)
+                // setLoginStatus(response.data[0].username);
+                global.loggedIn = true;
+                return history.push("/home");
+                
             }
         });
     }
@@ -30,7 +36,8 @@ function Login() {
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
             if (response.data.loggedIn === true) {
-                setLoginStatus(response.data.user[0].username);
+                return history.push("/home");
+                // setLoginStatus(response.data.user[0].username);
             }
         });
     }, []);
@@ -59,12 +66,14 @@ function Login() {
                                 <input type="text" id="username" className="form-control" placeholder="CS Username" required="" onChange={(e) => {
                                     setUsername(e.target.value);
                                     setClickField("yes");
+                                    setLoginStatus("");
                                 }} />
                             </div>
                             <div className="form-group p-2">
                                 <input type="password" id="password" className="form-control" placeholder="Password" required="" onChange={(e) => {
                                     setPassword(e.target.value);
                                     setClickField("yes");
+                                    setLoginStatus("");
                                 }} />
                             </div>
                             <button type="submit" className="btn btn-success shadow-sm m-3 btn-lg" disabled={!(username && password) ? true : false}
@@ -76,8 +85,6 @@ function Login() {
                         {/* to test if login is successful. map to homepage later */}
                         <div className="text-red">{loginStatus}</div>
                     </div>
-
-
                 </div>
             </div>
         </div>

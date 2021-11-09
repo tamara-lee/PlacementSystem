@@ -1,7 +1,12 @@
 import React from 'react';
 import NavBar from "./NavBar";
+import { Redirect } from 'react-router-dom';
 
-function FAQ(){
+function FAQ({ authorized }){
+    if (authorized === false) {
+        console.log(authorized);
+        return <Redirect to ="/" />;
+    }
     return (
         <div>
             <NavBar />
