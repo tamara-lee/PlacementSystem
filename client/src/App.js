@@ -5,6 +5,7 @@ import Home from "./Home";
 import FAQ from "./FAQ";
 import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
 // import NavBar from "./NavBar";
+import "./global.js";
 
 function App() {
 

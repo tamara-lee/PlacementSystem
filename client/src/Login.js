@@ -4,6 +4,7 @@ import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./Login.css";
 import logo from "./images/logo.png";
+import "./global.js";
 
 function Login() {
     const history = useHistory();
