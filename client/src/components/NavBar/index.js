@@ -9,7 +9,7 @@ import {
   NavTop,
 } from "./NavbarElements";
 
-import "./style/css";
+import "./style.css";
 
 const Navbar = () => {
   return (
