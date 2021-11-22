@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             allowNull: false,
         }
+    }, {
+        timestamps: false,
+        createdAt: false,
+        updatedAt: false,
+      
     });
 
     return UsersTest;
