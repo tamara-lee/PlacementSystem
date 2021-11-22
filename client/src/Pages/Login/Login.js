@@ -22,15 +22,16 @@ function Login() {
     Axios.post("http://localhost:3001/login", {
       username: username,
       password: password,
-    }).then((response) => {
-      if (response.data.message) {
-        setLoginStatus(response.data.message);
-      } else {
-        // setLoginStatus(response.data[0].username);
-        global.loggedIn = true;
-        return history.push("/home");
-      }
-    });
+    })
+      .then((response) => {
+        if (response === "Logged In") {
+          global.loggedIn = true;
+          return history.push("/home");
+        }
+      })
+      .catch((error) => {
+        setLoginStatus(error.response.data);
+      });
   };
 
   useEffect(() => {
