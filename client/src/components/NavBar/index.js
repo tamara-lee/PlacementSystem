@@ -1,40 +1,40 @@
 import React from "react";
-import {
-  Nav,
-  NavLink,
-  Bars,
-  NavMenu,
-  NavBtn,
-  NavBtnLink,
-  NavTop,
-} from "./NavbarElements";
 
-import "./style.css";
+import "./NavBarStyle.css";
+import logo from "../../images/logo.png";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
+  const logoutFunction = () => {
+    console.log("Logout button clicked!");
+  };
+
   return (
     <>
       <div className="nav-container">
-        <div className="navbar"></div>
-      </div>
-      {/* <Nav>
-        <Bars />
-
-        <NavMenu>
-          <NavTop> test </NavTop>
-          <NavLink to="/myplacementrecord" activeStyle>
+        <div className="navbar-mobile" />
+        <div className="nav-title">
+          <img className="nav-logo" src={logo} />
+          <h2 className="title-text">Internship Placement System</h2>
+        </div>
+        <div className="nav-links">
+          <NavLink
+            to="/myplacementrecord"
+            activeStyle={{ color: "#FAF9F6", fontWeight: "bold" }}
+          >
             My Placement Record
           </NavLink>
-          <NavLink to="/faq" activeStyle>
+          <NavLink
+            to="/faq"
+            activeStyle={{ color: "#FAF9F6", fontWeight: "bold" }}
+          >
             FAQ
           </NavLink>
-          Second Nav
-          <NavBtnLink to='/sign-in'>Sign In</NavBtnLink>
-        </NavMenu>
-        <NavBtn>
-          <NavBtnLink to="/signin">Sign In</NavBtnLink>
-        </NavBtn>
-      </Nav> */}
+        </div>
+        <div className="nav-button">
+          <button onClick={logoutFunction}>Logout</button>
+        </div>
+      </div>
     </>
   );
 };

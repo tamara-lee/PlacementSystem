@@ -1,0 +1,23 @@
+.container {
+    margin-top: 1.5rem;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+form {
+    display: table;
+}
+
+p {
+    display: table-row;
+}
+
+label, input, select, button {
+    display: table-cell;
+}
