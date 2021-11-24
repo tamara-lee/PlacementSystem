@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const db = require("./models");
 const { UsersTest } = require("./models");
@@ -14,8 +15,15 @@ const { createTokens } = require("./JWT");
 app.use(express.json());
 app.use(cookieParser());
 
-var cors = require("cors");
-app.use(cors({ credentials: true, origin: "http://localhost:3001" }));
+//var cors = require("cors");
+//app.use(cors({ credentials: true, origin: "http://localhost:3001" }));
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true, //allowing the cookie to be enabled
+  })
+);
 
 app.post("/login", async (req, res) => {
   //const { username, password } = req.body;
@@ -29,12 +37,10 @@ app.post("/login", async (req, res) => {
   const systemPassword = user.password;
 
   if (password != systemPassword) {
-    res
-      .status(400)
-      .json({
-        error:
-          "Incorrect Username and Password Combination!\nNote: UID is NOT staff/student number. Examples of UID are 'h1012345' and 'abchan'.",
-      });
+    res.status(400).json({
+      error:
+        "Incorrect Username and Password Combination!\r\nNote: UID is NOT staff/student number. Examples of UID are 'h1012345' and 'abchan'.",
+    });
   } else {
     const accessToken = createTokens(user);
 

@@ -24,13 +24,13 @@ function Login() {
       password: password,
     })
       .then((response) => {
-        if (response === "Logged In") {
+        if (response.data === "Logged In") {
           global.loggedIn = true;
           return history.push("/home");
         }
       })
       .catch((error) => {
-        setLoginStatus(error.response.data);
+        setLoginStatus(error.response.data.error);
       });
   };
 

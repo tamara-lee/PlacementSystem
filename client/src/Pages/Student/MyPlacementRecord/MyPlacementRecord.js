@@ -5,6 +5,14 @@ import { Redirect } from "react-router-dom";
 import "./style.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import styled from "styled-components";
+import { AppointmentLetterModal } from "../../../components/Modal/AppointmentLetterModal";
+
+const Container = styled.div`
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+`;
 
 function MyPlacementRecord({ authorized }) {
   // if (authorized === false) {
@@ -13,14 +21,19 @@ function MyPlacementRecord({ authorized }) {
   // }
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [showModal, setShowModal] = useState(false);
 
-  const uploadAppointmentLetter = () => {
-    console.log("Upload appointment letter button clicked!");
+  const openModal = () => {
+    setShowModal((prev) => !prev);
   };
 
-  const uploadFeedbackForm = () => {
-    console.log("Upload feedback button clicked!");
-  };
+  // const uploadAppointmentLetter = () => {
+  //   console.log("Upload appointment letter button clicked!");
+  // };
+
+  // const uploadFeedbackForm = () => {
+  //   console.log("Upload feedback button clicked!");
+  // };
 
   const submitForm = () => {
     console.log("Submit button clicked!");
@@ -29,7 +42,7 @@ function MyPlacementRecord({ authorized }) {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <Container>
         <form className="form-table">
           <div className="row">
             <div className="column">
@@ -105,15 +118,20 @@ function MyPlacementRecord({ authorized }) {
               <p className="table-row">
                 <label htmlFor="appointmentLetter">Appointment Letter</label>
                 <button
+                  type="button"
                   id="appointmentLetter"
-                  onClick={uploadAppointmentLetter}
+                  onClick={openModal}
                 >
                   <span>Upload</span>
                 </button>
+                <AppointmentLetterModal
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                />
               </p>
               <p className="table-row">
                 <label htmlFor="feedbackForm">Feedback Form</label>
-                <button id="feedbackForm" onClick={uploadFeedbackForm}>
+                <button type="button" id="feedbackForm" onClick={showModal}>
                   <span>Upload</span>
                 </button>
               </p>
@@ -144,7 +162,7 @@ function MyPlacementRecord({ authorized }) {
             Save & Submit
           </button>
         </form>
-      </div>
+      </Container>
     </>
   );
 }
