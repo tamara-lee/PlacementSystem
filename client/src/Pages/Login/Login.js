@@ -26,7 +26,7 @@ function Login() {
       .then((response) => {
         if (response.data === "Logged In") {
           global.loggedIn = true;
-          return history.push("/home");
+          return history.push("/myplacementrecord");
         }
       })
       .catch((error) => {

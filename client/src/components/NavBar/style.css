@@ -28,11 +28,11 @@
 
 .title-text {
     font-weight: bolder;
-    font-size: 26px;
+    font-size: 24px;
     color: #FAF9F6;
     margin-top: auto;
     margin-bottom: auto;
-    padding-bottom: 14px;
+    padding-bottom: 17px;
 }
 
 .nav-menu {
@@ -54,6 +54,7 @@
     padding-right: 2rem;
     color: #FAF9F6;
     padding-top: 10px;
+    font-size: 0.9rem;
 }
 
 .link-active {
@@ -77,6 +78,7 @@
     color: #FAF9F6;
     transition: all 0.3s ease 0s;
     cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .nav-button button:active {

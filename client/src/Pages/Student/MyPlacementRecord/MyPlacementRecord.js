@@ -14,13 +14,14 @@ const Container = styled.div`
 `;
 
 function MyPlacementRecord({ authorized }) {
-  // if (authorized === false) {
-  //   console.log(authorized);
-  //   return <Redirect to="/" />;
-  // }
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
+
+  if (authorized === false) {
+    console.log(authorized);
+    return <Redirect to="/" />;
+  }
 
   const openModal = () => {
     setShowModal((prev) => !prev);
@@ -108,20 +109,21 @@ function MyPlacementRecord({ authorized }) {
               </p>
               <p className="table-row">
                 <label htmlFor="appointmentLetter">Appointment Letter</label>
-                <button
+                {/* <button
                   type="button"
                   id="appointmentLetter"
                   onClick={openModal}
                 >
                   <span>Upload</span>
-                </button>
+                </button> */}
+                <input type="file" id="appointmentLetter" />
               </p>
               <p className="table-row">
                 <label htmlFor="feedbackForm">Feedback Form</label>
                 {/* <button type="button" id="feedbackForm" onClick={openModal}>
                   <span>Upload</span>
                 </button> */}
-                <input type="file" name="appointment-letter" />
+                <input type="file" id="feedbackForm" />
               </p>
               <p className="table-row">
                 <label htmlFor="feedbackComment">Feedback Comment</label>
