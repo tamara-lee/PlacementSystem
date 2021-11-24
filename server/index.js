@@ -5,7 +5,7 @@ const db = require("./models");
 const { UsersTest } = require("./models");
 
 const cookieParser = require("cookie-parser");
-const { createTokens } = require("./JWT");
+const { createTokens, validateToken } = require("./JWT");
 //const cors = require("cors");
 //const mysql = require("mysql");
 //const bodyParser = require("body-parser");
@@ -39,7 +39,7 @@ app.post("/login", async (req, res) => {
   if (password != systemPassword) {
     res.status(400).json({
       error:
-        "Incorrect Username and Password Combination!\r\nNote: UID is NOT staff/student number. Examples of UID are 'h1012345' and 'abchan'.",
+        "Incorrect Username and Password Combination!\nNote: UID is NOT staff/student number. Examples of UID are 'h1012345' and 'abchan'.",
     });
   } else {
     const accessToken = createTokens(user);
@@ -50,6 +50,11 @@ app.post("/login", async (req, res) => {
 
     res.json("Logged In");
   }
+});
+
+app.get("/home", validateToken, (req, res) => {
+  res.json("home");
+
 });
 
 db.sequelize.sync().then(() => {
