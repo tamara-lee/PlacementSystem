@@ -9,7 +9,6 @@ import styled from "styled-components";
 import { AppointmentLetterModal } from "../../../components/Modal/AppointmentLetterModal";
 
 const Container = styled.div`
-  margin-top: 1.5rem;
   display: flex;
   justify-content: center;
 `;
@@ -26,14 +25,6 @@ function MyPlacementRecord({ authorized }) {
   const openModal = () => {
     setShowModal((prev) => !prev);
   };
-
-  // const uploadAppointmentLetter = () => {
-  //   console.log("Upload appointment letter button clicked!");
-  // };
-
-  // const uploadFeedbackForm = () => {
-  //   console.log("Upload feedback button clicked!");
-  // };
 
   const submitForm = () => {
     console.log("Submit button clicked!");
@@ -124,16 +115,13 @@ function MyPlacementRecord({ authorized }) {
                 >
                   <span>Upload</span>
                 </button>
-                <AppointmentLetterModal
-                  showModal={showModal}
-                  setShowModal={setShowModal}
-                />
               </p>
               <p className="table-row">
                 <label htmlFor="feedbackForm">Feedback Form</label>
-                <button type="button" id="feedbackForm" onClick={showModal}>
+                {/* <button type="button" id="feedbackForm" onClick={openModal}>
                   <span>Upload</span>
-                </button>
+                </button> */}
+                <input type="file" name="appointment-letter" />
               </p>
               <p className="table-row">
                 <label htmlFor="feedbackComment">Feedback Comment</label>
@@ -162,6 +150,10 @@ function MyPlacementRecord({ authorized }) {
             Save & Submit
           </button>
         </form>
+        <AppointmentLetterModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
       </Container>
     </>
   );

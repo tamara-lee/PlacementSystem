@@ -1,6 +1,5 @@
 import React from "react";
-
-import "./NavBarStyle.css";
+import "./style.css";
 import logo from "../../images/logo.png";
 import { NavLink } from "react-router-dom";
 
@@ -15,24 +14,23 @@ const Navbar = () => {
         <div className="navbar-mobile" />
         <div className="nav-title">
           <img className="nav-logo" src={logo} />
-          <h2 className="title-text">Internship Placement System</h2>
+          <div className="nav-container-2">
+            <h2 className="title-text">Internship Placement System</h2>
+            <div className="nav-links">
+              <NavLink to="/myplacementrecord" activeClassName="link-active">
+                My Placement Record
+              </NavLink>
+              <NavLink to="/faq" activeClassName="link-active">
+                FAQ
+              </NavLink>
+            </div>
+          </div>
         </div>
-        <div className="nav-links">
-          <NavLink
-            to="/myplacementrecord"
-            activeStyle={{ color: "#FAF9F6", fontWeight: "bold" }}
-          >
-            My Placement Record
-          </NavLink>
-          <NavLink
-            to="/faq"
-            activeStyle={{ color: "#FAF9F6", fontWeight: "bold" }}
-          >
-            FAQ
-          </NavLink>
-        </div>
-        <div className="nav-button">
-          <button onClick={logoutFunction}>Logout</button>
+
+        <div className="nav-button-container">
+          <a id="logout-button" onClick={logoutFunction}>
+            Logout
+          </a>
         </div>
       </div>
     </>

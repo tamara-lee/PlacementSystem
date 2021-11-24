@@ -28,10 +28,11 @@
 
 .title-text {
     font-weight: bolder;
-    font-size: 30px;
+    font-size: 26px;
     color: #FAF9F6;
     margin-top: auto;
     margin-bottom: auto;
+    padding-bottom: 14px;
 }
 
 .nav-menu {
@@ -39,47 +40,53 @@
     align-items: center;
     margin-right: -24px;
 }
-
+.nav-container-2 {
+    display: flex;
+    flex-direction: column;
+}
 .nav-links {
     display: flex;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: black;
-    margin-top: auto;
-    margin-bottom: auto;
-    padding-left: 1.3rem;
-    padding-right: 1.3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: #FAF9F6;
+    padding-top: 10px;
 }
 
-.nav-links a:hover {
-    border-style: solid;
-    border-radius: 0.4rem;
-    padding: 0.8rem;
+.link-active {
+    background-color: #18521F;
+    border-style: none;
+    border-radius: 0.2rem;
+    /* width: 15rem; */
+    height: 2.5rem;
+    padding-top: 10px;
 }
 
-/* .nav-button {
-    border-color: gray;
-    height: 20px;
-} */
-
-.nav-button {
+.nav-button-container {
     display: flex;
-    padding-right: 1rem;
+    padding-right: 2em;
 }
 
-.nav-button button {
-    margin-top: auto;
-    margin-bottom: auto;
-    background-color: lightgray;
-    box-shadow: none;
-    border-radius: 0.1rem;
-    border-style: none;;
-    margin-top: auto;
-    margin-bottom: auto;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+#logout-button {
+    padding-top: 54px;
+    background-color: transparent;
+    outline: none;
+    color: #FAF9F6;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+}
+
+.nav-button button:active {
+    /* background-color: gray; */
+}
+
+#logout-button:hover {
+    text-shadow: 0px 15px 20px rgba(34, 48, 15, 0.4);
+    /* color: #fff; */
+    transform: translateY(-1px);
 }
 
 /* mobile style */

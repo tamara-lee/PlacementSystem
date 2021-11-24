@@ -1,29 +1,30 @@
-import React from "react";
+import React, { useRef, useEffect, useCallback } from "react";
+import { useSpring } from "react-spring";
 import styled from "styled-components";
 import { MdClose } from "react-icons/md";
 import "./style.css";
 
 const Background = styled.div`
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background: rgba(0, 0, 0, 0.8);
-  position: fixed;
+  position: absolute;
   display: flex;
   justify-content: center;
-  align-items: center;
+  //   align-items: center;
 `;
 
 const ModalWrapper = styled.div`
-  width: 800px;
-  height: 500px;
+  width: 40rem;
+  height: 20rem;
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
   background: #fff;
   color: #000;
   display: grid;
-  grid-template-columns: 1fr 1fr;
   position: relative;
-  z-index: 10;
-  border-radius: 10px;
+  z-index: 20;
+  border-radius: 0.2rem;
+  margin-top: 5rem;
 `;
 
 const ModalImg = styled.img`
@@ -54,20 +55,43 @@ const CloseModalButton = styled(MdClose)`
 `;
 
 export const AppointmentLetterModal = ({ showModal, setShowModal }) => {
+  const modalRef = useRef();
+
+  const closeModal = (e) => {
+    if (modalRef.current === e.target) {
+      setShowModal(false);
+    }
+  };
+
+  const keyPress = useCallback(
+    (e) => {
+      if (e.key === "Escape" && showModal) {
+        setShowModal(false);
+      }
+    },
+    [setShowModal, showModal]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", keyPress);
+    return () => document.removeEventListener("keydown", keyPress);
+  }, [keyPress]);
   return (
     <>
       {showModal ? (
-        <ModalWrapper showModal={showModal}>
-          <ModalContent>
-            <h1>Test</h1>
-            <p>Test</p>
-            <button>Test</button>
-          </ModalContent>
-          <CloseModalButton
-            aria-label="Close modal"
-            onClick={() => setShowModal((prev) => !prev)}
-          />
-        </ModalWrapper>
+        <Background ref={modalRef} onClick={closeModal}>
+          <ModalWrapper showModal={showModal}>
+            <ModalContent>
+              <h1>Test</h1>
+              <p>Test</p>
+              <button>Test</button>
+            </ModalContent>
+            <CloseModalButton
+              aria-label="Close modal"
+              onClick={() => setShowModal((prev) => !prev)}
+            />
+          </ModalWrapper>
+        </Background>
       ) : null}
     </>
   );
