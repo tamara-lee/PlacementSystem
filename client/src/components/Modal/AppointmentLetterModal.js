@@ -53,15 +53,15 @@ const CloseModalButton = styled(MdClose)`
   z-index: 10;
 `;
 
-export const AppointmentLetterModal = (showModal, setShowModal) => {
+export const AppointmentLetterModal = ({ showModal, setShowModal }) => {
   return (
     <>
       {showModal ? (
         <ModalWrapper showModal={showModal}>
           <ModalContent>
-            <h1>Are you ready?</h1>
-            <p>Exclusive access right here!</p>
-            <button>Join Now</button>
+            <h1>Test</h1>
+            <p>Test</p>
+            <button>Test</button>
           </ModalContent>
           <CloseModalButton
             aria-label="Close modal"
