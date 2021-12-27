@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 /* @import "@fontsource/roboto"; */
 
 * {
@@ -6,7 +7,8 @@
   padding: 0;
   box-sizing: border-box;
   
-  font-family: 'Open Sans', normal;
+  /* font-family: 'Open Sans', normal; */
+  font-family: 'Roboto', normal;
 }
 
 .App {

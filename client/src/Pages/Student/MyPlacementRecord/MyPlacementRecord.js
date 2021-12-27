@@ -9,14 +9,20 @@ import styled from "styled-components";
 import { AppointmentLetterModal } from "../../../components/Modal/AppointmentLetterModal";
 
 const Container = styled.div`
-  display: flex;
   justify-content: center;
+  margin: 1.2rem 3rem 2rem 3rem;
 `;
 
 function MyPlacementRecord({ authorized }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
+  const [appointmentFileMsg, setAppointmentFileMsg] = useState(
+    "or drag and drop file here"
+  );
+  const [feedbackFileMsg, setFeedbackFileMsg] = useState(
+    "or drag and drop file here"
+  );
 
   if (authorized === false) {
     console.log(authorized);
@@ -35,109 +41,162 @@ function MyPlacementRecord({ authorized }) {
     <>
       <Navbar />
       <Container>
-        <form className="form-table">
+        <form>
           <div className="row">
             <div className="column">
-              <p className="table-row">
-                <label htmlFor="studentNo">Student No.</label>
-                <input type="text" id="studentNo" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="studentName">Student Name</label>
-                <input type="text" id="studentName" />
-              </p>
-              <p className="table-row">
+              <p className="container-title">STUDENT INFORMATION</p>
+              <div className="container">
+                <label htmlFor="studentName">NAME</label>
+                <input
+                  className="input"
+                  type="text"
+                  id="studentName"
+                  placeholder="John Doe"
+                />
+                <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
+                <input
+                  className="input"
+                  type="text"
+                  id="studentNo"
+                  placeholder="3030001111"
+                />
                 <label htmlFor="curriculum">Curriculum</label>
-                <input type="text" id="curriculum" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="companyName">Company Name</label>
-                <input type="text" id="companyName" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="jobTitle">Job Title / Position</label>
-                <input type="text" id="jobTitle" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="jobNature">Job Nature</label>
-                <input type="text" id="jobNature" />
-              </p>
-              <div className="table-row">
-                <label htmlFor="startDate">Start Date</label>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  id="startDate"
+                <input
+                  className="input"
+                  type="text"
+                  id="curriculum"
+                  placeholder="BEng (CompSc)"
                 />
               </div>
-              <div className="table-row">
-                <label htmlFor="endDate">End Date</label>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  id="endDate"
+              <p className="container-title">PLACEMENT INFORMATION</p>
+              <div className="container">
+                <label htmlFor="companyName">COMPANY NAME</label>
+                <input
+                  className="input"
+                  type="text"
+                  id="companyName"
+                  placeholder="Microsoft"
                 />
-              </div>
-              <p className="table-row">
-                <label htmlFor="location">Working Location</label>
-                <input type="text" id="location" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="paymentType">Payment Type</label>
-                <select name="paymentType" id="paymentType">
+                <label htmlFor="jobTitle">JOB TITLE / POSITION</label>
+                <input
+                  className="input"
+                  type="text"
+                  id="jobTitle"
+                  placeholder="Software Engineer Intern"
+                />
+                <label htmlFor="jobNature">JOB NATURE</label>
+                <textarea
+                  className="input"
+                  type="text"
+                  id="jobNature"
+                  placeholder="The scope of the position is ..."
+                />
+                <div className="col">
+                  <label htmlFor="startDate">START DATE</label>
+                  <DatePicker
+                    className="date-picker"
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    id="startDate"
+                  />
+                  <label htmlFor="endDate">END DATE</label>
+                  <DatePicker
+                    className="date-picker"
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    id="endDate"
+                  />
+                </div>
+                <label htmlFor="location">WORKING LOCATION</label>
+                <input
+                  className="input"
+                  type="text"
+                  id="location"
+                  placeholder="Hong Kong"
+                />
+                <label htmlFor="paymentType">PAYMENT TYPE</label>
+                <select className="input" name="paymentType" id="paymentType">
                   <option value="unpaid">Unpaid</option>
                   <option value="paid">Paid</option>
                 </select>
-              </p>
+                <label htmlFor="salary">SALARY</label>
+                <input
+                  className="input"
+                  type="number"
+                  id="salary"
+                  placeholder="0.00"
+                />
+              </div>
             </div>
             <div className="column">
-              <p className="table-row">
-                <label htmlFor="salary">Salary</label>
-                <input type="text" id="salary" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="supervisorName">Supevisor Name</label>
-                <input type="text" id="supervisorName" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="supervisorPhone">Supervisor Telephone</label>
-                <input type="tel" id="supervisorPhone" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="supervisorEmail">Supervisor Email</label>
-                <input type="email" id="supervisorEmail" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="appointmentLetter">Appointment Letter</label>
-                {/* <button
-                  type="button"
-                  id="appointmentLetter"
-                  onClick={openModal}
-                >
-                  <span>Upload</span>
-                </button> */}
-                <input type="file" id="appointmentLetter" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="feedbackForm">Feedback Form</label>
-                {/* <button type="button" id="feedbackForm" onClick={openModal}>
-                  <span>Upload</span>
-                </button> */}
-                <input type="file" id="feedbackForm" />
-              </p>
-              <p className="table-row">
-                <label htmlFor="feedbackComment">Feedback Comment</label>
-                <input type="text" id="feedbackComment" />
-              </p>
-              <p className="table-row">
+              <p className="container-title">SUPERVISOR INFORMATION</p>
+              <div className="container">
+                <label htmlFor="supervisorName">NAME</label>
+                <input
+                  className="input"
+                  type="text"
+                  id="supervisorName"
+                  placeholder="Mr. Wong"
+                />
+                <label htmlFor="supervisorPhone">TELEPHONE</label>
+                <input
+                  className="input"
+                  type="tel"
+                  id="supervisorPhone"
+                  placeholder="12345678"
+                />
+                <label htmlFor="supervisorEmail">EMAIL</label>
+                <input
+                  className="input"
+                  type="email"
+                  id="supervisorEmail"
+                  placeholder="wong@microsoft.com"
+                />
+              </div>
+              <p className="container-title">DOCUMENTS & FEEDBACK COMMENT</p>
+              <div className="container">
+                <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
+                <div className="file-drop-area">
+                  <span className="fake-btn">Choose file</span>
+                  <span className="file-msg">{appointmentFileMsg}</span>
+                  <input
+                    type="file"
+                    id="appointmentLetter"
+                    onChange={function (e) {
+                      setAppointmentFileMsg(e.target.files[0].name);
+                    }}
+                  />
+                </div>
+                <label htmlFor="feedbackForm">FEEDBACK FORM</label>
+                <div className="file-drop-area">
+                  <span className="fake-btn">Choose file</span>
+                  <span className="file-msg">{feedbackFileMsg}</span>
+                  <input
+                    type="file"
+                    id="feedbackForm"
+                    onChange={function (e) {
+                      setFeedbackFileMsg(e.target.files[0].name);
+                    }}
+                  />
+                </div>
+                <label htmlFor="feedbackComment">FEEDBACK COMMENT</label>
+                <input className="input" type="text" id="feedbackComment" />
+              </div>
+              <p className="container-title">PLACEMENT STATUS</p>
+              <div className="container">
                 <label htmlFor="placementStatus">Placement Status</label>
-                <select name="placementStatus" id="placementStatus">
+                <select
+                  className="input"
+                  name="placementStatus"
+                  id="placementStatus"
+                >
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
                   <option value="waiting">Waiting</option>
                 </select>
-              </p>
-              <p className="table-row">
+              </div>
+              <p className="container-title">REMARKS</p>
+              <div className="container">
                 <label htmlFor="remarks">Remarks</label>
                 <input
                   type="text"
@@ -145,7 +204,7 @@ function MyPlacementRecord({ authorized }) {
                   value="add chat box here"
                   readOnly
                 />
-              </p>
+              </div>
             </div>
           </div>
           <button className="form-submit" onClick={submitForm}>

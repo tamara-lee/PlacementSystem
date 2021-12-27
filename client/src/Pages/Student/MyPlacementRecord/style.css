@@ -1,8 +1,44 @@
-/* .container {
-    margin-top: 1.5rem;
+.container-title {
+    text-align: left;
+    padding-left: 1.5rem;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.container {
+    flex: 1;
     display: flex;
     justify-content: center;
-} */
+    flex-direction: column;
+
+    padding-top: 0.5rem;
+    /* padding-bottom: 0.5rem; */
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: 1px solid gray;
+
+    margin-bottom: 1.2rem;
+}
+
+.container label {
+    text-align: left;
+    font-size: 0.75rem;
+}
+
+.input {
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid #257F2F;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.input:focus {
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #257F2F;
+}
 
 .row {
     display: flex;
@@ -12,63 +48,84 @@
     flex: 50%;
 }
 
-.form-table {
-    display: table;
-    margin-top: 1.5rem;
-}
-
-.table-row {
-    display: table-row;
-}
-
-.table-row label {
-    display: table-cell;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    padding-right: 0.5rem;
-    padding-left: 1rem;
+.col {
+    column-count: 2;
     text-align: left;
-    width: 14rem;
-    font-size: 0.85rem;
-    font-weight: 600;
 }
 
-.table-row input, select, button {
-    display: table-cell;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
-    border: 0.1rem solid #A8A8A8;
-    border-radius: 0.1rem;
-    background-color: #FBFBFB;
-    font-size: 0.85rem;
+DatePicker {
+    border: none;
+}
+.date-picker {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
 }
 
+.date-picker,
+.react-datepicker__today-button {
+    border: 1px solid black;
+    border-radius: 0px;
+    background-color: transparent;
+    font-size: 0.95rem;
+}
 
-.table-row button {
-    display:flex;
-    justify-content: flex-end;
+#jobNature {
+    min-height: 100px;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+.file-drop-area {
+    position: relative;
+    display: flex;
     align-items: center;
+    width: auto;
+    max-width: 100%;
+    border: 1.5px dashed #257F2F;
+    border-radius: 0px;
+    margin-bottom: 1rem;
 }
 
-.table-row button span {
-    margin-right: auto;
-    margin-left: auto;
+.file-drop-area:focus {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+  
+.fake-btn {
+    flex-shrink: 0;
+    background-color: #257f2f;
+    border-radius: 0px;
+    padding: 8px 15px;
+    margin: 4px 10px 4px 5px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: white;
+    box-shadow: 0px 2px 2px rgba(34, 48, 15, 0.4);
+  }
+  
+.file-msg {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+  
+#feedbackForm, #appointmentLetter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+} 
+
+#feedbackForm:focus, #appointmentLetter:focus {
+    outline: none;
 }
 
-
-.table-row input {
-    width: 20rem;
-}
-
-.table-row select, select option {
-    min-width: 20rem;
-    min-height: 2rem;
-}
-
-.table-cell {
-    display: table-cell;
-}
 
 .form-submit {
     margin-top: 1.5rem;
