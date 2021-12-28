@@ -1,10 +1,14 @@
+var jwtsecretkey = process.env.JWT_SECRET_KEY; 
+//var jwtsecretkey = ${process.env.JWT_SECRET_KEY};
 const { sign, verify } = require("jsonwebtoken");
 
 const createTokens = (user) => {
     //jwt secret key to be changed placed in .env file
     const accessToken = sign({ 
         username: user.username, id: user.id }, 
-        "tempjwtsecretkey", 
+        //"tempjwtsecretkey", 
+        //jwtsecretkey,
+        process.env.JWT_SECRET_KEY,
         {expiresIn: '12h'});
 
 
@@ -16,11 +20,12 @@ const validateToken = (req, res, next) => {
     const accessToken = req.cookies["access-token-cookie"];
 
     if (!accessToken) {
-        return res.status(400).json( {error: "User is not authenticated!\nPlease log in."} );
+        return res.status(400).json( {error: "User is not authenticated!\\nPlease log in."} );
     }
 
     try {
-        const validToken = verify(accessToken, "tempjwtsecretkey")
+        //const validToken = verify(accessToken, "tempjwtsecretkey")
+        const validToken = verify(accessToken, process.env.JWT_SECRET_KEY)
         if (validToken) {
             //create authenticate variable, and set it to true
             req.authenticated = true;
