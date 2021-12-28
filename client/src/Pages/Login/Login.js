@@ -35,13 +35,25 @@ function Login() {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/login").then((response) => {
-      if (response.data.loggedIn === true) {
-        return history.push("/myplacementrecord");
-        // setLoginStatus(response.data.user[0].username);
-      }
-    });
+    Axios.get("http://localhost:3001/login")
+      .then((response) => {
+        if (response.data === "Logged In") {
+          return history.push("/myplacementrecord");
+          // setLoginStatus(response.data.user[0].username);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
+
+  // useEffect(() => {
+  //   console.log(global.loggedIn);
+  //   if (global.loggedIn === true) {
+  //     return history.push("/myplacementrecord");
+  //     // setLoginStatus(response.data.user[0].username);
+  //   }
+  // }, []);
 
   return (
     <div className="d-md-flex h-md-100 align-items-center">

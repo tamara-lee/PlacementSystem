@@ -22,7 +22,7 @@ function App() {
           <Route
             exact
             path="/myplacementrecord"
-            component={() => <MyPlacementRecord authorized={global.loggedIn} />}
+            component={() => <MyPlacementRecord />}
           />
           <Route exact path="/faq" component={FAQ} />
         </Switch>

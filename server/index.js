@@ -25,6 +25,9 @@ app.use(
     credentials: true, //allowing the cookie to be enabled
   })
 );
+app.get("/login", validateToken, (req, res) => {
+  res.json("Logged In");
+});
 
 app.post("/login", async (req, res) => {
   //const { username, password } = req.body;
@@ -52,10 +55,8 @@ app.post("/login", async (req, res) => {
     res.json("Logged In");
   }
 });
-
 app.get("/home", validateToken, (req, res) => {
   res.json("home");
-
 });
 
 db.sequelize.sync().then(() => {

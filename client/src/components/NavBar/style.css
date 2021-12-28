@@ -23,10 +23,12 @@
     height: auto;
     display: block;
     margin-left: auto;
-    margin-right: auto;padding-right: 1.5rem;
+    margin-right: auto;
+    padding-right: 1.5rem;
 }
 
 .title-text {
+    text-align: left;
     font-weight: bolder;
     font-size: 24px;
     color: #FAF9F6;
@@ -46,6 +48,7 @@
 }
 .nav-links {
     display: flex;
+    width: 100%;
 }
 
 .nav-links a {
@@ -67,12 +70,14 @@
 }
 
 .nav-button-container {
+    position: absolute;
     display: flex;
-    padding-right: 2em;
+    right: 50px;
 }
 
 #logout-button {
-    padding-top: 54px;
+    padding-top: 9px; 
+
     background-color: transparent;
     outline: none;
     color: #FAF9F6;
@@ -93,7 +98,7 @@
 
 /* mobile style */
 @media screen and (max-width: 768px) {
-    .navbar-mobile {
+    /* .navbar-mobile {
         display: block;
         position: absolute;
         top: 0;
@@ -101,9 +106,71 @@
         transform: translate(-100%, 75%);
         font-size: 1.8rem;
         cursor: pointer;
+    } */
+
+    /* .nav-menu {
+        display: none;
+    } */
+
+    .nav-container {
+        background: #257F2F;
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        /* padding: 0.2rem calc((100vw - 1000px) / 2); */
+        padding: 0.8rem;
+        padding-left: 1.5rem;
+        z-index: 12;
     }
 
-    .nav-menu {
-        display: none;
+    .nav-logo {
+        width: auto;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        padding-right: 1rem;
+    }
+
+    .title-text {
+        text-align: left;
+        font-weight: bolder;
+        font-size: 1.2rem;
+        color: #FAF9F6;
+        margin-top: 10px;
+        margin-bottom: auto;
+        padding-bottom: 17px;
+        min-width: 250px;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+        color: #FAF9F6;
+        padding-top: 10px;
+        font-size: 0.8rem;
+    }
+    
+    .link-active {
+        background-color: #18521F;
+        border-style: none;
+        border-radius: 0.2rem;
+        /* width: 15rem; */
+        height: 2.3rem;
+        padding-top: 10px;
+    }
+    .nav-button-container {
+        padding-right: 0.5em;
+    }
+    #logout-button {
+        padding-top: 9px;
+        margin-left: 25px;
+        background-color: transparent;
+        outline: none;
+        color: #FAF9F6;
+        transition: all 0.3s ease 0s;
+        cursor: pointer;
+        font-size: 0.8rem;
     }
 }

@@ -11,7 +11,7 @@ function FAQ({ authorized }) {
   return (
     <div>
       <Navbar />
-      <h1>This is the FAQ page!</h1>
+      <h1></h1>
     </div>
   );
 }

@@ -7,6 +7,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 import { AppointmentLetterModal } from "../../../components/Modal/AppointmentLetterModal";
+import { IconContext } from "react-icons";
+import { IoIosInformationCircle } from "react-icons/io";
+import "../../../global.js";
 
 const Container = styled.div`
   justify-content: center;
@@ -14,9 +17,18 @@ const Container = styled.div`
 `;
 
 function MyPlacementRecord({ authorized }) {
+  // sample text
+  const [studentName, setStudentName] = useState("John Doe");
+  const [studentNumber, setStudentNumber] = useState("3031110000");
+  const [studentCurriculum, setStudentCurriculum] = useState("BEng (CompSc)");
+
+  // states
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
+
+  const [showSupervisorText, setShowSupervisorText] = useState(false);
+
   const [appointmentFileMsg, setAppointmentFileMsg] = useState(
     "or drag and drop file here"
   );
@@ -51,21 +63,24 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentName"
-                  placeholder="John Doe"
+                  value={studentName}
+                  readOnly
                 />
                 <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
                 <input
                   className="input"
                   type="text"
                   id="studentNo"
-                  placeholder="3030001111"
+                  value={studentNumber}
+                  readOnly
                 />
                 <label htmlFor="curriculum">Curriculum</label>
                 <input
                   className="input"
                   type="text"
                   id="curriculum"
-                  placeholder="BEng (CompSc)"
+                  value={studentCurriculum}
+                  readOnly
                 />
               </div>
               <p className="container-title">PLACEMENT INFORMATION</p>
@@ -129,14 +144,31 @@ function MyPlacementRecord({ authorized }) {
               </div>
             </div>
             <div className="column">
-              <p className="container-title">SUPERVISOR INFORMATION</p>
+              <IconContext.Provider
+                value={{ color: "green", className: "info-icon" }}
+              >
+                <p className="container-title">
+                  SUPERVISOR INFORMATION
+                  <IoIosInformationCircle
+                    onMouseEnter={() => setShowSupervisorText(true)}
+                    onMouseLeave={() => setShowSupervisorText(false)}
+                  />
+                  {showSupervisorText && (
+                    <span className="supervisor-info">
+                      You may complete this section later.
+                    </span>
+                  )}
+                </p>
+              </IconContext.Provider>
+
+              {/* <p>Test</p> */}
               <div className="container">
                 <label htmlFor="supervisorName">NAME</label>
                 <input
                   className="input"
                   type="text"
                   id="supervisorName"
-                  placeholder="Mr. Wong"
+                  placeholder="Mr. Wong Man Yi"
                 />
                 <label htmlFor="supervisorPhone">TELEPHONE</label>
                 <input
@@ -150,7 +182,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="email"
                   id="supervisorEmail"
-                  placeholder="wong@microsoft.com"
+                  placeholder="wongmanyi@microsoft.com"
                 />
               </div>
               <p className="container-title">DOCUMENTS & FEEDBACK COMMENT</p>

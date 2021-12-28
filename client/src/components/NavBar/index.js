@@ -23,14 +23,13 @@ const Navbar = () => {
               <NavLink to="/faq" activeClassName="link-active">
                 FAQ
               </NavLink>
+              <div className="nav-button-container">
+                <a id="logout-button" onClick={logoutFunction}>
+                  Logout
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="nav-button-container">
-          <a id="logout-button" onClick={logoutFunction}>
-            Logout
-          </a>
         </div>
       </div>
     </>

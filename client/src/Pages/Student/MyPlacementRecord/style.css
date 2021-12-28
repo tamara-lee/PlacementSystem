@@ -1,6 +1,6 @@
 .container-title {
     text-align: left;
-    padding-left: 1.5rem;
+    padding-left: 1.1rem;
     padding-bottom: 0px;
     margin-bottom: 0px;
 }
@@ -23,6 +23,16 @@
 .container label {
     text-align: left;
     font-size: 0.75rem;
+}
+
+.info-icon {
+    margin-left: 0.2rem;
+}
+
+.supervisor-info {
+    margin-left: 0.2rem;
+    font-size: 0.8rem;
+    color: red;
 }
 
 .input {
@@ -51,6 +61,13 @@
 .col {
     column-count: 2;
     text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+    .col {
+        column-count: 1;
+        text-align: left;
+    }
 }
 
 DatePicker {
