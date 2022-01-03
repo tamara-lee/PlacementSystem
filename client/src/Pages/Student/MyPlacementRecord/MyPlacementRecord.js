@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { useState, useRef } from "react";
 import NavBar from "../../../components/NavBar/NavBar";
 import Navbar from "../../../components/NavBar/index";
 import { Redirect } from "react-router-dom";
@@ -45,7 +45,26 @@ function MyPlacementRecord({ authorized }) {
   );
 
   // Remark states
+  const dummy = useRef();
+  // const remarksRef = firestore.collection("remarks"); // get collection of messages here
+  // const query = remarksRef.orderBy("createdAt").limit(50);
+  // const [remarks] = useCollectionData(query, { idField: "id" });
   const [remarkState, setRemarkState] = useState("");
+
+  const sendRemark = async (e) => {
+    e.preventDefault();
+
+    // const userId = 1;
+
+    // await remarksRef.add({
+    //   text: remarkState,
+    //   createdAt: createTime,
+    //   userId,
+    // });
+
+    // setRemarkState("");
+    dummy.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   if (authorized === false) {
     console.log(authorized);
@@ -247,24 +266,24 @@ function MyPlacementRecord({ authorized }) {
                   value="add chat box here"
                   readOnly
                 /> */}
-                <main>
-                  {messages &&
-                    messages.map((msg) => (
-                      <ChatMessage key={msg.id} message={msg} />
+                {/* <main>
+                  {remarks &&
+                    remarks.map((rmrk) => (
+                      <ChatMessage key={rmrk.id} remark={rmrk} />
                     ))}
 
                   <span ref={dummy}></span>
-                </main>
-
-                <form onSubmit={sendMessage}>
+                </main> */}
+                <div className="remarks"></div>
+                <form onSubmit={sendRemark}>
                   <input
-                    value={formValue}
-                    onChange={(e) => setFormValue(e.target.value)}
-                    placeholder="say something nice"
+                    value={remarkState}
+                    onChange={(e) => setRemarkState(e.target.value)}
+                    placeholder="Input message here..."
                   />
 
-                  <button type="submit" disabled={!formValue}>
-                    🕊️
+                  <button type="submit" disabled={!remarkState}>
+                    Send
                   </button>
                 </form>
               </div>

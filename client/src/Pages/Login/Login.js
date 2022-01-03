@@ -25,7 +25,7 @@ function Login() {
     })
       .then((response) => {
         if (response.data === "Logged In") {
-          global.loggedIn = true;
+          localStorage.setItem("userState", true);
           return history.push("/myplacementrecord");
         }
       })

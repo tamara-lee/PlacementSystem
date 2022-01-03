@@ -17,12 +17,20 @@ function App() {
           <Route
             exact
             path="/home"
-            component={() => <Home authorized={global.loggedIn} />}
+            component={() => (
+              <Home
+                authorized={JSON.parse(localStorage.getItem("userState"))}
+              />
+            )}
           />
           <Route
             exact
             path="/myplacementrecord"
-            component={() => <MyPlacementRecord />}
+            component={() => (
+              <MyPlacementRecord
+                authorized={JSON.parse(localStorage.getItem("userState"))}
+              />
+            )}
           />
           <Route exact path="/faq" component={FAQ} />\
           <Route exact path="/logout" />
