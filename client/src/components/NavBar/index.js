@@ -1,11 +1,14 @@
 import React from "react";
 import "./style.css";
 import logo from "../../images/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 const Navbar = () => {
+  const history = useHistory();
+
   const logoutFunction = () => {
-    console.log("Logout button clicked!");
+    // console.log("Logout button clicked!");
+    return history.push("/logout");
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import NavBar from "../../../components/NavBar/NavBar";
 import Navbar from "../../../components/NavBar/index";
 import { Redirect } from "react-router-dom";
@@ -21,6 +21,14 @@ function MyPlacementRecord({ authorized }) {
   const [studentName, setStudentName] = useState("John Doe");
   const [studentNumber, setStudentNumber] = useState("3031110000");
   const [studentCurriculum, setStudentCurriculum] = useState("BEng (CompSc)");
+  const [msg1, setMsg1] = useState(
+    "Job nature is not detailed enough. Please add more information."
+  );
+  const [msg2, setMsg2] = useState(
+    "I have added more information. Is the current version ok?"
+  );
+  const [msg3, setMsg3] = useState("Looks good.");
+  const [createTime, setCreateTime] = useState(Date().toLocaleString());
 
   // states
   const [startDate, setStartDate] = useState(new Date());
@@ -35,6 +43,9 @@ function MyPlacementRecord({ authorized }) {
   const [feedbackFileMsg, setFeedbackFileMsg] = useState(
     "or drag and drop file here"
   );
+
+  // Remark states
+  const [remarkState, setRemarkState] = useState("");
 
   if (authorized === false) {
     console.log(authorized);
@@ -134,7 +145,7 @@ function MyPlacementRecord({ authorized }) {
                   <option value="unpaid">Unpaid</option>
                   <option value="paid">Paid</option>
                 </select>
-                <label htmlFor="salary">SALARY</label>
+                <label htmlFor="salary">SALARY (HKD)</label>
                 <input
                   className="input"
                   type="number"
@@ -216,7 +227,7 @@ function MyPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">PLACEMENT STATUS</p>
               <div className="container">
-                <label htmlFor="placementStatus">Placement Status</label>
+                {/* <label htmlFor="placementStatus">Placement Status</label> */}
                 <select
                   className="input"
                   name="placementStatus"
@@ -229,13 +240,33 @@ function MyPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">REMARKS</p>
               <div className="container">
-                <label htmlFor="remarks">Remarks</label>
-                <input
+                {/* <label htmlFor="remarks">Remarks</label> */}
+                {/* <input
                   type="text"
                   id="remarks"
                   value="add chat box here"
                   readOnly
-                />
+                /> */}
+                <main>
+                  {messages &&
+                    messages.map((msg) => (
+                      <ChatMessage key={msg.id} message={msg} />
+                    ))}
+
+                  <span ref={dummy}></span>
+                </main>
+
+                <form onSubmit={sendMessage}>
+                  <input
+                    value={formValue}
+                    onChange={(e) => setFormValue(e.target.value)}
+                    placeholder="say something nice"
+                  />
+
+                  <button type="submit" disabled={!formValue}>
+                    🕊️
+                  </button>
+                </form>
               </div>
             </div>
           </div>

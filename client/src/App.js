@@ -24,7 +24,8 @@ function App() {
             path="/myplacementrecord"
             component={() => <MyPlacementRecord />}
           />
-          <Route exact path="/faq" component={FAQ} />
+          <Route exact path="/faq" component={FAQ} />\
+          <Route exact path="/logout" />
         </Switch>
       </Routes>
     </div>
