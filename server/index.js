@@ -59,6 +59,11 @@ app.get("/home", validateToken, (req, res) => {
   res.json("home");
 });
 
+app.get("/logout", validateToken, (req, res) => {
+  res.cookie("access-token-cookie", "", { maxAge: 1 });
+  res.redirect("/login");
+});
+
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log("Server Running");
