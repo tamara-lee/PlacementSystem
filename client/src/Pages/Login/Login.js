@@ -24,8 +24,11 @@ function Login() {
       password: password,
     })
       .then((response) => {
-        if (response.data === "Logged In") {
+        if (response.data.login_status === "Logged In") {
+          // console.log(response);
           localStorage.setItem("userState", true);
+          localStorage.setItem("userId", response.data.user_id);
+          console.log("user id is " + localStorage.getItem("userId"));
           return history.push("/myplacementrecord");
         }
       })
@@ -37,10 +40,15 @@ function Login() {
   useEffect(() => {
     Axios.get("http://localhost:3001/login")
       .then((response) => {
-        if (response.data === "Logged In") {
+        if (localStorage.getItem("userState") === true) {
           return history.push("/myplacementrecord");
-          // setLoginStatus(response.data.user[0].username);
+        } else {
+          return history.push("/");
         }
+        // if (response.data === "Logged In") {
+
+        //   // setLoginStatus(response.data.user[0].username);
+        // }
       })
       .catch((error) => {
         console.log(error);

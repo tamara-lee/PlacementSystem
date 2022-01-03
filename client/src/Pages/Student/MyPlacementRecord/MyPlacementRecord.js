@@ -1,4 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import Axios from "axios";
 import NavBar from "../../../components/NavBar/NavBar";
 import Navbar from "../../../components/NavBar/index";
 import { Redirect } from "react-router-dom";
@@ -17,6 +19,20 @@ const Container = styled.div`
 `;
 
 function MyPlacementRecord({ authorized }) {
+  const history = useHistory();
+  Axios.defaults.withCredentials = true;
+  useEffect(() => {
+    Axios.get("http://localhost:3001/login")
+      .then((response) => {
+        if (response.data != "Logged In") {
+          return history.push("/");
+          // setLoginStatus(response.data.user[0].username);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   // sample text
   const [studentName, setStudentName] = useState("John Doe");
   const [studentNumber, setStudentNumber] = useState("3031110000");
@@ -274,18 +290,26 @@ function MyPlacementRecord({ authorized }) {
 
                   <span ref={dummy}></span>
                 </main> */}
-                <div className="remarks"></div>
-                <form onSubmit={sendRemark}>
-                  <input
-                    value={remarkState}
-                    onChange={(e) => setRemarkState(e.target.value)}
-                    placeholder="Input message here..."
-                  />
+                <div className="remark-container">
+                  <RemarkMessage />
+                  <div className="column">
+                    <div className="remarks">
+                      <input
+                        value={remarkState}
+                        onChange={(e) => setRemarkState(e.target.value)}
+                        placeholder="Input message here..."
+                      />
 
-                  <button type="submit" disabled={!remarkState}>
-                    Send
-                  </button>
-                </form>
+                      <button
+                        type="submit"
+                        disabled={!remarkState}
+                        onClick={sendRemark}
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -293,11 +317,28 @@ function MyPlacementRecord({ authorized }) {
             Save & Submit
           </button>
         </form>
+
         <AppointmentLetterModal
           showModal={showModal}
           setShowModal={setShowModal}
         />
       </Container>
+    </>
+  );
+}
+
+function RemarkMessage(props) {
+  // const { text, uid, photoURL } = props.message;
+
+  // const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
+
+  // const messageClass = userId === auth.currentUser.userId ? "sent" : "received";
+  const messageClass = "sent";
+  return (
+    <>
+      <div className={`message ${messageClass}`}>
+        <p>text</p>
+      </div>
     </>
   );
 }

@@ -3,6 +3,7 @@ import "./App.css";
 import Login from "./Pages/Login/Login";
 import Home from "./Home";
 import FAQ from "./Pages/Student/FAQ/FAQ";
+import Logout from "./Pages/Logout/Logout";
 import MyPlacementRecord from "./Pages/Student/MyPlacementRecord/MyPlacementRecord";
 import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
 import "./global.js";
@@ -33,7 +34,7 @@ function App() {
             )}
           />
           <Route exact path="/faq" component={FAQ} />\
-          <Route exact path="/logout" />
+          <Route exact path="/logout" component={Logout} />
         </Switch>
       </Routes>
     </div>

@@ -39,6 +39,7 @@ app.post("/login", async (req, res) => {
   if (!user) res.status(400).json({ error: "Username does not exist." });
 
   const systemPassword = user.password;
+  const userId = user.user_id;
 
   if (password != systemPassword) {
     res.status(400).json({
@@ -52,7 +53,10 @@ app.post("/login", async (req, res) => {
       maxAge: 60 * 60 * 12 * 1000,
     });
 
-    res.json("Logged In");
+    res.json({
+      login_status: "Logged In",
+      user_id: userId,
+    });
   }
 });
 app.get("/home", validateToken, (req, res) => {
@@ -61,7 +65,8 @@ app.get("/home", validateToken, (req, res) => {
 
 app.get("/logout", validateToken, (req, res) => {
   res.cookie("access-token-cookie", "", { maxAge: 1 });
-  res.redirect("/login");
+  res.json("Logged Out"); // delete later
+  // res.redirect("/login");
 });
 
 db.sequelize.sync().then(() => {
