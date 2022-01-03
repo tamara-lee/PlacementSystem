@@ -9,7 +9,7 @@ const createTokens = (user) => {
         //"tempjwtsecretkey", 
         //jwtsecretkey,
         process.env.JWT_SECRET_KEY,
-        {expiresIn: '12h'});
+        {expiresIn: '5h'});
 
 
         return accessToken;
