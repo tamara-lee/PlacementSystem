@@ -19,12 +19,14 @@
 }
 
 .nav-logo {
+    height:70px;
     width: auto;
-    height: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    padding-right: 1.5rem;
+}
+
+.nav-logo-small {
+    height: 35px;
+    width: auto;
+    margin-top: 0.3rem;
 }
 
 .title-text {
@@ -65,8 +67,7 @@
     border-style: none;
     border-radius: 0.2rem;
     /* width: 15rem; */
-    height: 2.5rem;
-    padding-top: 10px;
+    /* height: 2.5rem; */
 }
 
 .nav-button-container {
@@ -77,7 +78,6 @@
 
 #logout-button {
     padding-top: 9px; 
-
     background-color: transparent;
     outline: none;
     color: #FAF9F6;
@@ -124,13 +124,10 @@
     }
 
     .nav-logo {
+        height:70px;
         width: auto;
-        height: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        padding-right: 1rem;
     }
+    
 
     .title-text {
         text-align: left;
@@ -173,4 +170,18 @@
         cursor: pointer;
         font-size: 0.8rem;
     }
+}
+
+.nav-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.css-1lvtzne {
+    max-width: 100px;
+}
+
+.mobile-header {
+    margin-left: auto;
+    margin-right: auto;
 }

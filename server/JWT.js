@@ -25,7 +25,7 @@ const validateToken = (req, res, next) => {
   if (!accessToken) {
     return res
       .status(400)
-      .json({ error: "User is not authenticated!\\nPlease log in." });
+      .json({ error: "User is not authenticated!\nPlease log in." });
   }
 
   try {

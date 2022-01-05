@@ -169,21 +169,103 @@ input[type=number]::-webkit-inner-spin-button {
     transform: translateY(-1px);
 }
 
+.remark-container {
+    
+}
+
+.remark-container {
+    padding: 10px;
+    min-height: 90px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+}
+  
+.remark-container::-webkit-scrollbar {
+    width: 0.3rem;
+}
+  
+.remark-container::-webkit-scrollbar-track {
+    background: lightgray;
+    ;
+}
+  
+.remark-container::-webkit-scrollbar-thumb {
+    background: #257F2F;
+}
+
+
 .message {
     display: flex;
     align-items: center;
   }
-  
-.sent {
+
+
+.new-remark {
+    padding-bottom: 0.5rem;
+    height: 2.2rem;
+    width: 100%;
+    display: flex;
+    font-size: 0.85rem;
+}
+
+.new-remark button {
+    width: 20%;
+    background-color: #257F2F;
+    border-radius: 0px 20px 20px 0px;
+    border: none;
+    color: white;
+    box-shadow: lightgray   ;
+  }
+
+  .sent {
     flex-direction: row-reverse;
   }
   
-  .sent p {
+.sent p {
     color: white;
     background: #0b93f6;
     align-self: flex-end;
-  }
-  .received p {
+    max-width: 500px;
+    margin-bottom: 12px;
+    line-height: 24px;
+    padding: 2px 10px;
+    border-radius: 25px;
+    position: relative;
+    text-align: center;
+    font-size: 0.9rem;
+}
+  
+.received p {
     background: #e5e5ea;
     color: black;
-  }
+    max-width: 500px;
+    margin-bottom: 12px;
+    line-height: 24px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    position: relative;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+
+
+  
+.new-remark input {
+    width: 100%;
+    font-size: 0.85rem;
+    background: lightgray;
+    color: black;
+    outline: none;
+    border: none;
+    padding: 0 10px;
+    border-radius: 20px 0px 0px 20px;
+}
+
+  
+  button:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+  

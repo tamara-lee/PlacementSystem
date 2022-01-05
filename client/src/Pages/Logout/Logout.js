@@ -16,7 +16,13 @@ function Logout() {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          localStorage.setItem("userState", false);
+          return history.push("/");
+        }
       });
   }, []);
 

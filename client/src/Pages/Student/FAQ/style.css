@@ -1,0 +1,66 @@
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}   
+
+.mobile-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+.faq-header {
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.faq-header p {
+    font-size: 2rem;
+    font-weight: bolder;
+    margin-left: 2rem;
+    padding-right: 18rem;
+    margin-bottom: 0px;
+}
+
+.faq-header-mobile {
+    margin-bottom: 2rem;
+}
+
+.faq-header-mobile p {
+    font-size: 1.5rem;
+    font-weight: bolder;
+    margin-bottom: 0px;
+}
+
+.search-bar {
+    /* position: absolute; */
+    /* display: flex; */
+    /* right: 50px; */
+    margin-top: 0.5rem;
+    margin-right: 2rem;
+    height: 2rem;
+}
+
+.search-bar-mobile {
+    /* position: absolute; */
+    /* display: flex; */
+    /* right: 50px; */
+    margin-top: 0.5rem;
+    height: 1.5rem;
+}
+
+.css-ahj2mt-MuiTypography-root {
+    text-align: left;
+}
+
+.panel-div {
+    min-width: 100%;
+    margin-right: 1rem;
+}
+
+.css-1fnuddt {
+    justify-content: center;
+}
+/* .css-1lu24rx {
+    justify-content: center;
+} */

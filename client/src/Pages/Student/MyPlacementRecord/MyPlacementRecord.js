@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import NavBar from "../../../components/NavBar/NavBar";
 import Navbar from "../../../components/NavBar/index";
+import NavigationBar from "../../../components/NavBar/NavBar";
 import { Redirect } from "react-router-dom";
 import "./style.css";
 import DatePicker from "react-datepicker";
@@ -23,20 +26,39 @@ function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
   useEffect(() => {
     Axios.get("http://localhost:3001/login")
-      .then((response) => {
-        if (response.data != "Logged In") {
-          return history.push("/");
-          // setLoginStatus(response.data.user[0].username);
-        }
-      })
+      .then((response) => {})
       .catch((error) => {
-        console.log(error);
+        console.log(error.response);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          console.log("logged out.");
+          localStorage.setItem("userState", false);
+          alert("You have been logged out. Please refresh and log in again.");
+        }
       });
   }, []);
   // sample text
   const [studentName, setStudentName] = useState("John Doe");
   const [studentNumber, setStudentNumber] = useState("3031110000");
   const [studentCurriculum, setStudentCurriculum] = useState("BEng (CompSc)");
+  const [companyName, setCompanyName] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobNature, setJobNature] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [location, setLocation] = useState("");
+  const [paymentType, setPaymentType] = useState("");
+  const [salary, setSalary] = useState("");
+  const [supervisorName, setSupervisorName] = useState("");
+  const [supervisorPhone, setSupervisorPhone] = useState("");
+  const [supervisorEmail, setSupervisorEmail] = useState("");
+  const [appointmentLetter, setAppointmentLetter] = useState("");
+  const [feedbackForm, setFeedbackForm] = useState("");
+  const [feedbackComment, setFeedbackComment] = useState("");
+  const [placementStatus, setPlacementStatus] = useState("");
+
   const [msg1, setMsg1] = useState(
     "Job nature is not detailed enough. Please add more information."
   );
@@ -47,8 +69,6 @@ function MyPlacementRecord({ authorized }) {
   const [createTime, setCreateTime] = useState(Date().toLocaleString());
 
   // states
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
 
   const [showSupervisorText, setShowSupervisorText] = useState(false);
@@ -91,13 +111,69 @@ function MyPlacementRecord({ authorized }) {
     setShowModal((prev) => !prev);
   };
 
+  const getForm = () => {
+    Axios.get("http://localhost:3001/myplacementrecord")
+      .then((response) => {
+        setStudentName(response.data.studentName);
+        setStudentNumber(response.data.studentNumber);
+        setStudentCurriculum(response.data.studentCurriculum);
+        setCompanyName(response.data.companyName);
+        setJobTitle(response.data.jobTitle);
+        setJobNature(response.data.jobNature);
+        setStartDate(response.data.startDate);
+        setEndDate(response.data.endDate);
+        setLocation(response.data.location);
+        setPaymentType(response.data.paymentType);
+        setSalary(response.data.salary);
+        setSupervisorName(response.data.supervisorName);
+        setSupervisorPhone(response.data.supervisorPhone);
+        setSupervisorEmail(response.data.supervisorEmail);
+        setAppointmentLetter(response.data.appointmentLetter);
+        setFeedbackForm(response.data.feedbackForm);
+        setFeedbackComment(response.data.feedbackComment);
+        setPlacementStatus(response.data.placementStatus);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
   const submitForm = () => {
     console.log("Submit button clicked!");
+    Axios.post("http://localhost:3001/myplacementrecord", {
+      studentName: studentName,
+      studentNumber: studentNumber,
+      studentCurriculum: studentCurriculum,
+      companyName: companyName,
+      jobTitle: jobTitle,
+      jobNature: jobNature,
+      startDate: startDate,
+      endDate: endDate,
+      location: location,
+      paymentType: paymentType,
+      salary: salary,
+      supervisorName: supervisorName,
+      supervisorPhone: supervisorPhone,
+      supervisorEmail: supervisorEmail,
+      appointmentLetter: appointmentLetter,
+      feedbackForm: feedbackForm,
+      feedbackComment: feedbackComment,
+      placementStatus: placementStatus,
+    })
+      .then((response) => {
+        console.log(response.data);
+        // if (response.data === "Successfully submitted") {
+        //   console.log(response.data);
+        // }
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   };
-
+  getForm();
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
+      <NavigationBar />
       <Container>
         <form>
           <div className="row">
@@ -136,36 +212,69 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="companyName"
+                  value={companyName}
                   placeholder="Microsoft"
+                  maxLength="100"
+                  onChange={(e) => {
+                    setCompanyName(e.target.value);
+                  }}
                 />
                 <label htmlFor="jobTitle">JOB TITLE / POSITION</label>
                 <input
                   className="input"
                   type="text"
                   id="jobTitle"
+                  value={jobTitle}
                   placeholder="Software Engineer Intern"
+                  maxLength="50"
+                  onChange={(e) => {
+                    setJobTitle(e.target.value);
+                  }}
                 />
                 <label htmlFor="jobNature">JOB NATURE</label>
                 <textarea
                   className="input"
                   type="text"
                   id="jobNature"
+                  value={jobNature}
                   placeholder="The scope of the position is ..."
+                  onChange={(e) => {
+                    setJobNature(e.target.value);
+                  }}
                 />
                 <div className="col">
                   <label htmlFor="startDate">START DATE</label>
                   <DatePicker
                     className="date-picker"
                     selected={startDate}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
                     onChange={(date) => setStartDate(date)}
+                    locale="en-GB"
+                    showWeekNumbers
                     id="startDate"
+                    value={startDate}
+                    onChange={(e) => {
+                      setStartDate(e.target.value);
+                    }}
                   />
                   <label htmlFor="endDate">END DATE</label>
                   <DatePicker
                     className="date-picker"
                     selected={endDate}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    minDate={startDate}
                     onChange={(date) => setEndDate(date)}
+                    locale="en-GB"
+                    showWeekNumbers
                     id="endDate"
+                    value={endDate}
+                    onChange={(e) => {
+                      setEndDate(e.target.value);
+                    }}
                   />
                 </div>
                 <label htmlFor="location">WORKING LOCATION</label>
@@ -173,10 +282,23 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="location"
+                  value={location}
                   placeholder="Hong Kong"
+                  maxLength="50"
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                  }}
                 />
                 <label htmlFor="paymentType">PAYMENT TYPE</label>
-                <select className="input" name="paymentType" id="paymentType">
+                <select
+                  className="input"
+                  name="paymentType"
+                  id="paymentType"
+                  value={paymentType}
+                  onChange={(e) => {
+                    setPaymentType(e.target.value);
+                  }}
+                >
                   <option value="unpaid">Unpaid</option>
                   <option value="paid">Paid</option>
                 </select>
@@ -185,7 +307,11 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="number"
                   id="salary"
+                  value={salary}
                   placeholder="0.00"
+                  onChange={(e) => {
+                    setPaymentType(e.target.value);
+                  }}
                 />
               </div>
             </div>
@@ -214,21 +340,34 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="supervisorName"
+                  value={supervisorName}
                   placeholder="Mr. Wong Man Yi"
+                  maxLength="50"
+                  onChange={(e) => {
+                    setSupervisorName(e.target.value);
+                  }}
                 />
                 <label htmlFor="supervisorPhone">TELEPHONE</label>
                 <input
                   className="input"
                   type="tel"
                   id="supervisorPhone"
+                  value={supervisorPhone}
                   placeholder="12345678"
+                  onChange={(e) => {
+                    setSupervisorPhone(e.target.value);
+                  }}
                 />
                 <label htmlFor="supervisorEmail">EMAIL</label>
                 <input
                   className="input"
                   type="email"
                   id="supervisorEmail"
+                  value={supervisorEmail}
                   placeholder="wongmanyi@microsoft.com"
+                  onChange={(e) => {
+                    setSupervisorEmail(e.target.value);
+                  }}
                 />
               </div>
               <p className="container-title">DOCUMENTS & FEEDBACK COMMENT</p>
@@ -240,8 +379,10 @@ function MyPlacementRecord({ authorized }) {
                   <input
                     type="file"
                     id="appointmentLetter"
+                    value={appointmentLetter}
                     onChange={function (e) {
                       setAppointmentFileMsg(e.target.files[0].name);
+                      setAppointmentLetter(e.target.files[0].name); //filename only
                     }}
                   />
                 </div>
@@ -252,13 +393,23 @@ function MyPlacementRecord({ authorized }) {
                   <input
                     type="file"
                     id="feedbackForm"
+                    value={feedbackForm}
                     onChange={function (e) {
                       setFeedbackFileMsg(e.target.files[0].name);
+                      setFeedbackForm(e.target.files[0].name);
                     }}
                   />
                 </div>
                 <label htmlFor="feedbackComment">FEEDBACK COMMENT</label>
-                <input className="input" type="text" id="feedbackComment" />
+                <input
+                  className="input"
+                  type="text"
+                  id="feedbackComment"
+                  value={feedbackComment}
+                  onChange={(e) => {
+                    setFeedbackComment(e.target.value);
+                  }}
+                />
               </div>
               <p className="container-title">PLACEMENT STATUS</p>
               <div className="container">
@@ -267,6 +418,9 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   name="placementStatus"
                   id="placementStatus"
+                  onChange={(e) => {
+                    setPlacementStatus(e.target.value);
+                  }}
                 >
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
@@ -275,13 +429,6 @@ function MyPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">REMARKS</p>
               <div className="container">
-                {/* <label htmlFor="remarks">Remarks</label> */}
-                {/* <input
-                  type="text"
-                  id="remarks"
-                  value="add chat box here"
-                  readOnly
-                /> */}
                 {/* <main>
                   {remarks &&
                     remarks.map((rmrk) => (
@@ -292,23 +439,22 @@ function MyPlacementRecord({ authorized }) {
                 </main> */}
                 <div className="remark-container">
                   <RemarkMessage />
-                  <div className="column">
-                    <div className="remarks">
-                      <input
-                        value={remarkState}
-                        onChange={(e) => setRemarkState(e.target.value)}
-                        placeholder="Input message here..."
-                      />
+                </div>
+                <div className="new-remark">
+                  <input
+                    value={remarkState}
+                    onChange={(e) => setRemarkState(e.target.value)}
+                    placeholder="Input message here..."
+                    maxLength="50"
+                  />
 
-                      <button
-                        type="submit"
-                        disabled={!remarkState}
-                        onClick={sendRemark}
-                      >
-                        Send
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    type="submit"
+                    disabled={!remarkState}
+                    onClick={sendRemark}
+                  >
+                    Send
+                  </button>
                 </div>
               </div>
             </div>
@@ -330,14 +476,13 @@ function MyPlacementRecord({ authorized }) {
 function RemarkMessage(props) {
   // const { text, uid, photoURL } = props.message;
 
-  // const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
+  // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
 
-  // const messageClass = userId === auth.currentUser.userId ? "sent" : "received";
   const messageClass = "sent";
   return (
     <>
       <div className={`message ${messageClass}`}>
-        <p>text</p>
+        <p>Sample text!</p>
       </div>
     </>
   );

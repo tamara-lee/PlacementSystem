@@ -40,7 +40,7 @@ function Login() {
   useEffect(() => {
     Axios.get("http://localhost:3001/login")
       .then((response) => {
-        if (localStorage.getItem("userState") === true) {
+        if (response.data === "Logged In") {
           return history.push("/myplacementrecord");
         } else {
           return history.push("/");
