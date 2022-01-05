@@ -3,20 +3,18 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const db = require("./models");
-const { UsersTest } = require("./models");
+//const { UsersTest } = require("./models");
+const { Student } = require("./models");
 
 const cookieParser = require("cookie-parser");
 const { createTokens, validateToken } = require("./JWT");
 //const cors = require("cors");
-//const mysql = require("mysql");
-//const bodyParser = require("body-parser");
 //const session = require("express-session");
 
 //automatically parse every json object from the frontend
 app.use(express.json());
 app.use(cookieParser());
 
-//var cors = require("cors");
 //app.use(cors({ credentials: true, origin: "http://localhost:3001" }));
 app.use(
   cors({
@@ -30,16 +28,15 @@ app.get("/login", validateToken, (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  //const { username, password } = req.body;
   const username = req.body.username;
   const password = req.body.password;
 
-  const user = await UsersTest.findOne({ where: { username: username } });
+  const user = await Student.findOne({ where: { username: username } });
 
   if (!user) res.status(400).json({ error: "Username does not exist." });
 
   const systemPassword = user.password;
-  const userId = user.user_id;
+  const studentId = user.student_uid;
 
   if (password != systemPassword) {
     res.status(400).json({
@@ -50,13 +47,12 @@ app.post("/login", async (req, res) => {
     const accessToken = createTokens(user);
 
     res.cookie("access-token-cookie", accessToken, {
-      maxAge: 60 * 60 * 12 * 1000,
-      // maxAge: 1000 * 10,
+      maxAge: 60 * 60 * 5 * 1000,
     });
 
     res.json({
       login_status: "Logged In",
-      user_id: userId,
+      user_id: studentId,
     });
   }
 });
