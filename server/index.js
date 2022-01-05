@@ -51,6 +51,7 @@ app.post("/login", async (req, res) => {
 
     res.cookie("access-token-cookie", accessToken, {
       maxAge: 60 * 60 * 12 * 1000,
+      // maxAge: 1000 * 10,
     });
 
     res.json({
