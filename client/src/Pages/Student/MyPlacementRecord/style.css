@@ -88,7 +88,7 @@ DatePicker {
 }
 
 #jobNature {
-    min-height: 100px;
+    min-height: 180px;
 }
 
 input[type=number]::-webkit-inner-spin-button {
@@ -130,7 +130,7 @@ input[type=number]::-webkit-inner-spin-button {
     text-overflow: ellipsis;
 }
   
-#feedbackForm, #appointmentLetter {
+#feedbackForm, #appointmentLetter, #consentForm {
     position: absolute;
     left: 0;
     top: 0;

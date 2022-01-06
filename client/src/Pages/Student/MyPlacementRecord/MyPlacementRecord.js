@@ -54,6 +54,7 @@ function MyPlacementRecord({ authorized }) {
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
+  const [consentForm, setConsentForm] = useState("");
   const [appointmentLetter, setAppointmentLetter] = useState("");
   const [feedbackForm, setFeedbackForm] = useState("");
   const [feedbackComment, setFeedbackComment] = useState("");
@@ -73,6 +74,9 @@ function MyPlacementRecord({ authorized }) {
 
   const [showSupervisorText, setShowSupervisorText] = useState(false);
 
+  const [consentFormMsg, setConsentFormMsg] = useState(
+    "or drag and drop file here"
+  );
   const [appointmentFileMsg, setAppointmentFileMsg] = useState(
     "or drag and drop file here"
   );
@@ -155,6 +159,7 @@ function MyPlacementRecord({ authorized }) {
       supervisorPhone: supervisorPhone,
       supervisorEmail: supervisorEmail,
       appointmentLetter: appointmentLetter,
+      consentForm: consentForm,
       feedbackForm: feedbackForm,
       feedbackComment: feedbackComment,
       placementStatus: placementStatus,
@@ -370,8 +375,23 @@ function MyPlacementRecord({ authorized }) {
                   }}
                 />
               </div>
+
               <p className="container-title">DOCUMENTS & FEEDBACK COMMENT</p>
               <div className="container">
+                <label htmlFor="consentForm">CONSENT FORM</label>
+                <div className="file-drop-area">
+                  <span className="fake-btn">Choose file</span>
+                  <span className="file-msg">{consentFormMsg}</span>
+                  <input
+                    type="file"
+                    id="consentForm"
+                    value={consentForm}
+                    onChange={function (e) {
+                      setConsentFormMsg(e.target.files[0].name);
+                      setConsentForm(e.target.files[0].name); //filename only
+                    }}
+                  />
+                </div>
                 <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
