@@ -18,8 +18,9 @@ h1 {
     font-size: 2rem;
     font-weight: bolder;
     margin-left: 2rem;
-    padding-right: 18rem;
+    padding-right: 10rem;
     margin-bottom: 0px;
+    text-align: left;
 }
 
 .faq-header-mobile {

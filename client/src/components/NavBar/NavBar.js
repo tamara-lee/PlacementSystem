@@ -169,11 +169,29 @@ const NavigationBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <StyledNavLink
+                  to="/myplacementrecord"
+                  sx={{ textDecoration: "none" }}
+                >
+                  <Typography
+                    textAlign="center"
+                    sx={{ textDecoration: "none", color: "black" }}
+                  >
+                    My Placement Record
+                  </Typography>
+                </StyledNavLink>
+              </MenuItem>
+              <MenuItem>
+                <StyledNavLink to="/faq" sx={{ textDecoration: "none" }}>
+                  <Typography
+                    textAlign="center"
+                    sx={{ textDecoration: "none", color: "black" }}
+                  >
+                    FAQ
+                  </Typography>
+                </StyledNavLink>
+              </MenuItem>
             </Menu>
           </Box>
           <div className="mobile-header">
