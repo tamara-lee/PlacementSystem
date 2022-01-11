@@ -168,6 +168,7 @@ function FAQ({ authorized }) {
             display: { xs: "none", md: "flex" },
             height: 260,
             marginTop: "25px",
+            justifyContent: "center",
           }}
         >
           <StyledTabs

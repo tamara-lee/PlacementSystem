@@ -269,3 +269,8 @@ input[type=number]::-webkit-inner-spin-button {
     cursor: not-allowed;
 }
   
+.error-message {
+    padding-left: 0.5rem;
+    color: red;
+    font-weight: bold;
+}

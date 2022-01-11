@@ -73,6 +73,9 @@ function MyPlacementRecord({ authorized }) {
   const [showModal, setShowModal] = useState(false);
 
   const [showSupervisorText, setShowSupervisorText] = useState(false);
+  const [showCommentText, setShowCommentText] = useState(false);
+  const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
+  const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
 
   const [consentFormMsg, setConsentFormMsg] = useState(
     "or drag and drop file here"
@@ -113,6 +116,22 @@ function MyPlacementRecord({ authorized }) {
 
   const openModal = () => {
     setShowModal((prev) => !prev);
+  };
+
+  const checkEmail = (e) => {
+    if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const checkPhone = (e) => {
+    if (/^\+?\d+$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const getForm = () => {
@@ -260,9 +279,6 @@ function MyPlacementRecord({ authorized }) {
                     showWeekNumbers
                     id="startDate"
                     value={startDate}
-                    onChange={(e) => {
-                      setStartDate(e.target.value);
-                    }}
                   />
                   <label htmlFor="endDate">END DATE</label>
                   <DatePicker
@@ -277,9 +293,6 @@ function MyPlacementRecord({ authorized }) {
                     showWeekNumbers
                     id="endDate"
                     value={endDate}
-                    onChange={(e) => {
-                      setEndDate(e.target.value);
-                    }}
                   />
                 </div>
                 <label htmlFor="location">WORKING LOCATION</label>
@@ -306,6 +319,7 @@ function MyPlacementRecord({ authorized }) {
                 >
                   <option value="unpaid">Unpaid</option>
                   <option value="paid">Paid</option>
+                  <option value="honorarium">Honorarium</option>
                 </select>
                 <label htmlFor="salary">SALARY (HKD)</label>
                 <input
@@ -322,7 +336,11 @@ function MyPlacementRecord({ authorized }) {
             </div>
             <div className="column">
               <IconContext.Provider
-                value={{ color: "green", className: "info-icon" }}
+                value={{
+                  color: "green",
+                  className: "info-icon",
+                  size: "1.2rem",
+                }}
               >
                 <p className="container-title">
                   SUPERVISOR INFORMATION
@@ -352,7 +370,15 @@ function MyPlacementRecord({ authorized }) {
                     setSupervisorName(e.target.value);
                   }}
                 />
-                <label htmlFor="supervisorPhone">TELEPHONE</label>
+                <label htmlFor="supervisorPhone">
+                  TELEPHONE
+                  {showTelephoneErrorMsg && (
+                    <span className="error-message">
+                      Invalid telephone number. Please enter a valid telephone
+                      number.
+                    </span>
+                  )}
+                </label>
                 <input
                   className="input"
                   type="tel"
@@ -360,18 +386,44 @@ function MyPlacementRecord({ authorized }) {
                   value={supervisorPhone}
                   placeholder="12345678"
                   onChange={(e) => {
-                    setSupervisorPhone(e.target.value);
+                    if (e.target.value == "") {
+                      setSupervisorPhone(e.target.value);
+                      setShowTelephoneErrorMsg(false);
+                    } else if (checkPhone(e.target.value)) {
+                      setSupervisorPhone(e.target.value);
+                      setShowTelephoneErrorMsg(false);
+                    } else {
+                      setSupervisorPhone(e.target.value);
+                      setShowTelephoneErrorMsg(true);
+                    }
                   }}
                 />
-                <label htmlFor="supervisorEmail">EMAIL</label>
+                <label htmlFor="supervisorEmail">
+                  EMAIL
+                  {showEmailErrorMsg && (
+                    <span className="error-message">
+                      Invalid email. Please enter a valid email.
+                    </span>
+                  )}
+                </label>
                 <input
                   className="input"
                   type="email"
                   id="supervisorEmail"
                   value={supervisorEmail}
                   placeholder="wongmanyi@microsoft.com"
+                  pattern="[\w.-]+@[\w.]+"
                   onChange={(e) => {
-                    setSupervisorEmail(e.target.value);
+                    if (e.target.value == "") {
+                      setSupervisorEmail(e.target.value);
+                      setShowEmailErrorMsg(false);
+                    } else if (checkEmail(e.target.value)) {
+                      setSupervisorEmail(e.target.value);
+                      setShowEmailErrorMsg(false);
+                    } else {
+                      setSupervisorEmail(e.target.value);
+                      setShowEmailErrorMsg(true);
+                    }
                   }}
                 />
               </div>
@@ -420,7 +472,28 @@ function MyPlacementRecord({ authorized }) {
                     }}
                   />
                 </div>
-                <label htmlFor="feedbackComment">FEEDBACK COMMENT</label>
+
+                <label htmlFor="feedbackComment">
+                  FEEDBACK COMMENT
+                  <IconContext.Provider
+                    value={{
+                      color: "green",
+                      className: "info-icon",
+                      size: "1.2rem",
+                    }}
+                  >
+                    <IoIosInformationCircle
+                      onMouseEnter={() => setShowCommentText(true)}
+                      onMouseLeave={() => setShowCommentText(false)}
+                    />
+                  </IconContext.Provider>
+                  {showCommentText && (
+                    <span className="error-message">
+                      This field will be filled in by the admin if student does
+                      not have access to the feedback form.
+                    </span>
+                  )}
+                </label>
                 <input
                   className="input"
                   type="text"
@@ -429,6 +502,7 @@ function MyPlacementRecord({ authorized }) {
                   onChange={(e) => {
                     setFeedbackComment(e.target.value);
                   }}
+                  disabled
                 />
               </div>
               <p className="container-title">PLACEMENT STATUS</p>
@@ -441,6 +515,7 @@ function MyPlacementRecord({ authorized }) {
                   onChange={(e) => {
                     setPlacementStatus(e.target.value);
                   }}
+                  disabled
                 >
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
