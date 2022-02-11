@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+  //output   = "./src/generated/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model student {
+  student_uid      String                   @id @db.VarChar(10) 
+  english_name     String                   @db.VarChar(64)
+  acad_year        String                   @db.VarChar(4)
+  course_year      Int                      @db.TinyInt
+  curriculum       String                   @db.VarChar(30)
+  placement_status student_placement_status
+  modified_by      String                   @db.VarChar(8)
+  last_modified    DateTime                 @default(now()) @db.Timestamp(0)
+  user_account     user_account[]
+}
+
+model user_account {
+  account_id  Int      @id @default(autoincrement())
+  student_uid String?  @db.VarChar(10)
+  username    String   @db.VarChar(64) @unique
+  password    String   @db.VarChar(20)
+  student     student? @relation(fields: [student_uid], references: [student_uid], onDelete: NoAction, onUpdate: NoAction, map: "user_account_ibfk_1")
+
+  @@index([student_uid], map: "student_uid")
+}
+
+enum student_placement_status {
+  NA
+  Waiting
+  Incomplete
+  Approved
+}
