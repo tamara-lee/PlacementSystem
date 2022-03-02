@@ -7,7 +7,7 @@ function Logout() {
 
   Axios.defaults.withCredentials = true;
   useEffect(() => {
-    Axios.get("http://localhost:3001/logout")
+    Axios.get("http://localhost:3001/auth/logout")
       .then((response) => {
         console.log(response);
         if (response.data === "Logged Out") {

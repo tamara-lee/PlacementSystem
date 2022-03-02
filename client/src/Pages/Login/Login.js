@@ -19,7 +19,7 @@ function Login() {
   const [loginStatus, setLoginStatus] = useState("");
 
   const login = () => {
-    Axios.post("http://localhost:3001/login", {
+    Axios.post("http://localhost:3001/auth/login", {
       username: username,
       password: password,
     })
@@ -38,7 +38,7 @@ function Login() {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/login")
+    Axios.get("http://localhost:3001/auth/login")
       .then((response) => {
         if (response.data === "Logged In") {
           return history.push("/myplacementrecord");
