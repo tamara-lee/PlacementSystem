@@ -3,9 +3,7 @@ import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NavBar from "../../../components/NavBar/NavBar";
-import Navbar from "../../../components/NavBar/index";
-import NavigationBar from "../../../components/NavBar/NavBar";
+import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import { Redirect } from "react-router-dom";
 import "./style.css";
 import DatePicker from "react-datepicker";
@@ -21,7 +19,7 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
-function MyPlacementRecord({ authorized }) {
+function EditStudentRecord({ authorized }) {
   const history = useHistory();
   Axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -135,7 +133,7 @@ function MyPlacementRecord({ authorized }) {
   };
 
   const getForm = () => {
-    Axios.get("http://localhost:3001/placementrecord/student")
+    Axios.get("http://localhost:3001/myplacementrecord")
       .then((response) => {
         setStudentName(response.data.studentName);
         setStudentNumber(response.data.studentNumber);
@@ -162,7 +160,7 @@ function MyPlacementRecord({ authorized }) {
   };
   const submitForm = () => {
     console.log("Submit button clicked!");
-    Axios.post("http://localhost:3001/placementrecord/student", {
+    Axios.post("http://localhost:3001/myplacementrecord", {
       studentName: studentName,
       studentNumber: studentNumber,
       studentCurriculum: studentCurriculum,
@@ -502,7 +500,6 @@ function MyPlacementRecord({ authorized }) {
                   onChange={(e) => {
                     setFeedbackComment(e.target.value);
                   }}
-                  disabled
                 />
               </div>
               <p className="container-title">PLACEMENT STATUS</p>
@@ -515,7 +512,6 @@ function MyPlacementRecord({ authorized }) {
                   onChange={(e) => {
                     setPlacementStatus(e.target.value);
                   }}
-                  disabled
                 >
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
@@ -583,4 +579,4 @@ function RemarkMessage(props) {
   );
 }
 
-export default MyPlacementRecord;
+export default EditStudentRecord;
