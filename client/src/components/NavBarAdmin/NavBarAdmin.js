@@ -7,9 +7,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./style.css";
 import { styled } from "@mui/material/styles";
@@ -45,6 +42,10 @@ const NavigationBar = () => {
     return history.push("/logout");
   };
 
+  const toggleFunction = () => {
+    alert("Switch button clicked!");
+  };
+
   return (
     <StyledAppBar position="static">
       <Container maxWidth="xl">
@@ -75,9 +76,10 @@ const NavigationBar = () => {
             >
               Internship Placement System
             </Typography>
+
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <StyledNavLink
-                to="/myplacementrecord"
+                to="/mainpage/admin"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,
@@ -97,11 +99,38 @@ const NavigationBar = () => {
                     marginTop: "5px",
                   }}
                 >
-                  My Placement Record
+                  Student Records
                 </Typography>
               </StyledNavLink>
               <StyledNavLink
-                to="/faq/student"
+                to="/addstudents/admin"
+                activeClassName="link-active"
+                sx={{
+                  marginTop: 1,
+                  color: "white",
+                  display: "block",
+                  minWidth: "14rem",
+                  minHeight: "2rem",
+                  "&:active": {
+                    backgroundColor: "#18521F",
+                  },
+                  textDecoration: "none",
+                  "&:hover": {
+                    color: "white",
+                  },
+                }}
+              >
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    marginTop: "5px",
+                  }}
+                >
+                  Add Student(s)
+                </Typography>
+              </StyledNavLink>
+              <StyledNavLink
+                to="/faq/admin"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,
@@ -171,22 +200,32 @@ const NavigationBar = () => {
             >
               <MenuItem>
                 <StyledNavLink
-                  to="/myplacementrecord"
+                  to="/mainpage/admin"
                   sx={{ textDecoration: "none" }}
                 >
                   <Typography
                     textAlign="center"
                     sx={{ textDecoration: "none", color: "black" }}
                   >
-                    My Placement Record
+                    Student Records
                   </Typography>
                 </StyledNavLink>
               </MenuItem>
               <MenuItem>
                 <StyledNavLink
-                  to="/faq/student"
+                  to="/addstudents/admin"
                   sx={{ textDecoration: "none" }}
                 >
+                  <Typography
+                    textAlign="center"
+                    sx={{ textDecoration: "none", color: "black" }}
+                  >
+                    Add Student(s)
+                  </Typography>
+                </StyledNavLink>
+              </MenuItem>
+              <MenuItem>
+                <StyledNavLink to="/faq/admin" sx={{ textDecoration: "none" }}>
                   <Typography
                     textAlign="center"
                     sx={{ textDecoration: "none", color: "black" }}
@@ -195,6 +234,21 @@ const NavigationBar = () => {
                   </Typography>
                 </StyledNavLink>
               </MenuItem>
+              {/* <MenuItem>
+                <StyledNavLink to="/faq" sx={{ textDecoration: "none" }}>
+                  <Typography
+                    textAlign="center"
+                    onClick={toggleFunction}
+                    sx={{
+                      display: { xs: "flex", md: "none" },
+                      textDecoration: "none",
+                      color: "black",
+                    }}
+                  >
+                    Switch to Student View
+                  </Typography>
+                </StyledNavLink>
+              </MenuItem> */}
             </Menu>
           </Box>
           <div className="mobile-header">
@@ -221,7 +275,24 @@ const NavigationBar = () => {
               Internship Placement System
             </Typography>
           </div>
-
+          {/* <Box>
+            <Typography
+              textAlign="center"
+              onClick={toggleFunction}
+              sx={{
+                display: { xs: "none", md: "flex" },
+                position: "relative",
+                right: "0rem",
+                width: "auto",
+                marginTop: "-2rem",
+                "&:hover": {
+                  color: "black",
+                },
+              }}
+            >
+              Switch to Student View
+            </Typography>
+          </Box> */}
           <Box sx={{ flexGrow: 0 }}>
             <Typography
               textAlign="center"
