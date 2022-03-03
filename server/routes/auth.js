@@ -5,21 +5,10 @@ const prisma = new PrismaClient();
 const router = require("express").Router();
 const cors = require("cors");
 
-/**router.use(
-    cors({
-      origin: ["http://localhost:3000"],
-      methods: ["GET", "POST"],
-      credentials: true, //allowing the cookie to be enabled
-    })
-  );**/
-
-  //router.get("/login", validateToken, (req, res) => {
     router.get("/login", validateToken, (req, res) => {
-
     res.json("Logged In");
   });
 
-  //router.post("/login", async (req, res) => {
     router.post("/login", async (req, res) => {
 
     //const username = req.body.username;
@@ -59,8 +48,7 @@ const cors = require("cors");
 
   router.get("/logout", validateToken, (req, res) => {
     res.cookie("access-token-cookie", "", { maxAge: 1 });
-    res.json("Logged Out"); // delete later
-    // res.redirect("/login");
+    res.json("Logged Out"); 
   });
 
   module.exports = router;
