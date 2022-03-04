@@ -11,7 +11,6 @@ import Typography from "@mui/material/Typography";
 import NativeSelect from "@mui/material/NativeSelect"; //use for mobile
 import MenuItem from "@mui/material/MenuItem";
 import TestData from "../../../mock data/test_data.json";
-import Axios from "axios";
 
 // for the table
 import Table from "@mui/material/Table";
