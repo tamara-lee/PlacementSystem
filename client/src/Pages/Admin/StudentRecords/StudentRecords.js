@@ -8,6 +8,18 @@ import Select from "@mui/material/Select";
 import NativeSelect from "@mui/material/NativeSelect"; //use for mobile
 import MenuItem from "@mui/material/MenuItem";
 import TestData from "../../../mock data/test_data.json";
+import Axios from "axios";
+
+Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
+    (response) => {
+      console.log(response);
+    }
+  );
+  Axios.get("http://localhost:3001/placementrecord/student/placementyear", {}).then(
+    (response) => {
+      console.log(response);
+    }
+  );
 
 function StudentRecords({ authorized }) {
   if (authorized === false) {

@@ -35,7 +35,7 @@ model user_account {
 
 model placement {
   placement_id         Int                     @id @unique(map: "placement_id") @default(autoincrement())
-  username             String                  @db.VarChar(8)
+  username             String                  @db.VarChar(8) @unique
   student_uid          String                  @db.VarChar(10)
   placement_year       String                  @db.VarChar(4)
   appointment_letter   String?                 @db.Char(1)
