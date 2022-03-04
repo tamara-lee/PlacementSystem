@@ -144,7 +144,7 @@ function AddStudent({ authorized }) {
               >
                 <Typography style={{ fontSize: "14px", fontWeight: "600" }}>
                   Template file:{" "}
-                  <Link href="template.xlsx" download>
+                  <Link href="/template.xlsx" download>
                     Student Records Template
                   </Link>
                 </Typography>

@@ -1,5 +1,5 @@
 const { createTokens, validateToken } = require("../JWT");
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { test_acad_year } = new PrismaClient();
@@ -200,8 +200,8 @@ router.post("/student", validateToken, async (req, res) => {
         });
       }
     });**/
-    
-  /** try {
+
+/** try {
       const comment = await prisma.comments.create({
         data: {
           message: req.body.message,
