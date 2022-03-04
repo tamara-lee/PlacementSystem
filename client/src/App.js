@@ -6,6 +6,7 @@ import FAQ from "./Pages/Student/FAQ/FAQ";
 import AdminFAQ from "./Pages/Admin/AdminFAQ/AdminFAQ";
 import AddStudent from "./Pages/Admin/AddStudent/AddStudent";
 import StudentRecords from "./Pages/Admin/StudentRecords/StudentRecords";
+import EditPlacementRecord from "./Pages/Admin/StudentRecords/EditPlacementRecord";
 import EditStudentRecord from "./Pages/Admin/StudentRecords/EditStudentRecord";
 import Logout from "./Pages/Logout/Logout";
 import MyPlacementRecord from "./Pages/Student/MyPlacementRecord/MyPlacementRecord";
@@ -43,9 +44,14 @@ function App() {
           <Route exact path="/mainpage/admin" component={StudentRecords} />
           <Route
             exact
+            path="/studentrecord/admin"
+            component={EditStudentRecord}
+          />
+          <Route
+            exact
             path="/placementrecord/admin"
             component={() => (
-              <EditStudentRecord
+              <EditPlacementRecord
                 authorized={JSON.parse(localStorage.getItem("userState"))}
               />
             )}

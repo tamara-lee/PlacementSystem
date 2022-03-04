@@ -329,7 +329,7 @@ function MyPlacementRecord({ authorized }) {
                   value={salary}
                   placeholder="0.00"
                   onChange={(e) => {
-                    setPaymentType(e.target.value);
+                    setSalary(e.target.value);
                   }}
                 />
               </div>

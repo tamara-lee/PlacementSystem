@@ -29,7 +29,7 @@ function Login() {
           localStorage.setItem("userState", true);
           localStorage.setItem("userId", response.data.user_id);
           console.log("user id is " + localStorage.getItem("userId"));
-          return history.push("/myplacementrecord");
+          return history.push("/placementrecord/student");
         }
       })
       .catch((error) => {
@@ -41,7 +41,7 @@ function Login() {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {
         if (response.data === "Logged In") {
-          return history.push("/myplacementrecord");
+          return history.push("/placementrecord/student");
         } else {
           return history.push("/");
         }
