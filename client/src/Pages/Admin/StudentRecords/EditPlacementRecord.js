@@ -327,7 +327,7 @@ function EditPlacementRecord({ authorized }) {
                   value={salary}
                   placeholder="0.00"
                   onChange={(e) => {
-                    setSalaryType(e.target.value);
+                    setSalary(e.target.value);
                   }}
                 />
               </div>
