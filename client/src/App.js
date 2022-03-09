@@ -10,6 +10,7 @@ import EditPlacementRecord from "./Pages/Admin/StudentRecords/EditPlacementRecor
 import EditStudentRecord from "./Pages/Admin/StudentRecords/EditStudentRecord";
 import Logout from "./Pages/Logout/Logout";
 import MyPlacementRecord from "./Pages/Student/MyPlacementRecord/MyPlacementRecord";
+import TestFileUpload from "./Pages/Admin/StudentRecords/TestFileUpload";
 import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
 import "./global.js";
 
@@ -56,6 +57,7 @@ function App() {
               />
             )}
           />
+          <Route exact path="/testfileupload" component={TestFileUpload} />
           <Route exact path="/logout" component={Logout} />
         </Switch>
       </Routes>
