@@ -8,30 +8,38 @@ const { test_placement_year } = new PrismaClient();
 const prisma = new PrismaClient();
 const router = require("express").Router();
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./public/data/uploads/");
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.originalname); // <-- CHANGE HERE
+  },
+});
+const upload = multer({ storage });
+const fs = require("fs");
 
-router.get("/student/acadyear", async(req, res) => {
-    //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
-    
-    const acadyear = await test_acad_year.findMany();
-    res.json(acadyear);
-    });
-    
-router.post("/student/placementyear", async (req, res) => {
-    /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
-    res.json(placementyear);**/
-    const testPlacmentYear = await test_placement_year.upsert({
-      where: {placement_test_id: 1},
-      update: {placement_test_year: 2023},
-      create: {placement_test_id: 2021}
-    });
-    res.json(testPlacmentYear);
+router.get("/student/acadyear", async (req, res) => {
+  //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
+
+  const acadyear = await test_acad_year.findMany();
+  res.json(acadyear);
 });
 
-router.post("/testpage", async (req, res) => {
-  const response = res.json(req.body);
-  console.log(response)
+router.post("/student/placementyear", async (req, res) => {
+  /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
+    res.json(placementyear);**/
+  const testPlacmentYear = await test_placement_year.upsert({
+    where: { placement_test_id: 1 },
+    update: { placement_test_year: 2023 },
+    create: { placement_test_id: 2021 },
+  });
+  res.json(testPlacmentYear);
+});
 
+router.post("/testpage", upload.single("file"), async (req, res) => {
+  console.log(req.file, req.body);
 });
 
 router.post("/student", validateToken, async (req, res) => {
@@ -54,91 +62,89 @@ router.post("/student", validateToken, async (req, res) => {
   //const feedbackForm
   const feedbackComment = req.body.feedbackComment;
   const placementStatus = req.body.placementStatus;
-  
-  //const username = await placement.findUnique({ 
-  const user = await user_account.findUnique({ 
 
-    where: { 
-      //find record req.body.username in username foreign key field in placement model    
+  //const username = await placement.findUnique({
+  const user = await user_account.findUnique({
+    where: {
+      //find record req.body.username in username foreign key field in placement model
       username: req.body.username,
-     },
-    }); 
+    },
+  });
 
-  if (!user) res.status(400).json({ error: "User does not exist in the Placement System." });
-  if(res !== undefined){
-    try{
-    // do parse
-    const placmentRecord = await placement.upsert({
-      where: { 
-        student_uid: studentNumber,
-      },
-      update: {
-        //placement_year:
-        //appointment_letter:
-        //feedback_form:
-        feedback_comment: feedbackComment,
-        company_name: companyName,
-        job_title: jobTitle,
-        job_nature: jobNature,
-        //employment_duration:
-        start_date: startDate,
-        end_date: endDate,
-        working_location: location,
-        salary: salary,
-        payment_type: paymentType,
-        supervisor_name: supervisorName,
-        supervisor_telephone: supervisorPhone,
-        supervisor_email: supervisorEmail,
-        modified_by: user.username,
-        //last_modified:
-        //consent_form:
-      },
-      create: {
-        //need to extract username
-        username: user.username,
-        student_uid: studentNumber,
-        //placement_year
-        //appointment_letter
-        //feedback_form:
-        feedback_comment: feedbackComment,
-        company_name: companyName,
-        job_title: jobTitle,
-        job_nature: jobNature,
-        //employment_duration:
-        start_date: startDate,
-        end_date: endDate,
-        working_location: location,
-        salary: salary,
-        payment_type: paymentType,
-        supervisor_name: supervisorName,
-        supervisor_telephone: supervisorPhone,
-        supervisor_email: supervisorEmail,
-        modified_by: user.username,
-        //last_modified:
-        created_by: studentNumber,
-        //creation_time:
-        //consent_form:
+  if (!user)
+    res
+      .status(400)
+      .json({ error: "User does not exist in the Placement System." });
+  if (res !== undefined) {
+    try {
+      // do parse
+      const placmentRecord = await placement.upsert({
+        where: {
+          student_uid: studentNumber,
+        },
+        update: {
+          //placement_year:
+          //appointment_letter:
+          //feedback_form:
+          feedback_comment: feedbackComment,
+          company_name: companyName,
+          job_title: jobTitle,
+          job_nature: jobNature,
+          //employment_duration:
+          start_date: startDate,
+          end_date: endDate,
+          working_location: location,
+          salary: salary,
+          payment_type: paymentType,
+          supervisor_name: supervisorName,
+          supervisor_telephone: supervisorPhone,
+          supervisor_email: supervisorEmail,
+          modified_by: user.username,
+          //last_modified:
+          //consent_form:
+        },
+        create: {
+          //need to extract username
+          username: user.username,
+          student_uid: studentNumber,
+          //placement_year
+          //appointment_letter
+          //feedback_form:
+          feedback_comment: feedbackComment,
+          company_name: companyName,
+          job_title: jobTitle,
+          job_nature: jobNature,
+          //employment_duration:
+          start_date: startDate,
+          end_date: endDate,
+          working_location: location,
+          salary: salary,
+          payment_type: paymentType,
+          supervisor_name: supervisorName,
+          supervisor_telephone: supervisorPhone,
+          supervisor_email: supervisorEmail,
+          modified_by: user.username,
+          //last_modified:
+          created_by: studentNumber,
+          //creation_time:
+          //consent_form:
+        },
+      });
 
-      }
-    });
-
-    res.json(placmentRecord);
-
+      res.json(placmentRecord);
+    } catch (error) {
+      console.error("Not a JSON response");
+      console.log(error);
     }
-    catch(error){
-        console.error("Not a JSON response")
-        console.log(error)
-    }
-}
+  }
 
-//to handle pdf upload
-//https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
+  //to handle pdf upload
+  //https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
 
-//to hand accessing of pdf files in express
-//https://expressjs.com/en/starter/static-files.html
+  //to hand accessing of pdf files in express
+  //https://expressjs.com/en/starter/static-files.html
 
-
- /** try{
+  /** try{
     const placmentRecord = await placement.upsert({
       where: { 
         student_uid: studentNumber,
@@ -197,11 +203,7 @@ router.post("/student", validateToken, async (req, res) => {
   } catch (e){
     res.status(400).send({ message: "Invalid placement record!" });
   }**/
-
-
 });
-
-    
 
 /**router.post("/student", validateToken, async (req, res) => {
      

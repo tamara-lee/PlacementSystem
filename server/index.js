@@ -6,6 +6,9 @@ const app = express();
 //const db = require("./models");
 //const { UsersTest } = require("./models");
 //const { Student } = require("./models");
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const fs = require("fs");
 
 //Prisma
 /**const { PrismaClient } = require('@prisma/client')
@@ -20,6 +23,8 @@ const { createTokens, validateToken } = require("./JWT");
 //automatically parse every json object from the frontend
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   cors({
@@ -36,7 +41,6 @@ const placementRouter = require("./routes/placementrecord");
 //app.use("/", authRouter);
 app.use("/auth", authRouter);
 app.use("/placementrecord", placementRouter);
-
 
 /**app.get("/login", validateToken, (req, res) => {
   res.json("Logged In");
@@ -90,7 +94,7 @@ app.get("/home", validateToken, (req, res) => {
 
 app.listen(3001, () => {
   console.log("Server running on port 3001");
-})
+});
 
 /**db.sequelize.sync().then(() => {
   app.listen(3001, () => {
