@@ -1,3 +1,4 @@
+const express = require("express");
 const { createTokens, validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
@@ -7,6 +8,7 @@ const { test_placement_year } = new PrismaClient();
 const prisma = new PrismaClient();
 const router = require("express").Router();
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 router.get("/student/acadyear", async(req, res) => {
     //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
@@ -24,6 +26,12 @@ router.post("/student/placementyear", async (req, res) => {
       create: {placement_test_id: 2021}
     });
     res.json(testPlacmentYear);
+});
+
+router.post("/testpage", async (req, res) => {
+  const response = res.json(req.body);
+  console.log(response)
+
 });
 
 router.post("/student", validateToken, async (req, res) => {
@@ -51,7 +59,7 @@ router.post("/student", validateToken, async (req, res) => {
   const user = await user_account.findUnique({ 
 
     where: { 
-      //find record req.body.username in username foreign key field in placement model
+      //find record req.body.username in username foreign key field in placement model    
       username: req.body.username,
      },
     }); 
@@ -65,8 +73,8 @@ router.post("/student", validateToken, async (req, res) => {
         student_uid: studentNumber,
       },
       update: {
-        //placement_year
-        //appointment_letter
+        //placement_year:
+        //appointment_letter:
         //feedback_form:
         feedback_comment: feedbackComment,
         company_name: companyName,
@@ -122,6 +130,12 @@ router.post("/student", validateToken, async (req, res) => {
         console.log(error)
     }
 }
+
+//to handle pdf upload
+//https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
+
+//to hand accessing of pdf files in express
+//https://expressjs.com/en/starter/static-files.html
 
 
  /** try{
