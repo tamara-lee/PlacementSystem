@@ -11,6 +11,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import "./style.css";
+import Axios from "axios";
 
 function AddStudent({ authorized }) {
   const [name, setName] = useState("");
@@ -47,13 +48,26 @@ function AddStudent({ authorized }) {
   };
   const handleUpload = (e) => {
     if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
-      alert(`The following is the data you want to submit:
-            Name: ${name}
-            University Number: ${universityNumber}
-            Curriculum: ${curriculum}
-            Academic Year: ${academicYear}
-            Placement Year: ${placementYear}
-    `);
+      //   alert(`The following is the data you want to submit:
+      //         Name: ${name}
+      //         University Number: ${universityNumber}
+      //         Curriculum: ${curriculum}
+      //         Academic Year: ${academicYear}
+      //         Placement Year: ${placementYear}
+      // `);
+      Axios.post("http://localhost:3001/addstudents/admin", {
+        name: name,
+        universityNumber: universityNumber,
+        curriculum: curriculum,
+        academicYear: academicYear,
+        placementYear: placementYear,
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       alert(
         `There is an error in the form. Please make sure there are no error messages before submitting!`
