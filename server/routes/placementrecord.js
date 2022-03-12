@@ -11,10 +11,19 @@ const cors = require("cors");
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, "./public/data/uploads/");
+    if (file.fieldname === "appointment") {
+      // if uploading resume
+      callback(null, "./server/upload/appointment");
+    } else if (file.fieldname === "consent") {
+      // else uploading image
+      callback(null, "./server/upload/consent");
+    } else if (file.fieldname === "feedback") {
+      // else uploading image
+      callback(null, "./server/upload/feedback");
+    }
   },
   filename: function (req, file, callback) {
-    callback(null, file.originalname); // <-- CHANGE HERE
+    callback(null, file.originalname);
   },
 });
 const upload = multer({ storage });
@@ -38,9 +47,26 @@ router.post("/student/placementyear", async (req, res) => {
   res.json(testPlacmentYear);
 });
 
-router.post("/testpage", upload.single("file"), async (req, res) => {
-  console.log(req.file, req.body);
-});
+router.post(
+  "/testpage",
+  upload.fields([
+    {
+      name: "appointment",
+      maxCount: 1,
+    },
+    {
+      name: "consent",
+      maxCount: 1,
+    },
+    {
+      name: "feedback",
+      maxCount: 1,
+    },
+  ]),
+  async (req, res) => {
+    // console.log(req.file, req.body);
+  }
+);
 
 router.post("/student", validateToken, async (req, res) => {
   const studentName = req.body.studentName;
