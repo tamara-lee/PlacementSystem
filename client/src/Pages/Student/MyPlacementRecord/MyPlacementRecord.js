@@ -25,7 +25,7 @@ function MyPlacementRecord({ authorized }) {
   const history = useHistory();
   Axios.defaults.withCredentials = true;
   useEffect(() => {
-    Axios.get("http://localhost:3001/login")
+    Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
       .catch((error) => {
         console.log(error.response);

@@ -25,10 +25,10 @@ function Login() {
     })
       .then((response) => {
         if (response.data.login_status === "Logged In") {
-          // console.log(response);
           localStorage.setItem("userState", true);
-          localStorage.setItem("userId", response.data.user_id);
-          console.log("user id is " + localStorage.getItem("userId"));
+          localStorage.setItem("userUid", response.data.account_uid);
+          localStorage.setItem("username", response.data.account_username);
+
           return history.push("/placementrecord/student");
         }
       })

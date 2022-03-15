@@ -37,6 +37,7 @@ function EditPlacementRecord({ authorized }) {
         }
       });
   }, []);
+  // console.log("user id is " + localStorage.getItem("userId"));
   // sample text
   const [studentName, setStudentName] = useState("John Doe");
   const [studentNumber, setStudentNumber] = useState("3031110000");
@@ -52,9 +53,9 @@ function EditPlacementRecord({ authorized }) {
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
-  const [consentForm, setConsentForm] = useState("");
-  const [appointmentLetter, setAppointmentLetter] = useState("");
-  const [feedbackForm, setFeedbackForm] = useState("");
+  const [consentForm, setConsentForm] = useState();
+  const [appointmentLetter, setAppointmentLetter] = useState();
+  const [feedbackForm, setFeedbackForm] = useState();
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
@@ -160,27 +161,41 @@ function EditPlacementRecord({ authorized }) {
   };
   const submitForm = () => {
     console.log("Submit button clicked!");
-    Axios.post("http://localhost:3001/myplacementrecord", {
-      studentName: studentName,
-      studentNumber: studentNumber,
-      studentCurriculum: studentCurriculum,
-      companyName: companyName,
-      jobTitle: jobTitle,
-      jobNature: jobNature,
-      startDate: startDate,
-      endDate: endDate,
-      location: location,
-      paymentType: paymentType,
-      salary: salary,
-      supervisorName: supervisorName,
-      supervisorPhone: supervisorPhone,
-      supervisorEmail: supervisorEmail,
-      appointmentLetter: appointmentLetter,
-      consentForm: consentForm,
-      feedbackForm: feedbackForm,
-      feedbackComment: feedbackComment,
-      placementStatus: placementStatus,
-    })
+
+    const formData = new FormData();
+
+    formData.append("appointment", appointmentLetter, appointmentLetter.name);
+    formData.append("consent", consentForm, consentForm.name);
+    formData.append("feedback", feedbackForm, feedbackForm.name);
+
+    Axios.post(
+      "http://localhost:3001/placementrecord/student",
+      {
+        username: localStorage.getItem("username"),
+        studentName: studentName,
+        studentNumber: studentNumber,
+        studentCurriculum: studentCurriculum,
+        companyName: companyName,
+        jobTitle: jobTitle,
+        jobNature: jobNature,
+        startDate: startDate,
+        endDate: endDate,
+        location: location,
+        paymentType: paymentType,
+        salary: salary,
+        supervisorName: supervisorName,
+        supervisorPhone: supervisorPhone,
+        supervisorEmail: supervisorEmail,
+        feedbackComment: feedbackComment,
+        placementStatus: placementStatus,
+        formData,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    )
       .then((response) => {
         console.log(response.data);
         // if (response.data === "Successfully submitted") {
@@ -438,7 +453,7 @@ function EditPlacementRecord({ authorized }) {
                     value={consentForm}
                     onChange={function (e) {
                       setConsentFormMsg(e.target.files[0].name);
-                      setConsentForm(e.target.files[0].name); //filename only
+                      setConsentForm(e.target.files[0]);
                     }}
                   />
                 </div>
@@ -452,7 +467,7 @@ function EditPlacementRecord({ authorized }) {
                     value={appointmentLetter}
                     onChange={function (e) {
                       setAppointmentFileMsg(e.target.files[0].name);
-                      setAppointmentLetter(e.target.files[0].name); //filename only
+                      setAppointmentLetter(e.target.files[0]);
                     }}
                   />
                 </div>
@@ -466,7 +481,7 @@ function EditPlacementRecord({ authorized }) {
                     value={feedbackForm}
                     onChange={function (e) {
                       setFeedbackFileMsg(e.target.files[0].name);
-                      setFeedbackForm(e.target.files[0].name);
+                      setFeedbackForm(e.target.files[0]);
                     }}
                   />
                 </div>
