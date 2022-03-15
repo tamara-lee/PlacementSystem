@@ -76,15 +76,9 @@ function EditPlacementRecord({ authorized }) {
   const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
   const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
 
-  const [consentFormMsg, setConsentFormMsg] = useState(
-    "or drag and drop file here"
-  );
-  const [appointmentFileMsg, setAppointmentFileMsg] = useState(
-    "or drag and drop file here"
-  );
-  const [feedbackFileMsg, setFeedbackFileMsg] = useState(
-    "or drag and drop file here"
-  );
+  const [consentFormName, setConsentFormName] = useState("");
+  const [appointmentLetterName, setAppointmentLetterName] = useState("");
+  const [feedbackFormName, setFeedbackFormName] = useState("");
 
   // Remark states
   const dummy = useRef();
@@ -131,6 +125,21 @@ function EditPlacementRecord({ authorized }) {
     } else {
       return false;
     }
+  };
+
+  const consentFormHandler = (e) => {
+    setConsentForm(e.target.files[0]);
+    setConsentFormName(e.target.files[0].name);
+  };
+
+  const appointmentLetterHandler = (e) => {
+    setAppointmentLetter(e.target.files[0]);
+    setAppointmentLetterName(e.target.files[0].name);
+  };
+
+  const feedbackFormHandler = (e) => {
+    setFeedbackForm(e.target.files[0]);
+    setFeedbackFormName(e.target.files[0].name);
   };
 
   const getForm = () => {
@@ -446,43 +455,46 @@ function EditPlacementRecord({ authorized }) {
                 <label htmlFor="consentForm">CONSENT FORM</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
-                  <span className="file-msg">{consentFormMsg}</span>
+                  <span className="file-msg">
+                    {consentFormName != ""
+                      ? consentFormName
+                      : "or drag and drop file here"}
+                  </span>
                   <input
                     type="file"
                     id="consentForm"
-                    value={consentForm}
-                    onChange={function (e) {
-                      setConsentFormMsg(e.target.files[0].name);
-                      setConsentForm(e.target.files[0]);
-                    }}
+                    name="consent"
+                    onChange={consentFormHandler}
                   />
                 </div>
                 <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
-                  <span className="file-msg">{appointmentFileMsg}</span>
+                  <span className="file-msg">
+                    {appointmentLetterName != ""
+                      ? appointmentLetterName
+                      : "or drag and drop file here"}
+                  </span>
                   <input
                     type="file"
                     id="appointmentLetter"
-                    value={appointmentLetter}
-                    onChange={function (e) {
-                      setAppointmentFileMsg(e.target.files[0].name);
-                      setAppointmentLetter(e.target.files[0]);
-                    }}
+                    name="appointment"
+                    onChange={appointmentLetterHandler}
                   />
                 </div>
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
-                  <span className="file-msg">{feedbackFileMsg}</span>
+                  <span className="file-msg">
+                    {feedbackFormName != ""
+                      ? feedbackFormName
+                      : "or drag and drop file here"}
+                  </span>
                   <input
                     type="file"
                     id="feedbackForm"
-                    value={feedbackForm}
-                    onChange={function (e) {
-                      setFeedbackFileMsg(e.target.files[0].name);
-                      setFeedbackForm(e.target.files[0]);
-                    }}
+                    name="feedback"
+                    onChange={feedbackFormHandler}
                   />
                 </div>
 
