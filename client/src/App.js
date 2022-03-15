@@ -12,7 +12,6 @@ import Logout from "./Pages/Logout/Logout";
 import MyPlacementRecord from "./Pages/Student/MyPlacementRecord/MyPlacementRecord";
 import TestFileUpload from "./Pages/Admin/StudentRecords/TestFileUpload";
 import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
-import "./global.js";
 
 function App() {
   return (

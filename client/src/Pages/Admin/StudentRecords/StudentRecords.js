@@ -27,17 +27,17 @@ import { useHistory } from "react-router-dom";
 import studentRecords from "../../../mock data/test_data.json";
 import tableRecords from "../../../mock data/records.json";
 
-Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
-  (response) => {
-    console.log(response);
-  }
-);
-Axios.get(
-  "http://localhost:3001/placementrecord/student/placementyear",
-  {}
-).then((response) => {
-  console.log(response);
-});
+// Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
+//   (response) => {
+//     console.log(response);
+//   }
+// );
+// Axios.get(
+//   "http://localhost:3001/placementrecord/student/placementyear",
+//   {}
+// ).then((response) => {
+//   console.log(response);
+// });
 
 // get json of all student records
 // get json of all placement records
