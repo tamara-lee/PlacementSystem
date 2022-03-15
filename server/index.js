@@ -37,10 +37,14 @@ app.use(
 //route handling
 const authRouter = require("./routes/auth");
 const placementRouter = require("./routes/placementrecord");
+const addStudentsRouter = require("./routes/addstudents");
+
 
 //app.use("/", authRouter);
 app.use("/auth", authRouter);
 app.use("/placementrecord", placementRouter);
+app.use("/addstudents", addStudentsRouter);
+
 
 /**app.get("/login", validateToken, (req, res) => {
   res.json("Logged In");
