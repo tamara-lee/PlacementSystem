@@ -14,6 +14,14 @@ import { IconContext } from "react-icons";
 import { IoIosInformationCircle } from "react-icons/io";
 import "../../../global.js";
 
+// for pop-ups
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 const Container = styled.div`
   justify-content: center;
   margin: 1.2rem 3rem 2rem 3rem;
@@ -64,6 +72,12 @@ function EditPlacementRecord({ authorized }) {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
+  const [openError, setOpenError] = React.useState(false);
+
+  const handleClose = () => {
+    setOpenError(false);
+  };
+
   // test chat messages
   const [msg1, setMsg1] = useState(
     "Job nature is not detailed enough. Please add more information."
@@ -75,8 +89,6 @@ function EditPlacementRecord({ authorized }) {
   const [createTime, setCreateTime] = useState(Date().toLocaleString());
 
   // states
-  const [showModal, setShowModal] = useState(false);
-
   const [showSupervisorText, setShowSupervisorText] = useState(false);
   const [showCommentText, setShowCommentText] = useState(false);
   const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
@@ -112,10 +124,6 @@ function EditPlacementRecord({ authorized }) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
-
-  const openModal = () => {
-    setShowModal((prev) => !prev);
-  };
 
   const checkEmail = (e) => {
     if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(e)) {
@@ -179,48 +187,56 @@ function EditPlacementRecord({ authorized }) {
   const submitForm = () => {
     console.log("Submit button clicked!");
 
-    const formData = new FormData();
+    if (showEmailErrorMsg || showTelephoneErrorMsg) {
+      setOpenError(true);
+    } else {
+      const formData = new FormData();
 
-    if (appointmentLetter) {
-      formData.append("appointment", appointmentLetter, appointmentLetter.name);
-    }
-    if (consentForm) {
-      formData.append("consent", consentForm, consentForm.name);
-    }
-    if (feedbackForm) {
-      formData.append("feedback", feedbackForm, feedbackForm.name);
-    }
+      if (appointmentLetter) {
+        formData.append(
+          "appointment",
+          appointmentLetter,
+          appointmentLetter.name
+        );
+      }
+      if (consentForm) {
+        formData.append("consent", consentForm, consentForm.name);
+      }
+      if (feedbackForm) {
+        formData.append("feedback", feedbackForm, feedbackForm.name);
+      }
 
-    console.log("username is " + localStorage.getItem("username"));
-    Axios.post("http://localhost:3001/placementrecord/student", {
-      username: localStorage.getItem("username"),
-      studentName: studentName,
-      studentNumber: studentNumber,
-      studentCurriculum: studentCurriculum,
-      companyName: companyName,
-      jobTitle: jobTitle,
-      jobNature: jobNature,
-      startDate: startDate,
-      endDate: endDate,
-      location: location,
-      paymentType: paymentType,
-      salary: salary,
-      supervisorName: supervisorName,
-      supervisorPhone: supervisorPhone,
-      supervisorEmail: supervisorEmail,
-      feedbackComment: feedbackComment,
-      placementStatus: placementStatus,
-      formData,
-    })
-      .then((response) => {
-        console.log(response.data);
-        // if (response.data === "Successfully submitted") {
-        //   console.log(response.data);
-        // }
+      console.log("username is " + localStorage.getItem("username"));
+      Axios.post("http://localhost:3001/placementrecord/student", {
+        username: localStorage.getItem("username"),
+        studentName: studentName,
+        studentNumber: studentNumber,
+        studentCurriculum: studentCurriculum,
+        companyName: companyName,
+        jobTitle: jobTitle,
+        jobNature: jobNature,
+        startDate: startDate,
+        endDate: endDate,
+        location: location,
+        paymentType: paymentType,
+        salary: salary,
+        supervisorName: supervisorName,
+        supervisorPhone: supervisorPhone,
+        supervisorEmail: supervisorEmail,
+        feedbackComment: feedbackComment,
+        placementStatus: placementStatus,
+        formData,
       })
-      .catch((error) => {
-        console.log(error.response);
-      });
+        .then((response) => {
+          console.log(response.data);
+          // if (response.data === "Successfully submitted") {
+          //   console.log(response.data);
+          // }
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    }
   };
 
   getForm();
@@ -586,10 +602,27 @@ function EditPlacementRecord({ authorized }) {
           Save & Submit
         </button>
 
-        <AppointmentLetterModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-        />
+        <Dialog
+          open={openError}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Unable to submit form!"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Please make sure all information have been entered correctly and
+              no error messages if showing before submitting this form.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );
