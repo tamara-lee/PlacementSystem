@@ -465,8 +465,8 @@ function MyPlacementRecord({ authorized }) {
                   </span>
                   <input
                     type="file"
+                    name="consent"
                     id="consentForm"
-                    value={consentForm}
                     onChange={consentFormHandler}
                   />
                 </div>
@@ -480,8 +480,8 @@ function MyPlacementRecord({ authorized }) {
                   </span>
                   <input
                     type="file"
+                    name="appointment"
                     id="appointmentLetter"
-                    value={appointmentLetter}
                     onChange={appointmentLetterHandler}
                   />
                 </div>
@@ -495,8 +495,8 @@ function MyPlacementRecord({ authorized }) {
                   </span>
                   <input
                     type="file"
+                    name="feedback"
                     id="feedbackForm"
-                    value={feedbackForm}
                     onChange={feedbackFormHandler}
                   />
                 </div>
