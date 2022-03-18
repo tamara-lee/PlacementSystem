@@ -3,8 +3,6 @@ import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NavBar from "../../../components/NavBar/NavBar";
-import Navbar from "../../../components/NavBar/index";
 import NavigationBar from "../../../components/NavBar/NavBar";
 import { Redirect } from "react-router-dom";
 import "./style.css";
@@ -39,10 +37,14 @@ function MyPlacementRecord({ authorized }) {
         }
       });
   }, []);
+
   // sample text
-  const [studentName, setStudentName] = useState("John Doe");
-  const [studentNumber, setStudentNumber] = useState("3031110000");
-  const [studentCurriculum, setStudentCurriculum] = useState("BEng (CompSc)");
+  // const [studentName, setStudentName] = useState("John Doe");
+  // const [studentNumber, setStudentNumber] = useState("3031110000");
+  // const [studentCurriculum, setStudentCurriculum] = useState("BEng(CompSc)");
+  const [studentName, setStudentName] = useState("");
+  const [studentNumber, setStudentNumber] = useState("");
+  const [studentCurriculum, setStudentCurriculum] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobNature, setJobNature] = useState("");
@@ -54,12 +56,13 @@ function MyPlacementRecord({ authorized }) {
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
-  const [consentForm, setConsentForm] = useState("");
-  const [appointmentLetter, setAppointmentLetter] = useState("");
-  const [feedbackForm, setFeedbackForm] = useState("");
+  const [consentForm, setConsentForm] = useState();
+  const [appointmentLetter, setAppointmentLetter] = useState();
+  const [feedbackForm, setFeedbackForm] = useState();
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
+  // test chat messages
   const [msg1, setMsg1] = useState(
     "Job nature is not detailed enough. Please add more information."
   );
@@ -77,15 +80,9 @@ function MyPlacementRecord({ authorized }) {
   const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
   const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
 
-  const [consentFormMsg, setConsentFormMsg] = useState(
-    "or drag and drop file here"
-  );
-  const [appointmentFileMsg, setAppointmentFileMsg] = useState(
-    "or drag and drop file here"
-  );
-  const [feedbackFileMsg, setFeedbackFileMsg] = useState(
-    "or drag and drop file here"
-  );
+  const [consentFormName, setConsentFormName] = useState("");
+  const [appointmentLetterName, setAppointmentLetterName] = useState("");
+  const [feedbackFormName, setFeedbackFormName] = useState("");
 
   // Remark states
   const dummy = useRef();
@@ -134,27 +131,43 @@ function MyPlacementRecord({ authorized }) {
     }
   };
 
+  const consentFormHandler = (e) => {
+    setConsentForm(e.target.files[0]);
+    setConsentFormName(e.target.files[0].name);
+  };
+
+  const appointmentLetterHandler = (e) => {
+    setAppointmentLetter(e.target.files[0]);
+    setAppointmentLetterName(e.target.files[0].name);
+  };
+
+  const feedbackFormHandler = (e) => {
+    setFeedbackForm(e.target.files[0]);
+    setFeedbackFormName(e.target.files[0].name);
+  };
+
   const getForm = () => {
     Axios.get("http://localhost:3001/placementrecord/student")
-      .then((response) => {
-        setStudentName(response.data.studentName);
-        setStudentNumber(response.data.studentNumber);
-        setStudentCurriculum(response.data.studentCurriculum);
-        setCompanyName(response.data.companyName);
-        setJobTitle(response.data.jobTitle);
-        setJobNature(response.data.jobNature);
-        setStartDate(response.data.startDate);
-        setEndDate(response.data.endDate);
-        setLocation(response.data.location);
-        setPaymentType(response.data.paymentType);
-        setSalary(response.data.salary);
-        setSupervisorName(response.data.supervisorName);
-        setSupervisorPhone(response.data.supervisorPhone);
-        setSupervisorEmail(response.data.supervisorEmail);
-        setAppointmentLetter(response.data.appointmentLetter);
-        setFeedbackForm(response.data.feedbackForm);
-        setFeedbackComment(response.data.feedbackComment);
-        setPlacementStatus(response.data.placementStatus);
+      .then((res) => {
+        setStudentName(res.data.studentName);
+        setStudentNumber(res.data.studentNumber);
+        setStudentCurriculum(res.data.studentCurriculum);
+        setCompanyName(res.data.companyName);
+        setJobTitle(res.data.jobTitle);
+        setJobNature(res.data.jobNature);
+        setStartDate(res.data.startDate);
+        setEndDate(res.data.endDate);
+        setLocation(res.data.location);
+        setPaymentType(res.data.paymentType);
+        setSalary(res.data.salary);
+        setSupervisorName(res.data.supervisorName);
+        setSupervisorPhone(res.data.supervisorPhone);
+        setSupervisorEmail(res.data.supervisorEmail);
+        setConsentForm(res.data.consentForm);
+        setAppointmentLetter(res.data.appointmentLetter);
+        setFeedbackForm(res.data.feedbackForm);
+        setFeedbackComment(res.data.feedbackComment);
+        setPlacementStatus(res.data.placementStatus);
       })
       .catch((error) => {
         console.log(error.response);
@@ -162,7 +175,22 @@ function MyPlacementRecord({ authorized }) {
   };
   const submitForm = () => {
     console.log("Submit button clicked!");
+
+    const formData = new FormData();
+
+    if (appointmentLetter) {
+      formData.append("appointment", appointmentLetter, appointmentLetter.name);
+    }
+    if (consentForm) {
+      formData.append("consent", consentForm, consentForm.name);
+    }
+    if (feedbackForm) {
+      formData.append("feedback", feedbackForm, feedbackForm.name);
+    }
+
+    console.log("username is " + localStorage.getItem("username"));
     Axios.post("http://localhost:3001/placementrecord/student", {
+      username: localStorage.getItem("username"),
       studentName: studentName,
       studentNumber: studentNumber,
       studentCurriculum: studentCurriculum,
@@ -177,11 +205,9 @@ function MyPlacementRecord({ authorized }) {
       supervisorName: supervisorName,
       supervisorPhone: supervisorPhone,
       supervisorEmail: supervisorEmail,
-      appointmentLetter: appointmentLetter,
-      consentForm: consentForm,
-      feedbackForm: feedbackForm,
       feedbackComment: feedbackComment,
       placementStatus: placementStatus,
+      formData,
     })
       .then((response) => {
         console.log(response.data);
@@ -193,10 +219,11 @@ function MyPlacementRecord({ authorized }) {
         console.log(error.response);
       });
   };
+
   getForm();
+
   return (
     <>
-      {/* <Navbar /> */}
       <NavigationBar />
       <Container>
         <form>
@@ -355,8 +382,6 @@ function MyPlacementRecord({ authorized }) {
                   )}
                 </p>
               </IconContext.Provider>
-
-              {/* <p>Test</p> */}
               <div className="container">
                 <label htmlFor="supervisorName">NAME</label>
                 <input
@@ -433,43 +458,46 @@ function MyPlacementRecord({ authorized }) {
                 <label htmlFor="consentForm">CONSENT FORM</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
-                  <span className="file-msg">{consentFormMsg}</span>
+                  <span className="file-msg">
+                    {consentFormName != ""
+                      ? consentFormName
+                      : "or drag and drop file here"}
+                  </span>
                   <input
                     type="file"
                     id="consentForm"
                     value={consentForm}
-                    onChange={function (e) {
-                      setConsentFormMsg(e.target.files[0].name);
-                      setConsentForm(e.target.files[0].name); //filename only
-                    }}
+                    onChange={consentFormHandler}
                   />
                 </div>
                 <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
-                  <span className="file-msg">{appointmentFileMsg}</span>
+                  <span className="file-msg">
+                    {appointmentLetterName != ""
+                      ? appointmentLetterName
+                      : "or drag and drop file here"}
+                  </span>
                   <input
                     type="file"
                     id="appointmentLetter"
                     value={appointmentLetter}
-                    onChange={function (e) {
-                      setAppointmentFileMsg(e.target.files[0].name);
-                      setAppointmentLetter(e.target.files[0].name); //filename only
-                    }}
+                    onChange={appointmentLetterHandler}
                   />
                 </div>
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
-                  <span className="file-msg">{feedbackFileMsg}</span>
+                  <span className="file-msg">
+                    {feedbackFormName != ""
+                      ? feedbackFormName
+                      : "or drag and drop file here"}
+                  </span>
                   <input
                     type="file"
                     id="feedbackForm"
                     value={feedbackForm}
-                    onChange={function (e) {
-                      setFeedbackFileMsg(e.target.files[0].name);
-                      setFeedbackForm(e.target.files[0].name);
-                    }}
+                    onChange={feedbackFormHandler}
                   />
                 </div>
 

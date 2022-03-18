@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import { Redirect } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -24,6 +24,16 @@ import Link from "@mui/material/Link";
 import Axios from "axios";
 import { useHistory } from "react-router-dom";
 
+// for pop-up
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 import studentRecords from "../../../mock data/test_data.json";
 import tableRecords from "../../../mock data/records.json";
 
@@ -45,6 +55,58 @@ import tableRecords from "../../../mock data/records.json";
 function StudentRecords({ authorized }) {
   const history = useHistory();
 
+  // let records = tableRecords;
+
+  const [open, setOpen] = React.useState(false);
+  const [acadYear, setAcadYear] = useState("");
+  const [placementYear, setPlacementYear] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [recentlyUpdated, setRecentlyUpdated] = useState(false);
+  const [records, setRecords] = useState(tableRecords);
+  const [filteredRecords, setFilteredRecords] = useState(tableRecords);
+  const [sortRecentlyUpdated, setSortRecentlyUpdated] = useState([]);
+
+  const [rows, setRows] = useState(
+    Object.keys(records).map((element) =>
+      createData(
+        records[element]["student_uid"],
+        records[element]["english_name"],
+        records[element]["username"],
+        records[element]["curriculum"],
+        records[element]["placement_status"]
+      )
+    )
+  );
+
+  const fields = [
+    {
+      placement_id: "Placement ID",
+      placement_year: "Placement Year",
+      acad_year: "Academic Year",
+      username: "Username",
+      student_uid: "Student UID",
+      english_name: "Student Name",
+      curriculum: "Curriculum",
+      job_title: "Job Title",
+      company_name: "Company Name",
+      job_nature: "Job Nature",
+      start_date: "Start Date",
+      end_date: "End Date",
+      employment_duration: "Employment Duration",
+      working_location: "Working Location",
+      payment_type: "Payment Type",
+      salary: "Salary",
+      supervisor_name: "Supervisor Name",
+      supervisor_telephone: "Supervisor Telephone",
+      supervisor_email: "Supervisor Email",
+      consent_form: "Consent Form (Uploaded: Yes/No)",
+      appointment_letter: "Appointment Letter (Uploaded: Yes/No)",
+      feedback_form: "Feedback Form (Uploaded: Yes/No)",
+      feedback_comment: "Feedback Comment",
+      placement_status: "Placement Status",
+    },
+  ];
+
   function createData(
     student_uid,
     english_name,
@@ -61,21 +123,6 @@ function StudentRecords({ authorized }) {
     };
   }
 
-  const [acadYear, setAcadYear] = useState("");
-  const [placementYear, setPlacementYear] = useState("");
-
-  const rows = Object.keys(tableRecords).map((element) =>
-    createData(
-      tableRecords[element]["student_uid"],
-      tableRecords[element]["english_name"],
-      tableRecords[element]["username"],
-      tableRecords[element]["curriculum"],
-      tableRecords[element]["placement_status"]
-    )
-  );
-
-  const [searchTerm, setSearchTerm] = useState("");
-
   // Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
   //   (response) => {
   //     console.log(response);
@@ -86,7 +133,6 @@ function StudentRecords({ authorized }) {
   //     console.log(response);
   //   }
   // );
-
   const acadYears = [
     ...new Set(
       Object.keys(studentRecords).map(
@@ -103,13 +149,88 @@ function StudentRecords({ authorized }) {
     ),
   ];
 
-  const handleExport = (e) => {
-    alert("Export button clicked");
+  // ADD API
+  // Axios.get("http://localhost:3001/{}}").then((response) => {
+  //   console.log(response);
+  // });
+
+  function sortAlphabetically() {
+    // records = tableRecords;
+    // records.sort(function (a, b) {
+    //   return a.english_name < b.english_name
+    //     ? -1
+    //     : a.english_name > b.english_name
+    //     ? 1
+    //     : 0;
+    // });
+    // setRecords(tableRecords);
+    filteredRecords.sort(function (a, b) {
+      return a.english_name < b.english_name
+        ? -1
+        : a.english_name > b.english_name
+        ? 1
+        : 0;
+    });
+  }
+
+  acadYears.sort();
+  placementYears.sort();
+  sortAlphabetically();
+
+  const handleAcadYear = (e) => {
+    setAcadYear(e.target.value);
+    if (placementYear == "") {
+      setFilteredRecords(
+        records.filter(function (data) {
+          return data.acad_year == e.target.value;
+        })
+      );
+    } else {
+      setFilteredRecords(
+        records.filter(function (data) {
+          return (
+            data.acad_year == e.target.value &&
+            data.placement_year == placementYear
+          );
+        })
+      );
+    }
   };
 
+  const handlePlacementYear = (e) => {
+    setPlacementYear(e.target.value);
+    if (acadYear == "") {
+      setFilteredRecords(
+        records.filter(function (data) {
+          return data.placement_year == e.target.value;
+        })
+      );
+    } else {
+      setFilteredRecords(
+        records.filter(function (data) {
+          return (
+            data.placement_year == e.target.value && data.acad_year == acadYear
+          );
+        })
+      );
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log("Do something after counter has changed", placementYear);
+  // }, [placementYear]);
   const handleRecentlyUpdated = (e) => {
+    // records.sort(function (a, b) {
+    //   return a.last_modified < b.last_modified
+    //     ? -1
+    //     : a.last_modified > b.last_modified
+    //     ? 1
+    //     : 0;
+    // });
     alert("Recently Updated button clicked");
   };
+
+  const selectAll = (e) => {};
 
   const handleStudent = (e) => {
     return history.push("/studentrecord/admin");
@@ -118,6 +239,64 @@ function StudentRecords({ authorized }) {
   const handlePlacement = (e) => {
     return history.push("/placementrecord/admin");
   };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    alert(e.target.value);
+  };
+
+  const resetFilters = () => {
+    // alert("Default button clicked! This button is used to reset the filters!");
+    setAcadYear("");
+    setPlacementYear("");
+    setFilteredRecords(records);
+    sortAlphabetically();
+    setSearchTerm("");
+  };
+
+  useEffect(() => {
+    setAcadYear(acadYear);
+    console.log(acadYear);
+  }, [acadYear]);
+
+  useEffect(() => {
+    // console.log(records);
+    // PROBLEM WITH FILTERS ACAD AND PLACMENT
+    // console.log(acadYear);
+    // alert("Academic Year is " + acadYear);
+    // console.log(placementYear);
+    // alert("Placement Year is " + placementYear);
+    // setAcadYear(acadYear);
+    // setPlacementYear(placementYear);
+    // if (acadYear != "") {
+    //   setRecords(
+    //     tableRecords.filter(function (data) {
+    //       return data.acad_year == acadYear;
+    //     })
+    //   );
+    // }
+
+    console.log(filteredRecords);
+    setRows(
+      Object.keys(filteredRecords).map((element) =>
+        createData(
+          filteredRecords[element]["student_uid"],
+          filteredRecords[element]["english_name"],
+          filteredRecords[element]["username"],
+          filteredRecords[element]["curriculum"],
+          filteredRecords[element]["placement_status"]
+        )
+      )
+    );
+  }, [acadYear, placementYear, recentlyUpdated, searchTerm]);
 
   if (authorized === false) {
     console.log(authorized);
@@ -158,6 +337,8 @@ function StudentRecords({ authorized }) {
                   marginTop: "5px",
                   marginBottom: "10px",
                 }}
+                value={acadYear}
+                onChange={handleAcadYear}
               >
                 {Object.keys(acadYears).map((element) => (
                   <MenuItem value={acadYears[element]}>
@@ -186,6 +367,8 @@ function StudentRecords({ authorized }) {
                   marginTop: "5px",
                   marginBottom: "10px",
                 }}
+                value={placementYear}
+                onChange={handlePlacementYear}
               >
                 {Object.keys(placementYears).map((element) => (
                   <MenuItem value={placementYears[element]}>
@@ -226,13 +409,57 @@ function StudentRecords({ authorized }) {
                 marginTop: "auto",
                 marginBottom: "auto",
               }}
-              onClick={handleExport}
+              onClick={handleClickOpen}
             >
               Export
             </Button>
+            <Dialog maxWidth="xl" open={open} onClose={handleClose}>
+              <DialogTitle>Select fields to export</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Select the fields you would like to export and the relevant
+                  information will be exported in an Excel file.
+                </DialogContentText>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    checked={selectAll}
+                    label="All"
+                  />
+                  {Object.keys(fields[0]).map((element) => (
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label={fields[0][element]}
+                    />
+                  ))}
+                </FormGroup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>Export</Button>
+              </DialogActions>
+            </Dialog>
+            <Button
+              style={{
+                marginLeft: "20px",
+                marginRight: "20px",
+                width: "90px",
+                height: "2.5rem",
+                backgroundColor: "#f2f2f2",
+                borderStyle: "none",
+                color: "#333333",
+                boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                fontSize: "14px",
+                marginTop: "auto",
+                marginBottom: "auto",
+              }}
+              onClick={resetFilters}
+            >
+              Default
+            </Button>
             <TextField
               id="filled-search"
-              label="Search field"
+              label="Search..."
               type="search"
               variant="filled"
               style={{
@@ -242,6 +469,8 @@ function StudentRecords({ authorized }) {
                 marginTop: "auto",
                 marginBottom: "auto",
               }}
+              value={searchTerm}
+              onChange={handleSearch}
             />
           </Box>
           <TableContainer component={Paper}>

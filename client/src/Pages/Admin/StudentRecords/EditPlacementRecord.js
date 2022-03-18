@@ -37,11 +37,16 @@ function EditPlacementRecord({ authorized }) {
         }
       });
   }, []);
+
   // console.log("user id is " + localStorage.getItem("userId"));
+
   // sample text
-  const [studentName, setStudentName] = useState("John Doe");
-  const [studentNumber, setStudentNumber] = useState("3031110000");
-  const [studentCurriculum, setStudentCurriculum] = useState("BEng (CompSc)");
+  // const [studentName, setStudentName] = useState("John Doe");
+  // const [studentNumber, setStudentNumber] = useState("3031110000");
+  // const [studentCurriculum, setStudentCurriculum] = useState("BEng(CompSc)");
+  const [studentName, setStudentName] = useState("");
+  const [studentNumber, setStudentNumber] = useState("");
+  const [studentCurriculum, setStudentCurriculum] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobNature, setJobNature] = useState("");
@@ -59,6 +64,7 @@ function EditPlacementRecord({ authorized }) {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
+  // test chat messages
   const [msg1, setMsg1] = useState(
     "Job nature is not detailed enough. Please add more information."
   );
@@ -144,25 +150,26 @@ function EditPlacementRecord({ authorized }) {
 
   const getForm = () => {
     Axios.get("http://localhost:3001/myplacementrecord")
-      .then((response) => {
-        setStudentName(response.data.studentName);
-        setStudentNumber(response.data.studentNumber);
-        setStudentCurriculum(response.data.studentCurriculum);
-        setCompanyName(response.data.companyName);
-        setJobTitle(response.data.jobTitle);
-        setJobNature(response.data.jobNature);
-        setStartDate(response.data.startDate);
-        setEndDate(response.data.endDate);
-        setLocation(response.data.location);
-        setPaymentType(response.data.paymentType);
-        setSalary(response.data.salary);
-        setSupervisorName(response.data.supervisorName);
-        setSupervisorPhone(response.data.supervisorPhone);
-        setSupervisorEmail(response.data.supervisorEmail);
-        setAppointmentLetter(response.data.appointmentLetter);
-        setFeedbackForm(response.data.feedbackForm);
-        setFeedbackComment(response.data.feedbackComment);
-        setPlacementStatus(response.data.placementStatus);
+      .then((res) => {
+        setStudentName(res.data.studentName);
+        setStudentNumber(res.data.studentNumber);
+        setStudentCurriculum(res.data.studentCurriculum);
+        setCompanyName(res.data.companyName);
+        setJobTitle(res.data.jobTitle);
+        setJobNature(res.data.jobNature);
+        setStartDate(res.data.startDate);
+        setEndDate(res.data.endDate);
+        setLocation(res.data.location);
+        setPaymentType(res.data.paymentType);
+        setSalary(res.data.salary);
+        setSupervisorName(res.data.supervisorName);
+        setSupervisorPhone(res.data.supervisorPhone);
+        setSupervisorEmail(res.data.supervisorEmail);
+        setConsentForm(res.data.consentForm);
+        setAppointmentLetter(res.data.appointmentLetter);
+        setFeedbackForm(res.data.feedbackForm);
+        setFeedbackComment(res.data.feedbackComment);
+        setPlacementStatus(res.data.placementStatus);
       })
       .catch((error) => {
         console.log(error.response);
@@ -215,10 +222,11 @@ function EditPlacementRecord({ authorized }) {
         console.log(error.response);
       });
   };
+
   getForm();
+
   return (
     <>
-      {/* <Navbar /> */}
       <NavigationBar />
       <Container>
         <div className="row">
@@ -376,8 +384,6 @@ function EditPlacementRecord({ authorized }) {
                 )}
               </p>
             </IconContext.Provider>
-
-            {/* <p>Test</p> */}
             <div className="container">
               <label htmlFor="supervisorName">NAME</label>
               <input
