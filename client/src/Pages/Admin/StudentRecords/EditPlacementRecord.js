@@ -6,13 +6,19 @@ import "react-toastify/dist/ReactToastify.css";
 import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import { Redirect } from "react-router-dom";
 import "./style.css";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import { AppointmentLetterModal } from "../../../components/Modal/AppointmentLetterModal";
 import { IconContext } from "react-icons";
 import { IoIosInformationCircle } from "react-icons/io";
 import "../../../global.js";
+import moment from "moment";
+
+// for date picker
+import TextField from "@mui/material/TextField";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateRangePicker from "@mui/lab/DateRangePicker";
 
 // for pop-ups
 import Button from "@mui/material/Button";
@@ -46,20 +52,15 @@ function EditPlacementRecord({ authorized }) {
       });
   }, []);
 
-  // console.log("user id is " + localStorage.getItem("userId"));
-
-  // sample text
-  // const [studentName, setStudentName] = useState("John Doe");
-  // const [studentNumber, setStudentNumber] = useState("3031110000");
-  // const [studentCurriculum, setStudentCurriculum] = useState("BEng(CompSc)");
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [studentCurriculum, setStudentCurriculum] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobNature, setJobNature] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [salary, setSalary] = useState("");
@@ -73,6 +74,8 @@ function EditPlacementRecord({ authorized }) {
   const [placementStatus, setPlacementStatus] = useState("");
 
   const [openError, setOpenError] = React.useState(false);
+
+  const [period, setPeriod] = React.useState([null, null]);
 
   const handleClose = () => {
     setOpenError(false);
@@ -93,6 +96,7 @@ function EditPlacementRecord({ authorized }) {
   const [showCommentText, setShowCommentText] = useState(false);
   const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
   const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
+  const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
   const [consentFormName, setConsentFormName] = useState("");
   const [appointmentLetterName, setAppointmentLetterName] = useState("");
@@ -167,6 +171,7 @@ function EditPlacementRecord({ authorized }) {
         setJobNature(res.data.jobNature);
         setStartDate(res.data.startDate);
         setEndDate(res.data.endDate);
+        setDuration(res.data.duration);
         setLocation(res.data.location);
         setPaymentType(res.data.paymentType);
         setSalary(res.data.salary);
@@ -187,7 +192,7 @@ function EditPlacementRecord({ authorized }) {
   const submitForm = () => {
     console.log("Submit button clicked!");
 
-    if (showEmailErrorMsg || showTelephoneErrorMsg) {
+    if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
     } else {
       const formData = new FormData();
@@ -217,6 +222,7 @@ function EditPlacementRecord({ authorized }) {
         jobNature: jobNature,
         startDate: startDate,
         endDate: endDate,
+        duration: duration,
         location: location,
         paymentType: paymentType,
         salary: salary,
@@ -312,14 +318,17 @@ function EditPlacementRecord({ authorized }) {
                 }}
               />
               <div className="col">
-                <label htmlFor="startDate">START DATE</label>
+                {/* <label htmlFor="startDate">START DATE</label>
                 <DatePicker
                   className="date-picker"
                   selected={startDate}
                   selectsStart
                   startDate={startDate}
                   endDate={endDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => {
+                    setStartDate(date);
+                    // updateDuration();
+                  }}
                   locale="en-GB"
                   showWeekNumbers
                   id="startDate"
@@ -333,13 +342,59 @@ function EditPlacementRecord({ authorized }) {
                   startDate={startDate}
                   endDate={endDate}
                   minDate={startDate}
-                  onChange={(date) => setEndDate(date)}
+                  onChange={(date) => (date) => {
+                    setEndDate(date);
+                    // updateDuration();
+                  }}
                   locale="en-GB"
                   showWeekNumbers
                   id="endDate"
                   value={endDate}
-                />
+                /> */}
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DateRangePicker
+                    inputFormat="dd/MM/yyyy"
+                    startText="START DATE"
+                    endText="END DATE"
+                    value={period}
+                    onChange={(newPeriod) => {
+                      setPeriod(newPeriod);
+                      const duration = moment
+                        .duration(
+                          moment(newPeriod[1]).diff(moment(newPeriod[0]))
+                        )
+                        .weeks();
+                      setDuration(duration);
+                      setStartDate(newPeriod[0]);
+                      setEndDate(newPeriod[1]);
+                      if (parseInt(duration) < 4) {
+                        setShowDurationErrorMsg(true);
+                      } else {
+                        setShowDurationErrorMsg(false);
+                      }
+                    }}
+                    renderInput={(startProps, endProps) => (
+                      <React.Fragment>
+                        <TextField {...startProps} />
+                        <div className="dateTO">TO</div>
+                        <TextField {...endProps} />
+                      </React.Fragment>
+                    )}
+                  />
+                </LocalizationProvider>
               </div>
+              <label htmlFor="duration" className="duration">
+                DURATION (WEEKS)
+              </label>
+              <input
+                className="input"
+                type="text"
+                id="duration"
+                value={duration}
+                placeholder="0"
+                maxLength="20"
+                disabled
+              />
               <label htmlFor="location">WORKING LOCATION</label>
               <input
                 className="input"

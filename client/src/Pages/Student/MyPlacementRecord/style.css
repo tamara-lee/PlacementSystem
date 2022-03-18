@@ -26,6 +26,17 @@
     font-size: 0.75rem;
 }
 
+.duration {
+    padding-top: 8px;
+}
+
+.dateTO {
+    margin-left: 25px;
+    padding-right: 25px;
+    text-align: left;
+    font-size: 0.75rem;
+}
+
 .info-icon {
     margin-left: 0.2rem;
 }
@@ -88,7 +99,7 @@ DatePicker {
 }
 
 #jobNature {
-    min-height: 180px;
+    min-height: 124px;
 }
 
 input[type=number]::-webkit-inner-spin-button {
