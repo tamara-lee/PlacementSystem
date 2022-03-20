@@ -79,7 +79,7 @@ const NavigationBar = () => {
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <StyledNavLink
-                to="/mainpage/admin"
+                to="/admin/mainpage"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,
@@ -103,7 +103,7 @@ const NavigationBar = () => {
                 </Typography>
               </StyledNavLink>
               <StyledNavLink
-                to="/addstudents/admin"
+                to="/admin/addstudents"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,
@@ -130,7 +130,7 @@ const NavigationBar = () => {
                 </Typography>
               </StyledNavLink>
               <StyledNavLink
-                to="/faq/admin"
+                to="/admin/faq"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,

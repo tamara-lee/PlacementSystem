@@ -233,11 +233,11 @@ function StudentRecords({ authorized }) {
   const selectAll = (e) => {};
 
   const handleStudent = (e) => {
-    return history.push("/studentrecord/admin");
+    return history.push("/admin/edit/studentrecord");
   };
 
   const handlePlacement = (e) => {
-    return history.push("/placementrecord/admin");
+    return history.push("/admin/edit/placementrecord");
   };
 
   const handleClickOpen = () => {

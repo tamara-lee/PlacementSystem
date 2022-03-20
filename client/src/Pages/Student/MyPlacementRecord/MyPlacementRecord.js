@@ -190,6 +190,7 @@ function MyPlacementRecord({ authorized }) {
   };
   const submitForm = () => {
     // console.log("Submit button clicked!");
+    const username = localStorage.getItem("username");
 
     if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
@@ -212,7 +213,7 @@ function MyPlacementRecord({ authorized }) {
 
       console.log("username is " + localStorage.getItem("username"));
       Axios.post("http://localhost:3001/placementrecord/student", {
-        username: localStorage.getItem("username"),
+        username: username,
         studentName: studentName,
         studentNumber: studentNumber,
         studentCurriculum: studentCurriculum,
@@ -326,11 +327,13 @@ function MyPlacementRecord({ authorized }) {
                     value={period}
                     onChange={(newPeriod) => {
                       setPeriod(newPeriod);
-                      const duration = moment
-                        .duration(
-                          moment(newPeriod[1]).diff(moment(newPeriod[0]))
+                      const duration = moment.duration(
+                        moment(newPeriod[1]).diff(
+                          moment(newPeriod[0]),
+                          "weeks",
+                          true
                         )
-                        .weeks();
+                      );
                       setDuration(duration);
                       setStartDate(newPeriod[0]);
                       setEndDate(newPeriod[1]);
