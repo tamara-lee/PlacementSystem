@@ -9,7 +9,6 @@ const router = require("express").Router();
 const cors = require("cors");
 
 router.post("/admin", validateToken, async (req, res) => {
-  console.log(req);
   try {
     console.log(req.body);
 
