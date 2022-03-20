@@ -12,13 +12,13 @@ const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     if (file.fieldname === "appointment") {
-      // if uploading resume
+      // if uploading appointment letter
       callback(null, "./server/upload/appointment");
     } else if (file.fieldname === "consent") {
-      // else uploading image
+      // else uploading consent form
       callback(null, "./server/upload/consent");
     } else if (file.fieldname === "feedback") {
-      // else uploading image
+      // else uploading feedback form 
       callback(null, "./server/upload/feedback");
     }
   },
@@ -98,9 +98,7 @@ router.post("/student", validateToken, async (req, res) => {
   });
 
   if (!user)
-    res
-      .status(400)
-      .json({ error: "User does not exist in the Placement System." });
+    res.status(400).json({ error: "User does not exist in the Placement System." });
   if (res !== undefined) {
     try {
       // do parse

@@ -26,10 +26,11 @@ function Login() {
       .then((response) => {
         if (response.data.login_status === "Logged In") {
           localStorage.setItem("userState", true);
-          localStorage.setItem("userUid", response.data.account_uid);
+          localStorage.setItem("userUid", response.data.student_uid);
           localStorage.setItem("username", response.data.account_username);
+          localStorage.setItem("userId", response.data.account_id);
 
-          return history.push("/placementrecord/student");
+          return history.push("/student/mainpage");
         }
       })
       .catch((error) => {
@@ -41,7 +42,7 @@ function Login() {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {
         if (response.data === "Logged In") {
-          return history.push("/placementrecord/student");
+          return history.push("/student/mainpage");
         } else {
           return history.push("/");
         }

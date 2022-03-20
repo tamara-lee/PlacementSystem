@@ -47,15 +47,19 @@ function AddStudent({ authorized }) {
     alert(`File uploaded is ${file}`);
   };
   const handleUpload = (e) => {
+    console.log(localStorage.getItem("userUid"));
     if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
-      //   alert(`The following is the data you want to submit:
+      // alert(`The following is the data you want to submit:
       //         Name: ${name}
       //         University Number: ${universityNumber}
       //         Curriculum: ${curriculum}
       //         Academic Year: ${academicYear}
       //         Placement Year: ${placementYear}
       // `);
+
       Axios.post("http://localhost:3001/addstudents/admin", {
+        username: localStorage.getItem("username"),
+        account_id: localStorage.getItem("userId"),
         name: name,
         universityNumber: universityNumber,
         curriculum: curriculum,
@@ -64,6 +68,7 @@ function AddStudent({ authorized }) {
       })
         .then((res) => {
           console.log(res);
+          console.log("success");
         })
         .catch((error) => {
           console.log(error);
@@ -238,9 +243,9 @@ function AddStudent({ authorized }) {
                     type="text"
                     id="curriculum"
                     value={curriculum}
-                    // onChange={(e) => {
-                    //   setSupervisorName(e.target.value);
-                    // }}
+                    onChange={(e) => {
+                      setCurriculum(e.target.value);
+                    }}
                   >
                     <option value="compsc" selected>
                       BEng(CompSc)
