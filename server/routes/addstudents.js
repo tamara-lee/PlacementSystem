@@ -30,7 +30,7 @@ router.post("/admin", validateToken, async (req, res) => {
         res.status(400).json({ error: "User does not exist in the Placement System." });
 
       }
-      if (res !== undefined){
+      if (res !== undefined && res){
           try{
               const newStudent = await student.create({
                 data: {
