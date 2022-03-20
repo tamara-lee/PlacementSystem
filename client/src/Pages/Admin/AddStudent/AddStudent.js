@@ -47,7 +47,6 @@ function AddStudent({ authorized }) {
     alert(`File uploaded is ${file}`);
   };
   const handleUpload = (e) => {
-    console.log(localStorage.getItem("userUid"));
     if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
       // alert(`The following is the data you want to submit:
       //         Name: ${name}
@@ -68,7 +67,6 @@ function AddStudent({ authorized }) {
       })
         .then((res) => {
           console.log(res);
-          console.log("success");
         })
         .catch((error) => {
           console.log(error);

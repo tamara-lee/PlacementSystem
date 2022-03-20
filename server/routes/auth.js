@@ -42,8 +42,9 @@ const cors = require("cors");
   
       res.json({
         login_status: "Logged In",
-        account_uid: studentId,
+        student_uid: studentId,
         account_username: user.username,
+        account_id: user.account_id,
       });
     }
     } catch (error){
