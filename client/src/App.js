@@ -20,7 +20,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Login} />
           {/* <Route exact path="/home" component={Home} /> */}
-          <Route
+          {/* <Route
             exact
             path="/home"
             component={() => (
@@ -28,35 +28,35 @@ function App() {
                 authorized={JSON.parse(localStorage.getItem("userState"))}
               />
             )}
-          />
+          /> */}
           <Route
             exact
-            path="/placementrecord/student"
+            path="/student/mainpage"
             component={() => (
               <MyPlacementRecord
                 authorized={JSON.parse(localStorage.getItem("userState"))}
               />
             )}
           />
-          <Route exact path="/faq/student" component={FAQ} />
-          <Route exact path="/faq/admin" component={AdminFAQ} />
-          <Route exact path="/addstudents/admin" component={AddStudent} />
-          <Route exact path="/mainpage/admin" component={StudentRecords} />
+          <Route exact path="/student/faq" component={FAQ} />
+          <Route exact path="/admin/faq" component={AdminFAQ} />
+          <Route exact path="/admin/addstudents" component={AddStudent} />
+          <Route exact path="/admin/mainpage" component={StudentRecords} />
           <Route
             exact
-            path="/studentrecord/admin"
+            path="/admin/edit/studentrecord"
             component={EditStudentRecord}
           />
           <Route
             exact
-            path="/placementrecord/admin"
+            path="/admin/edit/placementrecord"
             component={() => (
               <EditPlacementRecord
                 authorized={JSON.parse(localStorage.getItem("userState"))}
               />
             )}
           />
-          <Route exact path="/testfileupload" component={TestFileUpload} />
+          {/* <Route exact path="/testfileupload" component={TestFileUpload} /> */}
           <Route exact path="/logout" component={Logout} />
         </Switch>
       </Routes>

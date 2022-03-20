@@ -7,9 +7,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./style.css";
 import { styled } from "@mui/material/styles";
@@ -171,7 +168,7 @@ const NavigationBar = () => {
             >
               <MenuItem>
                 <StyledNavLink
-                  to="/myplacementrecord"
+                  to="/student/mainpage"
                   sx={{ textDecoration: "none" }}
                 >
                   <Typography
@@ -184,7 +181,7 @@ const NavigationBar = () => {
               </MenuItem>
               <MenuItem>
                 <StyledNavLink
-                  to="/faq/student"
+                  to="/student/faq"
                   sx={{ textDecoration: "none" }}
                 >
                   <Typography

@@ -359,11 +359,13 @@ function EditPlacementRecord({ authorized }) {
                     value={period}
                     onChange={(newPeriod) => {
                       setPeriod(newPeriod);
-                      const duration = moment
-                        .duration(
-                          moment(newPeriod[1]).diff(moment(newPeriod[0]))
+                      const duration = moment.duration(
+                        moment(newPeriod[1]).diff(
+                          moment(newPeriod[0]),
+                          "weeks",
+                          true
                         )
-                        .weeks();
+                      );
                       setDuration(duration);
                       setStartDate(newPeriod[0]);
                       setEndDate(newPeriod[1]);
