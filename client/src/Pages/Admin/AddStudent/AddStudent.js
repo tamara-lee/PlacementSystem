@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import { Redirect } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -14,6 +14,23 @@ import "./style.css";
 import Axios from "axios";
 
 function AddStudent({ authorized }) {
+  Axios.defaults.withCredentials = true;
+  useEffect(() => {
+    Axios.get("http://localhost:3001/auth/login")
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error.response);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          console.log("logged out.");
+          localStorage.setItem("userState", false);
+          alert("You have been logged out. Please refresh and log in again.");
+        }
+      });
+  }, []);
+
   const [name, setName] = useState("");
   const [universityNumber, setUniversityNumber] = useState("");
   const [curriculum, setCurriculum] = useState("BEng(CompSc)");
@@ -47,6 +64,9 @@ function AddStudent({ authorized }) {
     alert(`File uploaded is ${file}`);
   };
   const handleUpload = (e) => {
+    const username = localStorage.getItem("username");
+    const account_id = localStorage.getItem("userId");
+
     if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
       // alert(`The following is the data you want to submit:
       //         Name: ${name}
@@ -57,8 +77,8 @@ function AddStudent({ authorized }) {
       // `);
 
       Axios.post("http://localhost:3001/addstudents/admin", {
-        username: localStorage.getItem("username"),
-        account_id: localStorage.getItem("userId"),
+        username: username,
+        account_id: account_id,
         name: name,
         universityNumber: universityNumber,
         curriculum: curriculum,
