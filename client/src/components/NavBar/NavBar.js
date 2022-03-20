@@ -74,7 +74,7 @@ const NavigationBar = () => {
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <StyledNavLink
-                to="/myplacementrecord"
+                to="/student/mainpage"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,
@@ -98,7 +98,7 @@ const NavigationBar = () => {
                 </Typography>
               </StyledNavLink>
               <StyledNavLink
-                to="/faq/student"
+                to="/student/faq"
                 activeClassName="link-active"
                 sx={{
                   marginTop: 1,
