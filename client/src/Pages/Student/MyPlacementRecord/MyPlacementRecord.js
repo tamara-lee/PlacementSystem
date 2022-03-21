@@ -337,7 +337,7 @@ function MyPlacementRecord({ authorized }) {
                       setDuration(duration);
                       setStartDate(newPeriod[0]);
                       setEndDate(newPeriod[1]);
-                      if (parseInt(duration) < 4) {
+                      if (duration < 4) {
                         setShowDurationErrorMsg(true);
                       } else {
                         setShowDurationErrorMsg(false);
