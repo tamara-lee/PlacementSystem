@@ -200,7 +200,7 @@ const NavigationBar = () => {
             >
               <MenuItem>
                 <StyledNavLink
-                  to="/mainpage/admin"
+                  to="/admin/mainpage"
                   sx={{ textDecoration: "none" }}
                 >
                   <Typography
@@ -213,7 +213,7 @@ const NavigationBar = () => {
               </MenuItem>
               <MenuItem>
                 <StyledNavLink
-                  to="/addstudents/admin"
+                  to="/admin/addstudents"
                   sx={{ textDecoration: "none" }}
                 >
                   <Typography
@@ -225,7 +225,7 @@ const NavigationBar = () => {
                 </StyledNavLink>
               </MenuItem>
               <MenuItem>
-                <StyledNavLink to="/faq/admin" sx={{ textDecoration: "none" }}>
+                <StyledNavLink to="/admin/faq" sx={{ textDecoration: "none" }}>
                   <Typography
                     textAlign="center"
                     sx={{ textDecoration: "none", color: "black" }}

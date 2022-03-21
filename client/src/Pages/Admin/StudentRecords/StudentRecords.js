@@ -34,6 +34,11 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
+// for card
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+
 import studentRecords from "../../../mock data/test_data.json";
 import tableRecords from "../../../mock data/records.json";
 
@@ -65,6 +70,7 @@ function StudentRecords({ authorized }) {
   const [records, setRecords] = useState(tableRecords);
   const [filteredRecords, setFilteredRecords] = useState(tableRecords);
   const [sortRecentlyUpdated, setSortRecentlyUpdated] = useState([]);
+  const [show, setShow] = useState(false);
 
   const [rows, setRows] = useState(
     Object.keys(records).map((element) =>
@@ -227,7 +233,7 @@ function StudentRecords({ authorized }) {
     //     ? 1
     //     : 0;
     // });
-    alert("Recently Updated button clicked");
+    // alert("Recently Updated button clicked");
   };
 
   const selectAll = (e) => {};
@@ -250,7 +256,16 @@ function StudentRecords({ authorized }) {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    alert(e.target.value);
+    // alert(e.target.value);
+    setFilteredRecords(
+      records.filter(function (data) {
+        return (
+          String(data.student_uid).includes(e.target.value) ||
+          String(data.english_name).includes(e.target.value) ||
+          String(data.username).includes(e.target.value)
+        );
+      })
+    );
   };
 
   const resetFilters = () => {
@@ -308,222 +323,432 @@ function StudentRecords({ authorized }) {
       <div>
         <NavigationBar />
         <Container>
-          <Box
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "baseline",
-              marginTop: "10px",
-              paddingBottom: "10px",
-            }}
-          >
-            <Box style={{ paddingRight: "20px" }}>
-              <InputLabel variant="standard" id="academicYear">
-                <Typography
-                  style={{
-                    fontSize: "15px",
-                    color: "grey",
-                  }}
-                >
-                  Academic Year
-                </Typography>
-              </InputLabel>
-              <Select
-                labelId="academicYear"
-                id="select"
-                style={{
-                  minWidth: "100px",
-                  maxHeight: "30px",
-                  marginTop: "5px",
-                  marginBottom: "10px",
-                }}
-                value={acadYear}
-                onChange={handleAcadYear}
-              >
-                {Object.keys(acadYears).map((element) => (
-                  <MenuItem value={acadYears[element]}>
-                    {acadYears[element]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Box style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-              <InputLabel variant="standard" id="placementYear">
-                <Typography
-                  style={{
-                    fontSize: "15px",
-                    color: "grey",
-                  }}
-                >
-                  Placement Year
-                </Typography>
-              </InputLabel>
-              <Select
-                labelId="placementYear"
-                id="select"
-                style={{
-                  minWidth: "100px",
-                  maxHeight: "30px",
-                  marginTop: "5px",
-                  marginBottom: "10px",
-                }}
-                value={placementYear}
-                onChange={handlePlacementYear}
-              >
-                {Object.keys(placementYears).map((element) => (
-                  <MenuItem value={placementYears[element]}>
-                    {placementYears[element]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Button
+          <Box sx={{ display: { xs: "none", md: "initial" } }}>
+            <Box
               style={{
-                marginLeft: "20px",
-                marginRight: "20px",
-                width: "170px",
-                height: "2.5rem",
-                backgroundColor: "#f2f2f2",
-                borderStyle: "none",
-                color: "#333333",
-                boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
-                fontSize: "14px",
-                marginTop: "auto",
-                marginBottom: "auto",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "baseline",
+                marginTop: "10px",
+                paddingBottom: "10px",
               }}
-              onClick={handleRecentlyUpdated}
             >
-              Recently Updated
-            </Button>
-            <Button
-              style={{
-                marginLeft: "20px",
-                marginRight: "20px",
-                width: "90px",
-                height: "2.5rem",
-                backgroundColor: "#f2f2f2",
-                borderStyle: "none",
-                color: "#404040",
-                boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
-                fontSize: "14px",
-                marginTop: "auto",
-                marginBottom: "auto",
-              }}
-              onClick={handleClickOpen}
-            >
-              Export
-            </Button>
-            <Dialog maxWidth="xl" open={open} onClose={handleClose}>
-              <DialogTitle>Select fields to export</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Select the fields you would like to export and the relevant
-                  information will be exported in an Excel file.
-                </DialogContentText>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    checked={selectAll}
-                    label="All"
-                  />
-                  {Object.keys(fields[0]).map((element) => (
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label={fields[0][element]}
-                    />
-                  ))}
-                </FormGroup>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleClose}>Export</Button>
-              </DialogActions>
-            </Dialog>
-            <Button
-              style={{
-                marginLeft: "20px",
-                marginRight: "20px",
-                width: "90px",
-                height: "2.5rem",
-                backgroundColor: "#f2f2f2",
-                borderStyle: "none",
-                color: "#333333",
-                boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
-                fontSize: "14px",
-                marginTop: "auto",
-                marginBottom: "auto",
-              }}
-              onClick={resetFilters}
-            >
-              Default
-            </Button>
-            <TextField
-              id="filled-search"
-              label="Search..."
-              type="search"
-              variant="filled"
-              style={{
-                marginLeft: "auto",
-                marginRight: "20px",
-                fontSize: "14px",
-                marginTop: "auto",
-                marginBottom: "auto",
-              }}
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </Box>
-          <TableContainer component={Paper}>
-            <Table
-              sx={{ minWidth: 650 }}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Student UID</TableCell>
-                  <TableCell align="center">Student Name</TableCell>
-                  <TableCell align="center">CS ID</TableCell>
-                  <TableCell align="center">Curriculum</TableCell>
-                  <TableCell align="center">Placement Status</TableCell>
-                  <TableCell align="center">Feedback Form</TableCell>
-                  <TableCell align="center">Edit Student Details</TableCell>
-                  <TableCell align="center">Edit Placement Record</TableCell>
-                  <TableCell align="center">Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.student_uid}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              <Box style={{ paddingRight: "20px" }}>
+                <InputLabel variant="standard" id="academicYear">
+                  <Typography
+                    style={{
+                      fontSize: "15px",
+                      color: "grey",
+                    }}
                   >
-                    <TableCell component="th" scope="row">
-                      {row.student_uid}
-                    </TableCell>
-                    <TableCell align="center">{row.english_name}</TableCell>
-                    <TableCell align="center">{row.username}</TableCell>
-                    <TableCell align="center">{row.curriculum}</TableCell>
-                    <TableCell align="center">{row.placement_status}</TableCell>
-                    <TableCell align="center">
-                      <Link href="sample_file.pdf" download>
-                        Download
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button onClick={handleStudent}>Edit</Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button onClick={handlePlacement}>Edit</Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button disabled>Test</Button>
-                    </TableCell>
+                    Academic Year
+                  </Typography>
+                </InputLabel>
+                <Select
+                  labelId="academicYear"
+                  id="select"
+                  style={{
+                    minWidth: "100px",
+                    maxHeight: "30px",
+                    marginTop: "5px",
+                    marginBottom: "10px",
+                  }}
+                  value={acadYear}
+                  onChange={handleAcadYear}
+                >
+                  {Object.keys(acadYears).map((element) => (
+                    <MenuItem value={acadYears[element]}>
+                      {acadYears[element]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+              <Box style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+                <InputLabel variant="standard" id="placementYear">
+                  <Typography
+                    style={{
+                      fontSize: "15px",
+                      color: "grey",
+                    }}
+                  >
+                    Placement Year
+                  </Typography>
+                </InputLabel>
+                <Select
+                  labelId="placementYear"
+                  id="select"
+                  style={{
+                    minWidth: "100px",
+                    maxHeight: "30px",
+                    marginTop: "5px",
+                    marginBottom: "10px",
+                  }}
+                  value={placementYear}
+                  onChange={handlePlacementYear}
+                >
+                  {Object.keys(placementYears).map((element) => (
+                    <MenuItem value={placementYears[element]}>
+                      {placementYears[element]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+              <Button
+                style={{
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  width: "170px",
+                  height: "2.5rem",
+                  backgroundColor: "#f2f2f2",
+                  borderStyle: "none",
+                  color: "#333333",
+                  boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                onClick={handleRecentlyUpdated}
+              >
+                Recently Updated
+              </Button>
+              <Button
+                style={{
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  width: "90px",
+                  height: "2.5rem",
+                  backgroundColor: "#f2f2f2",
+                  borderStyle: "none",
+                  color: "#404040",
+                  boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                onClick={handleClickOpen}
+              >
+                Export
+              </Button>
+              <Dialog maxWidth="xl" open={open} onClose={handleClose}>
+                <DialogTitle>Select fields to export</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Select the fields you would like to export and the relevant
+                    information will be exported in an Excel file.
+                  </DialogContentText>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      checked={selectAll}
+                      label="All"
+                    />
+                    {Object.keys(fields[0]).map((element) => (
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label={fields[0][element]}
+                      />
+                    ))}
+                  </FormGroup>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleClose}>Export</Button>
+                </DialogActions>
+              </Dialog>
+              <Button
+                style={{
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  width: "90px",
+                  height: "2.5rem",
+                  backgroundColor: "#f2f2f2",
+                  borderStyle: "none",
+                  color: "#333333",
+                  boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                onClick={resetFilters}
+              >
+                Default
+              </Button>
+              <TextField
+                id="filled-search"
+                label="Search..."
+                type="search"
+                variant="filled"
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "20px",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </Box>
+            <TableContainer component={Paper}>
+              <Table
+                sx={{ minWidth: 650 }}
+                size="small"
+                aria-label="a dense table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Student UID</TableCell>
+                    <TableCell align="center">Student Name</TableCell>
+                    <TableCell align="center">CS ID</TableCell>
+                    <TableCell align="center">Curriculum</TableCell>
+                    <TableCell align="center">Placement Status</TableCell>
+                    <TableCell align="center">Feedback Form</TableCell>
+                    <TableCell align="center">Edit Student Details</TableCell>
+                    <TableCell align="center">Edit Placement Record</TableCell>
+                    <TableCell align="center">Status</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.student_uid}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.student_uid}
+                      </TableCell>
+                      <TableCell align="center">{row.english_name}</TableCell>
+                      <TableCell align="center">{row.username}</TableCell>
+                      <TableCell align="center">{row.curriculum}</TableCell>
+                      <TableCell align="center">
+                        {row.placement_status}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Link href="sample_file.pdf" download>
+                          Download
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button onClick={handleStudent}>Edit</Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button onClick={handlePlacement}>Edit</Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button disabled>Test</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          <Box sx={{ display: { xs: "initial", md: "none" } }}>
+            <Box style={{ paddingTop: "20px", paddingBottom: "20px" }}>
+              <TextField
+                id="filled-search"
+                label="Search..."
+                type="search"
+                variant="filled"
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "20px",
+                  fontSize: "13px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <Button
+                variant="outlined"
+                style={{
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  width: "90px",
+                  height: "2.5rem",
+                  backgroundColor: "#f2f2f2",
+                  borderStyle: "none",
+                  color: "#333333",
+                  boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                onClick={() => setShow(!show)}
+              >
+                Filters
+              </Button>
+              {show ? (
+                <Card sx={{ minWidth: 275 }}>
+                  <CardContent>
+                    <Box style={{ display: "flex" }}>
+                      <Box>
+                        <InputLabel variant="standard" id="academicYear">
+                          <Typography
+                            style={{
+                              fontSize: "12px",
+                              color: "grey",
+                            }}
+                          >
+                            Academic Year
+                          </Typography>
+                        </InputLabel>
+                        <Select
+                          labelId="academicYear"
+                          id="select"
+                          style={{
+                            minWidth: "100px",
+                            maxHeight: "30px",
+                            marginTop: "5px",
+                            marginBottom: "10px",
+                          }}
+                          value={acadYear}
+                          onChange={handleAcadYear}
+                        >
+                          {Object.keys(acadYears).map((element) => (
+                            <MenuItem value={acadYears[element]}>
+                              {acadYears[element]}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <Box>
+                        <InputLabel variant="standard" id="placementYear">
+                          <Typography
+                            style={{
+                              fontSize: "12px",
+                              color: "grey",
+                            }}
+                          >
+                            Placement Year
+                          </Typography>
+                        </InputLabel>
+                        <Select
+                          labelId="placementYear"
+                          id="select"
+                          style={{
+                            minWidth: "100px",
+                            maxHeight: "30px",
+                            marginTop: "5px",
+                            marginBottom: "10px",
+                          }}
+                          value={placementYear}
+                          onChange={handlePlacementYear}
+                        >
+                          {Object.keys(placementYears).map((element) => (
+                            <MenuItem value={placementYears[element]}>
+                              {placementYears[element]}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <Button
+                        style={{
+                          marginLeft: "20px",
+                          marginRight: "20px",
+                          width: "150px",
+                          height: "3rem",
+                          backgroundColor: "#f2f2f2",
+                          borderStyle: "none",
+                          color: "#333333",
+                          boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                          fontSize: "13px",
+                          marginTop: "auto",
+                          marginBottom: "auto",
+                        }}
+                        onClick={handleRecentlyUpdated}
+                      >
+                        Recently Updated
+                      </Button>
+                    </Box>
+                    <Box style={{ display: "flex" }}>
+                      <Button
+                        style={{
+                          marginLeft: "20px",
+                          marginRight: "20px",
+                          width: "70px",
+                          height: "2rem",
+                          backgroundColor: "#f2f2f2",
+                          borderStyle: "none",
+                          color: "#404040",
+                          boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                          fontSize: "13px",
+                          marginTop: "auto",
+                          marginBottom: "auto",
+                        }}
+                        onClick={handleClickOpen}
+                      >
+                        Export
+                      </Button>
+                      <Dialog maxWidth="xl" open={open} onClose={handleClose}>
+                        <DialogTitle>Select fields to export</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Select the fields you would like to export and the
+                            relevant information will be exported in an Excel
+                            file.
+                          </DialogContentText>
+                          <FormGroup>
+                            <FormControlLabel
+                              control={<Checkbox defaultChecked />}
+                              checked={selectAll}
+                              label="All"
+                            />
+                            {Object.keys(fields[0]).map((element) => (
+                              <FormControlLabel
+                                control={<Checkbox />}
+                                label={fields[0][element]}
+                              />
+                            ))}
+                          </FormGroup>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose}>Cancel</Button>
+                          <Button onClick={handleClose}>Export</Button>
+                        </DialogActions>
+                      </Dialog>
+                      <Button
+                        style={{
+                          marginLeft: "20px",
+                          marginRight: "20px",
+                          width: "70px",
+                          height: "2rem",
+                          backgroundColor: "#f2f2f2",
+                          borderStyle: "none",
+                          color: "#333333",
+                          boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                          fontSize: "13px",
+                          marginTop: "auto",
+                          marginBottom: "auto",
+                        }}
+                        onClick={resetFilters}
+                      >
+                        Default
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ) : null}
+            </Box>{" "}
+            {filteredRecords.map((val, key) => {
+              return (
+                <Card variant="outlined" style={{ marginBottom: "5px" }}>
+                  <CardContent style={{ display: "flex" }}>
+                    <Typography variant="body2">
+                      Name: {val.english_name}
+                    </Typography>
+                    <Typography variant="body2">
+                      UID: {val.student_uid}
+                    </Typography>
+                    <Typography variant="body2">Status: </Typography>
+                    <Button size="small">Edit Student</Button>
+                    <Button size="small">Edit Record</Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </Box>
         </Container>
       </div>
     </>

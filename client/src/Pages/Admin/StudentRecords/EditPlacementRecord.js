@@ -369,7 +369,7 @@ function EditPlacementRecord({ authorized }) {
                       setDuration(duration);
                       setStartDate(newPeriod[0]);
                       setEndDate(newPeriod[1]);
-                      if (parseInt(duration) < 4) {
+                      if (duration < 4) {
                         setShowDurationErrorMsg(true);
                       } else {
                         setShowDurationErrorMsg(false);
@@ -387,6 +387,11 @@ function EditPlacementRecord({ authorized }) {
               </div>
               <label htmlFor="duration" className="duration">
                 DURATION (WEEKS)
+                {showDurationErrorMsg && (
+                  <span className="error-message">
+                    Duration must be a minimum of FOUR weeks!
+                  </span>
+                )}
               </label>
               <input
                 className="input"
