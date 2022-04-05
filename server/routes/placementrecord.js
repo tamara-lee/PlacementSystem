@@ -3,6 +3,7 @@ const { createTokens, validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
+const { student } = new PrismaClient();
 const { test_acad_year } = new PrismaClient();
 const { test_placement_year } = new PrismaClient();
 const prisma = new PrismaClient();
@@ -28,6 +29,21 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const fs = require("fs");
+
+router.get("/student", async (req, res) => {
+  const student_info = await student.findUnique({
+    where: {
+      //find record req.body.username in username foreign key field in placement model
+      student_uid: req.body.studentNumber,
+    },
+    select: {
+      student_uid: true,
+      english_name: true,
+      curriculum: true,
+    }
+  });
+
+});
 
 router.get("/student/acadyear", async (req, res) => {
   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
@@ -97,14 +113,26 @@ router.post("/student", validateToken, async (req, res) => {
     },
   });
 
-  if (!user)
+  if (!user){
     res.status(400).json({ error: "User does not exist in the Placement System." });
+  }
+  
+  const student_table_record = await student.findUnique({
+    where: {
+      //find record req.body.username in username foreign key field in placement model
+      student_uid: studentNumber,
+    },
+  });
+
+  const student_table_uid = student_table_record.student_uid;
+
   if (res !== undefined) {
     try {
       // do parse
       const placmentRecord = await placement.upsert({
         where: {
-          student_uid: studentNumber,
+          student_table_uid: studentNumber,
+         //student_uid:  { connect: { student_uid: studentNumber } },
         },
         update: {
           //placement_year:
@@ -124,13 +152,14 @@ router.post("/student", validateToken, async (req, res) => {
           supervisor_telephone: supervisorPhone,
           supervisor_email: supervisorEmail,
           modified_by: user.username,
-          //last_modified:
+         // last_modified:
           //consent_form:
         },
         create: {
           //need to extract username
           username: user.username,
-          student_uid: studentNumber,
+          //student_uid: studentNumber, { connect: { id: categoryId } }
+          student_uid:  { connect: { student_uid: studentNumber } },
           //placement_year
           //appointment_letter
           //feedback_form:
