@@ -188,9 +188,78 @@ function MyPlacementRecord({ authorized }) {
         console.log(error.response);
       });
   };
+
+  // const submitForm = () => {
+  //   if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
+  //     setOpenError(true);
+  //   } else {
+  //     confirmSubmitForm
+  //   }
+  // }
+
+  // const confirmSubmitForm = () => {
+  //   // console.log("Submit button clicked!");
+  //   const username = localStorage.getItem("username");
+  //   const student_uid = localStorage.getItem("userUid")
+
+  //   if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
+  //     setOpenError(true);
+  //   } else {
+  //     const formData = new FormData();
+
+  //     if (appointmentLetter) {
+  //       formData.append(
+  //         "appointment",
+  //         appointmentLetter,
+  //         appointmentLetter.name
+  //       );
+  //     }
+  //     if (consentForm) {
+  //       formData.append("consent", consentForm, consentForm.name);
+  //     }
+  //     if (feedbackForm) {
+  //       formData.append("feedback", feedbackForm, feedbackForm.name);
+  //     }
+
+  //     console.log("username is " + localStorage.getItem("username"));
+  //     Axios.post("http://localhost:3001/placementrecord/student", {
+  //       username: username,
+  //       studentName: studentName,
+  //       // studentNumber: studentNumber,
+  //       studentNumber: student_uid,
+  //       studentCurriculum: studentCurriculum,
+  //       companyName: companyName,
+  //       jobTitle: jobTitle,
+  //       jobNature: jobNature,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //       duration: duration,
+  //       location: location,
+  //       paymentType: paymentType,
+  //       salary: salary,
+  //       supervisorName: supervisorName,
+  //       supervisorPhone: supervisorPhone,
+  //       supervisorEmail: supervisorEmail,
+  //       feedbackComment: feedbackComment,
+  //       placementStatus: placementStatus,
+  //       formData,
+  //     })
+  //       .then((response) => {
+  //         console.log(response.data);
+  //         // if (response.data === "Successfully submitted") {
+  //         //   console.log(response.data);
+  //         // }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error.response);
+  //       });
+  //   }
+  // };
+
   const submitForm = () => {
     // console.log("Submit button clicked!");
     const username = localStorage.getItem("username");
+    const student_uid = localStorage.getItem("userUid");
 
     if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
@@ -215,7 +284,8 @@ function MyPlacementRecord({ authorized }) {
       Axios.post("http://localhost:3001/placementrecord/student", {
         username: username,
         studentName: studentName,
-        studentNumber: studentNumber,
+        // studentNumber: studentNumber,
+        studentNumber: student_uid,
         studentCurriculum: studentCurriculum,
         companyName: companyName,
         jobTitle: jobTitle,
