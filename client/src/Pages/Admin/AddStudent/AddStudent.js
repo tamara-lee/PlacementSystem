@@ -36,10 +36,12 @@ function AddStudent({ authorized }) {
   const [curriculum, setCurriculum] = useState("BEng(CompSc)");
   const [academicYear, setAcademicYear] = useState("");
   const [placementYear, setPlacementYear] = useState("");
+  const [courseYear, setCourseYear] = useState("");
 
   const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
   const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
   const [showPlacementErrorMsg, setShowPlacementErrorMsg] = useState(false);
+  const [showCourseErrorMsg, setShowCourseErrorMsg] = useState(false);
 
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
@@ -60,22 +62,55 @@ function AddStudent({ authorized }) {
     }
   };
 
+  const checkCourseYear = (e) => {
+    if (/^\d$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const handleImport = (e) => {
     alert(`File uploaded is ${file}`);
   };
+
+  // const handleUpload = (e) => {
+  //   if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
+  //     confirmHandleUpload();
+  //   } else {
+  //     alert(
+  //       `There is an error in the form. Please make sure there are no error messages before submitting!`
+  //     );
+  //   }
+  // };
+
+  // const confirmHandleUpload = (e) => {
+  //   const username = localStorage.getItem("username");
+  //   const account_id = localStorage.getItem("userId");
+
+  //   Axios.post("http://localhost:3001/addstudents/admin", {
+  //     username: username,
+  //     account_id: account_id,
+  //     name: name,
+  //     universityNumber: universityNumber,
+  //     curriculum: curriculum,
+  //     academicYear: academicYear,
+  //     // placementYear: parseInt(placementYear),
+  //     courseYear: parseInt(courseYear),
+  //   })
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
   const handleUpload = (e) => {
     const username = localStorage.getItem("username");
     const account_id = localStorage.getItem("userId");
 
     if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
-      // alert(`The following is the data you want to submit:
-      //         Name: ${name}
-      //         University Number: ${universityNumber}
-      //         Curriculum: ${curriculum}
-      //         Academic Year: ${academicYear}
-      //         Placement Year: ${placementYear}
-      // `);
-
       Axios.post("http://localhost:3001/addstudents/admin", {
         username: username,
         account_id: account_id,
@@ -83,7 +118,8 @@ function AddStudent({ authorized }) {
         universityNumber: universityNumber,
         curriculum: curriculum,
         academicYear: academicYear,
-        placementYear: parseInt(placementYear),
+        // placementYear: parseInt(placementYear),
+        courseYear: parseInt(courseYear),
       })
         .then((res) => {
           console.log(res);
@@ -270,6 +306,34 @@ function AddStudent({ authorized }) {
                     </option>
                     <option value="is">BBA(IS)</option>
                   </select>
+                  <label htmlFor="courseYear">
+                    Course Year
+                    {showCourseErrorMsg && (
+                      <span className="error-message">
+                        Invalid course year. Please enter a single digit value.
+                      </span>
+                    )}
+                  </label>
+                  <input
+                    className="input"
+                    type="number"
+                    id="courseYear"
+                    value={courseYear}
+                    // placeholder="Enter placement year here..."
+                    maxLength="4"
+                    onChange={(e) => {
+                      if (e.target.value == "") {
+                        setCourseYear(e.target.value);
+                        setShowCourseErrorMsg(false);
+                      } else if (checkCourseYear(e.target.value)) {
+                        setCourseYear(e.target.value);
+                        setShowCourseErrorMsg(false);
+                      } else {
+                        setPlacementYear(e.target.value);
+                        setShowCourseErrorMsg(true);
+                      }
+                    }}
+                  />
                   <label htmlFor="academicYear">
                     Academic Year
                     {showAcademicErrorMsg && (
