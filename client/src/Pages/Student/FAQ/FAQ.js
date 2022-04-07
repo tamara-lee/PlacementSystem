@@ -158,18 +158,7 @@ function FAQ({ authorized }) {
     setExpanded(newExpanded ? panel : false);
   };
 
-  Axios.get("http://localhost:3001/faq/admin", {
-    username: username,
-    account_id: account_id,
-  })
-    .then((res) => {
-      JSONDATA = res;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-  Axios.post("http://localhost:3001/faq/admin", {
+  Axios.get("http://localhost:3001/faq/student", {
     username: username,
     account_id: account_id,
   })

@@ -155,6 +155,10 @@ function FAQ({ authorized }) {
   const username = localStorage.getItem("username");
   const account_id = localStorage.getItem("userId");
 
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newAnswer, setNewAnswer] = useState("");
+  const [newCat, setnewCat] = useState("");
+
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -174,16 +178,21 @@ function FAQ({ authorized }) {
       console.log(error);
     });
 
-  Axios.post("http://localhost:3001/faq/admin", {
-    username: username,
-    account_id: account_id,
-  })
-    .then((res) => {
-      JSONDATA = res;
+  const submitFAQ = () => {
+    Axios.post("http://localhost:3001/faq/admin", {
+      username: username,
+      account_id: account_id,
+      questions: newQuestion,
+      answers: newAnswers,
+      cat: newCat,
     })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((res) => {
+        JSONDATA = res;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   if (authorized === false) {
     console.log(authorized);
@@ -265,9 +274,9 @@ function FAQ({ authorized }) {
                         // value="{supervisorName}"
                         placeholder="Enter question here..."
                         maxLength="200"
-                        // onChange={(e) => {
-                        //   setSupervisorName(e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          setNewQuestion(e.target.value);
+                        }}
                       />
                       <label htmlFor="answer">ANSWER</label>
                       <textarea
@@ -277,9 +286,9 @@ function FAQ({ authorized }) {
                         // value="{supervisorName}"
                         placeholder="Enter answer here..."
                         maxLength="200"
-                        // onChange={(e) => {
-                        //   setSupervisorName(e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          setNewAnswer(e.target.value);
+                        }}
                       />
                       <label htmlFor="category">CATEGORY</label>
                       <select
@@ -287,9 +296,9 @@ function FAQ({ authorized }) {
                         type="text"
                         id="category"
                         // value="{supervisorName}"
-                        // onChange={(e) => {
-                        //   setSupervisorName(e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          setNewCat(e.target.value);
+                        }}
                       >
                         <option value="general">General</option>
                         <option value="uploadingdocuments">
@@ -302,7 +311,9 @@ function FAQ({ authorized }) {
                     </div>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">Submit</Button>
+                    <Button size="small" onClick={submitFAQ}>
+                      Submit
+                    </Button>
                   </CardActions>
                 </Card>
               ) : null}
