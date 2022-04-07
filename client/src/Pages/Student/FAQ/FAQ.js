@@ -145,6 +145,7 @@ function FAQ({ authorized }) {
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");
+  const JSONDATA = [{}];
 
   const username = localStorage.getItem("username");
   const account_id = localStorage.getItem("userId");

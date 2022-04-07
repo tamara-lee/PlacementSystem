@@ -289,7 +289,6 @@ function MyPlacementRecord({ authorized }) {
       formData.append("feedback", feedbackForm, feedbackForm.name);
     }
 
-    console.log("username is " + localStorage.getItem("username"));
     Axios.post("http://localhost:3001/placementrecord/student", {
       username: username,
       studentName: studentName,
@@ -412,7 +411,7 @@ function MyPlacementRecord({ authorized }) {
                           true
                         )
                       );
-                      setDuration(duration);
+                      setDuration(Math.floor(duration));
                       setStartDate(newPeriod[0]);
                       setEndDate(newPeriod[1]);
                       if (duration < 4) {

@@ -151,6 +151,7 @@ function FAQ({ authorized }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState(false);
 
+  const JSONDATA = [{}];
   const username = localStorage.getItem("username");
   const account_id = localStorage.getItem("userId");
 
