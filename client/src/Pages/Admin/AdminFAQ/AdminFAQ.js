@@ -313,10 +313,10 @@ function FAQ({ authorized }) {
                   if (searchTerm == "") {
                     return val;
                   } else if (
-                    val.question
+                    val.questions
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    val.answer.toLowerCase().includes(searchTerm.toLowerCase())
+                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return val;
                   }
@@ -326,17 +326,17 @@ function FAQ({ authorized }) {
                     return (
                       <Accordion
                         key={key}
-                        expanded={expanded === val.id}
-                        onChange={handleAccordionChange(val.id)}
+                        expanded={expanded === val.faq_id}
+                        onChange={handleAccordionChange(val.faq_id)}
                       >
                         <AccordionSummary
-                          aria-controls={val.id + "-content"}
-                          id={val.id + "-header"}
+                          aria-controls={val.faq_id + "-content"}
+                          id={val.faq_id + "-header"}
                         >
-                          <Typography>{val.question}</Typography>
+                          <Typography>{val.questions}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography>{val.answer}</Typography>
+                          <Typography>{val.answers}</Typography>
                         </AccordionDetails>
                       </Accordion>
                     );
@@ -348,10 +348,10 @@ function FAQ({ authorized }) {
                   if (searchTerm == "") {
                     return val;
                   } else if (
-                    val.question
+                    val.questions
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    val.answer.toLowerCase().includes(searchTerm.toLowerCase())
+                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return val;
                   }
@@ -361,17 +361,17 @@ function FAQ({ authorized }) {
                     return (
                       <Accordion
                         key={key}
-                        expanded={expanded === val.id}
-                        onChange={handleAccordionChange(val.id)}
+                        expanded={expanded === val.faq_id}
+                        onChange={handleAccordionChange(val.faq_id)}
                       >
                         <AccordionSummary
-                          aria-controls={val.id + "-content"}
-                          id={val.id + "-header"}
+                          aria-controls={val.faq_id + "-content"}
+                          id={val.faq_id + "-header"}
                         >
-                          <Typography>{val.question}</Typography>
+                          <Typography>{val.questions}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography>{val.answer}</Typography>
+                          <Typography>{val.answers}</Typography>
                         </AccordionDetails>
                       </Accordion>
                     );
@@ -383,10 +383,10 @@ function FAQ({ authorized }) {
                   if (searchTerm == "") {
                     return val;
                   } else if (
-                    val.question
+                    val.questions
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    val.answer.toLowerCase().includes(searchTerm.toLowerCase())
+                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return val;
                   }
@@ -396,17 +396,17 @@ function FAQ({ authorized }) {
                     return (
                       <Accordion
                         key={key}
-                        expanded={expanded === val.id}
-                        onChange={handleAccordionChange(val.id)}
+                        expanded={expanded === val.faq_id}
+                        onChange={handleAccordionChange(val.faq_id)}
                       >
                         <AccordionSummary
-                          aria-controls={val.id + "-content"}
-                          id={val.id + "-header"}
+                          aria-controls={val.faq_id + "-content"}
+                          id={val.faq_id + "-header"}
                         >
-                          <Typography>{val.question}</Typography>
+                          <Typography>{val.questions}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography>{val.answer}</Typography>
+                          <Typography>{val.answers}</Typography>
                         </AccordionDetails>
                       </Accordion>
                     );
@@ -524,10 +524,10 @@ function FAQ({ authorized }) {
                   if (searchTerm == "") {
                     return val;
                   } else if (
-                    val.question
+                    val.questions
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    val.answer.toLowerCase().includes(searchTerm.toLowerCase())
+                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return val;
                   }
@@ -537,17 +537,17 @@ function FAQ({ authorized }) {
                     return (
                       <Accordion
                         key={key}
-                        expanded={expanded === val.id}
-                        onChange={handleAccordionChange(val.id)}
+                        expanded={expanded === val.faq_id}
+                        onChange={handleAccordionChange(val.faq_id)}
                       >
                         <AccordionSummary
-                          aria-controls={val.id + "-content"}
-                          id={val.id + "-header"}
+                          aria-controls={val.faq_id + "-content"}
+                          id={val.faq_id + "-header"}
                         >
-                          <Typography>{val.question}</Typography>
+                          <Typography>{val.questions}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography>{val.answer}</Typography>
+                          <Typography>{val.answers}</Typography>
                         </AccordionDetails>
                       </Accordion>
                     );
@@ -559,10 +559,10 @@ function FAQ({ authorized }) {
                   if (searchTerm == "") {
                     return val;
                   } else if (
-                    val.question
+                    val.questions
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    val.answer.toLowerCase().includes(searchTerm.toLowerCase())
+                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return val;
                   }
@@ -572,17 +572,17 @@ function FAQ({ authorized }) {
                     return (
                       <Accordion
                         key={key}
-                        expanded={expanded === val.id}
-                        onChange={handleAccordionChange(val.id)}
+                        expanded={expanded === val.faq_id}
+                        onChange={handleAccordionChange(val.faq_id)}
                       >
                         <AccordionSummary
-                          aria-controls={val.id + "-content"}
-                          id={val.id + "-header"}
+                          aria-controls={val.faq_id + "-content"}
+                          id={val.faq_id + "-header"}
                         >
-                          <Typography>{val.question}</Typography>
+                          <Typography>{val.questions}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography>{val.answer}</Typography>
+                          <Typography>{val.answers}</Typography>
                         </AccordionDetails>
                       </Accordion>
                     );
@@ -594,10 +594,10 @@ function FAQ({ authorized }) {
                   if (searchTerm == "") {
                     return val;
                   } else if (
-                    val.question
+                    val.questions
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    val.answer.toLowerCase().includes(searchTerm.toLowerCase())
+                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return val;
                   }
@@ -607,17 +607,17 @@ function FAQ({ authorized }) {
                     return (
                       <Accordion
                         key={key}
-                        expanded={expanded === val.id}
-                        onChange={handleAccordionChange(val.id)}
+                        expanded={expanded === val.faq_id}
+                        onChange={handleAccordionChange(val.faq_id)}
                       >
                         <AccordionSummary
-                          aria-controls={val.id + "-content"}
-                          id={val.id + "-header"}
+                          aria-controls={val.faq_id + "-content"}
+                          id={val.faq_id + "-header"}
                         >
-                          <Typography>{val.question}</Typography>
+                          <Typography>{val.questions}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography>{val.answer}</Typography>
+                          <Typography>{val.answers}</Typography>
                         </AccordionDetails>
                       </Accordion>
                     );
