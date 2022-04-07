@@ -118,7 +118,7 @@ function AddStudent({ authorized }) {
         universityNumber: universityNumber,
         curriculum: curriculum,
         academicYear: academicYear,
-        // placementYear: parseInt(placementYear),
+        placementYear: placementYear,
         courseYear: parseInt(courseYear),
       })
         .then((res) => {

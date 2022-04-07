@@ -16,8 +16,8 @@ model student {
   placement_status student_placement_status @default(NA)
   modified_by      String                   @db.VarChar(8)
   last_modified    DateTime                 @default(now()) @db.Timestamp(0)
-  user_account     user_account            @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "student_ibfk_1")
-  account_id       Int                        
+  user_account     user_account             @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "student_ibfk_1")
+  account_id       Int                       
   placement        placement[]
   //user_account     user_account[]
   @@index([account_id], map: "account_id")

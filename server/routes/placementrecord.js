@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 const fs = require("fs");
 
-router.get("/student", async (req, res) => {
+/**router.get("/student", validateToken, async (req, res) => {
   const student_info = await student.findUnique({
     where: {
       //find record req.body.username in username foreign key field in placement model
@@ -43,7 +43,7 @@ router.get("/student", async (req, res) => {
     }
   });
 
-});
+});**/
 
 router.get("/student/acadyear", async (req, res) => {
   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
@@ -83,8 +83,40 @@ router.post(
     // console.log(req.file, req.body);
   }
 );
+/**router.get("/student", validateToken, async (req, res) => {
+  //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
+  const studentNumber = req.body.studentNumber;
+
+
+  try {
+    const student_info = await student.findUnique({
+      where: {
+        //find record req.body.username in username foreign key field in placement model
+        //student_uid: req.body.studentNumber,
+        student_uid: studentNumber,
+
+      },
+      select: {
+        student_uid: true,
+        english_name: true,
+        curriculum: true,
+      },
+      
+    });
+    console.log(req.body);
+    
+	}
+	catch (error) {
+    console.error("Student not found!")
+		console.log(error);
+		//res.status(500).json(error);
+	}
+
+});**/
+
 
 router.post("/student", validateToken, async (req, res) => {
+  
   const studentName = req.body.studentName;
   const studentNumber = req.body.studentNumber;
   const studentCurriculum = req.body.studentCurriculum;
