@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/NavBar/index";
 import NavigationBar from "../../../components/NavBar/NavBar";
 import "./style.css";
@@ -142,6 +142,23 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 function FAQ({ authorized }) {
+  Axios.defaults.withCredentials = true;
+  useEffect(() => {
+    Axios.get("http://localhost:3001/auth/login")
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error.response);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          console.log("logged out.");
+          localStorage.setItem("userState", false);
+          alert("You have been logged out. Please refresh and log in again.");
+        }
+      });
+  }, []);
+
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");

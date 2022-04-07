@@ -1,11 +1,10 @@
 const express = require("express");
 const { createTokens, validateToken } = require("../JWT");
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const router = require("express").Router();
 const cors = require("cors");
 const { user_account } = new PrismaClient();
 const { faq } = new PrismaClient();
-
 
 router.post("/admin", validateToken, async (req, res) => {
    const modifier = await user_account.findUnique({
@@ -37,9 +36,8 @@ router.post("/admin", validateToken, async (req, res) => {
 
 router.get("/admin", validateToken, async (req, res) => {});
 
-router.put("/")
+router.put("/");
 
 router.get("/student", validateToken, async (req, res) => {});
-
 
 module.exports = router;

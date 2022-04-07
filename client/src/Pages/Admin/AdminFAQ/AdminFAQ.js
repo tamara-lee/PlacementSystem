@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import "./style.css";
 import { Tab, Tabs, Typography, Box } from "@mui/material";
@@ -146,6 +146,23 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 function FAQ({ authorized }) {
+  Axios.defaults.withCredentials = true;
+  useEffect(() => {
+    Axios.get("http://localhost:3001/auth/login")
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error.response);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          console.log("logged out.");
+          localStorage.setItem("userState", false);
+          alert("You have been logged out. Please refresh and log in again.");
+        }
+      });
+  }, []);
+
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");
@@ -157,7 +174,7 @@ function FAQ({ authorized }) {
 
   const [newQuestion, setNewQuestion] = useState("");
   const [newAnswer, setNewAnswer] = useState("");
-  const [newCat, setNewCat] = useState("");
+  const [newCat, setNewCat] = useState("0");
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -178,7 +195,8 @@ function FAQ({ authorized }) {
       console.log(error);
     });
 
-  const submitFAQ = () => {
+  const submitFAQ = (e) => {
+    console.log(localStorage.getItem("username"));
     Axios.post("http://localhost:3001/faq/admin", {
       username: username,
       account_id: account_id,
@@ -190,7 +208,7 @@ function FAQ({ authorized }) {
         JSONDATA = res;
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response);
       });
   };
 
@@ -295,12 +313,13 @@ function FAQ({ authorized }) {
                         className="input"
                         type="text"
                         id="category"
-                        // value="{supervisorName}"
                         onChange={(e) => {
                           setNewCat(e.target.value);
                         }}
                       >
-                        <option value="general">General</option>
+                        <option value="general" default>
+                          General
+                        </option>
                         <option value="uploadingdocuments">
                           Uploading Documents
                         </option>
@@ -508,13 +527,9 @@ function FAQ({ authorized }) {
                         //   setSupervisorName(e.target.value);
                         // }}
                       >
-                        <option value="general">General</option>
-                        <option value="uploadingdocuments">
-                          Uploading Documents
-                        </option>
-                        <option value="placementsupervisor">
-                          Placement Supervisor
-                        </option>
+                        <option value="0">General</option>
+                        <option value="1">Uploading Documents</option>
+                        <option value="2">Placement Supervisor</option>
                       </select>
                     </div>
                   </CardContent>
