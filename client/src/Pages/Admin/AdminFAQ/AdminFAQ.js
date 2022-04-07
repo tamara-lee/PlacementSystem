@@ -157,7 +157,7 @@ function FAQ({ authorized }) {
 
   const [newQuestion, setNewQuestion] = useState("");
   const [newAnswer, setNewAnswer] = useState("");
-  const [newCat, setnewCat] = useState("");
+  const [newCat, setNewCat] = useState("");
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -183,7 +183,7 @@ function FAQ({ authorized }) {
       username: username,
       account_id: account_id,
       questions: newQuestion,
-      answers: newAnswers,
+      answers: newAnswer,
       cat: newCat,
     })
       .then((res) => {
