@@ -63,28 +63,6 @@ if (res !== undefined) {
           user_account : {
             connect : {account_id: student_account.account_id,},
           },
-          //account_id: student_account.account_id,
-          //placement_year is needed as well - (one student to many records)
-          //which means placement table might be beeded? 
-          //maybe we can change it to one to one?
-
-          //create placement record for this student
-          //but the relations seem kind of complicated
-        /*  placement : {
-            create: [
-              {
-                connect : {account_id: student_account.account_id, student_uid: req.body.universityNumber,},
-                //worried about this part as student record is created at the same time
-                //maybe we can try create and connect
-                //if not we need to put student table + placement table tgt
-               // connect : {student_uid: req.body.universityNumber},
-                placement_year: req.body.placementYear,
-                created_by: modifier.username,
-                modified_by: modifier.username,
-                creation_time: Date(),
-              },
-            ],
-          },*/
         },
       });
      console.log(newStudent);

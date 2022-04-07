@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const fs = require("fs");
+const { duration } = require("moment");
 
 /**router.get("/student", validateToken, async (req, res) => {
   const student_info = await student.findUnique({
@@ -83,7 +84,7 @@ router.post(
     // console.log(req.file, req.body);
   }
 );
-/**router.get("/student", validateToken, async (req, res) => {
+/*router.get("/student/info`", validateToken, async (req, res) => {
   //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
   const studentNumber = req.body.studentNumber;
 
@@ -112,7 +113,7 @@ router.post(
 		//res.status(500).json(error);
 	}
 
-});**/
+});*/
 
 
 router.post("/student", validateToken, async (req, res) => {
@@ -123,6 +124,7 @@ router.post("/student", validateToken, async (req, res) => {
   const companyName = req.body.companyName;
   const jobTitle = req.body.jobTitle;
   const jobNature = req.body.jobNature;
+  const employmentDuration = req.body.duration;
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
   const location = req.body.location;
@@ -149,32 +151,30 @@ router.post("/student", validateToken, async (req, res) => {
     res.status(400).json({ error: "User does not exist in the Placement System." });
   }
   
-  const student_table_record = await student.findUnique({
+ /* const student_table_record = await student.findUnique({
     where: {
       //find record req.body.username in username foreign key field in placement model
       student_uid: studentNumber,
     },
   });
 
-  const student_table_uid = student_table_record.student_uid;
+  const student_table_uid = student_table_record.student_uid;*/
 
   if (res !== undefined) {
     try {
       // do parse
-      const placmentRecord = await placement.upsert({
+      const placementRecord = await placement.update({
         where: {
-          student_table_uid: studentNumber,
-         //student_uid:  { connect: { student_uid: studentNumber } },
-        },
-        update: {
-          //placement_year:
+         username: user.username,
+      },   
+        data: {
           //appointment_letter:
           //feedback_form:
           feedback_comment: feedbackComment,
           company_name: companyName,
           job_title: jobTitle,
           job_nature: jobNature,
-          //employment_duration:
+          employment_duration: employmentDuration,
           start_date: startDate,
           end_date: endDate,
           working_location: location,
@@ -183,42 +183,17 @@ router.post("/student", validateToken, async (req, res) => {
           supervisor_name: supervisorName,
           supervisor_telephone: supervisorPhone,
           supervisor_email: supervisorEmail,
+          user_account : {
+            connect : {account_id: user.account_id,},
+          },
           modified_by: user.username,
-         // last_modified:
-          //consent_form:
-        },
-        create: {
-          //need to extract username
-          username: user.username,
-          //student_uid: studentNumber, { connect: { id: categoryId } }
-          student_uid:  { connect: { student_uid: studentNumber } },
-          //placement_year
-          //appointment_letter
-          //feedback_form:
-          feedback_comment: feedbackComment,
-          company_name: companyName,
-          job_title: jobTitle,
-          job_nature: jobNature,
-          //employment_duration:
-          start_date: startDate,
-          end_date: endDate,
-          working_location: location,
-          salary: salary,
-          payment_type: paymentType,
-          supervisor_name: supervisorName,
-          supervisor_telephone: supervisorPhone,
-          supervisor_email: supervisorEmail,
-          modified_by: user.username,
-          //last_modified:
-          created_by: studentNumber,
-          //creation_time:
           //consent_form:
         },
       });
-
-      res.json(placmentRecord);
+      console.log(placementRecord);
+      res.json(placementRecord);
     } catch (error) {
-      console.error("Not a JSON response");
+      console.error("Student does not exist in placement system!");
       console.log(error);
     }
   }
