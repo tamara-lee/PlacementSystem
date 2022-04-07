@@ -38,12 +38,14 @@ app.use(
 const authRouter = require("./routes/auth");
 const placementRouter = require("./routes/placementrecord");
 const addStudentsRouter = require("./routes/addstudents");
+const faqRouter = require("./routes/faq");
 
 
 //app.use("/", authRouter);
 app.use("/auth", authRouter);
 app.use("/placementrecord", placementRouter);
 app.use("/addstudents", addStudentsRouter);
+app.use("/faq", faqRouter);
 
 
 /**app.get("/login", validateToken, (req, res) => {
