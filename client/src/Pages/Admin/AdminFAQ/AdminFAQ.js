@@ -15,7 +15,8 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import JSONDATA from "../../../mock data/MOCK_DATA.json";
+// import JSONDATA from "../../../mock data/MOCK_DATA.json";
+import Axios from "axios";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -150,6 +151,9 @@ function FAQ({ authorized }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState(false);
 
+  const username = localStorage.getItem("username");
+  const account_id = localStorage.getItem("userId");
+
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -157,6 +161,28 @@ function FAQ({ authorized }) {
   const handleAccordionChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
+
+  Axios.get("http://localhost:3001/faq/admin", {
+    username: username,
+    account_id: account_id,
+  })
+    .then((res) => {
+      JSONDATA = res;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  Axios.post("http://localhost:3001/faq/admin", {
+    username: username,
+    account_id: account_id,
+  })
+    .then((res) => {
+      JSONDATA = res;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   if (authorized === false) {
     console.log(authorized);
