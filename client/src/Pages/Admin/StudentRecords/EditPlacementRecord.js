@@ -375,7 +375,7 @@ function EditPlacementRecord({ authorized }) {
                           true
                         )
                       );
-                      setDuration(duration);
+                      setDuration(Math.floor(duration));
                       setStartDate(newPeriod[0]);
                       setEndDate(newPeriod[1]);
                       if (duration < 4) {
