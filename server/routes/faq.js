@@ -8,7 +8,7 @@ const { faq } = new PrismaClient();
 
 
 router.post("/admin", validateToken, async (req, res) => {
-    const modifier = await user_account.findUnique({
+   const modifier = await user_account.findUnique({
         where: {
           //find record req.body.username in username foreign key field in placement model
           username: req.body.username,
