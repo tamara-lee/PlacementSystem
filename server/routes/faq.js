@@ -34,7 +34,14 @@ router.post("/admin", validateToken, async (req, res) => {
 
   });
 
-router.get("/admin", validateToken, async (req, res) => {});
+router.get("/admin", validateToken, async (req, res) => {
+  //get questions = findMany()
+  //get answers
+  //cat
+  //last
+
+
+});
 
 router.put("/");
 

@@ -33,9 +33,14 @@ router.post("/admin", validateToken, async (req, res) => {
   //i.e., student is a CS or IS student
   //user_account consists of unique account_id, student_uid, username and password
   const student_account = await user_account.findUnique({
-    where: {
-      student_uid: req.body.universityNumber,
-    }
+    where:{
+      student_uid: req.body.universityNumber
+    },
+   select: {
+    
+          account_id: true
+    },
+      //student_uid: req.body.universityNumber,
   });
   console.log(student_account)
  
@@ -65,25 +70,51 @@ if (res !== undefined) {
 
           //create placement record for this student
           //but the relations seem kind of complicated
-          placement : {
+        /*  placement : {
             create: [
               {
-                connect : {account_id: student_account.account_id,},
+                connect : {account_id: student_account.account_id, student_uid: req.body.universityNumber,},
                 //worried about this part as student record is created at the same time
                 //maybe we can try create and connect
                 //if not we need to put student table + placement table tgt
-                connect : {student_uid: req.body.universityNumber,},
+               // connect : {student_uid: req.body.universityNumber},
                 placement_year: req.body.placementYear,
-
-              }
-            ]
-          }
-
+                created_by: modifier.username,
+                modified_by: modifier.username,
+                creation_time: Date(),
+              },
+            ],
+          },*/
         },
       });
-      console.log(newStudent);
+     console.log(newStudent);
     } catch (e) {
       console.log(e);
+    }
+
+    try {
+      const newPlacementRecord = await placement.create({ 
+        data:{
+          user_account : {
+            connect : {account_id: student_account.account_id,},
+          },
+          student : {
+            connect : {student_uid: req.body.universityNumber,},
+
+          },
+          //connect : {account_id: student_account.account_id, student_uid: req.body.universityNumber,},
+          placement_year: req.body.placementYear,
+          created_by: modifier.username,
+          modified_by: modifier.username,
+          creation_time: new Date(Date.now()),
+        }
+
+      });
+      console.log(newPlacementRecord);
+
+    } catch (error) {
+      console.log(error);
+
     }
   }
 });
