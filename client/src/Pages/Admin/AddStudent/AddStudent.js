@@ -13,6 +13,13 @@ import CardContent from "@mui/material/CardContent";
 import "./style.css";
 import Axios from "axios";
 
+// for pop-ups
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 function AddStudent({ authorized }) {
   Axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -38,6 +45,14 @@ function AddStudent({ authorized }) {
   const [placementYear, setPlacementYear] = useState("");
   const [courseYear, setCourseYear] = useState("");
 
+  const [openUploadError, setOpenUploadError] = React.useState(false);
+  const [openFieldError, setOpenFieldError] = React.useState(false);
+  const [openImportError, setOpenImportError] = React.useState(false);
+  const [openUploadConfirmation, setOpenUploadConfirmation] =
+    React.useState(false);
+  const [openImportConfirmation, setOpenImportConfirmation] =
+    React.useState(false);
+
   const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
   const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
   const [showPlacementErrorMsg, setShowPlacementErrorMsg] = useState(false);
@@ -45,6 +60,26 @@ function AddStudent({ authorized }) {
 
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
+
+  const handleCloseUploadError = () => {
+    setOpenUploadError(false);
+  };
+
+  const handleCloseFieldError = () => {
+    setOpenFieldError(false);
+  };
+
+  const handleCloseImportError = () => {
+    setOpenImportError(false);
+  };
+
+  const handleCloseUploadConfirmation = () => {
+    setOpenUploadConfirmation(false);
+  };
+
+  const handleCloseImportConfirmation = () => {
+    setOpenImportConfirmation(false);
+  };
 
   const checkUniversityNumber = (e) => {
     if (/^\d\d\d\d\d\d\d\d\d\d$/.test(e)) {
@@ -71,67 +106,60 @@ function AddStudent({ authorized }) {
   };
 
   const handleImport = (e) => {
-    alert(`File uploaded is ${file}`);
+    if (file === "") {
+      setOpenImportError(true);
+    } else {
+      setOpenImportConfirmation(true);
+    }
   };
 
-  // const handleUpload = (e) => {
-  //   if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
-  //     confirmHandleUpload();
-  //   } else {
-  //     alert(
-  //       `There is an error in the form. Please make sure there are no error messages before submitting!`
-  //     );
-  //   }
-  // };
-
-  // const confirmHandleUpload = (e) => {
-  //   const username = localStorage.getItem("username");
-  //   const account_id = localStorage.getItem("userId");
-
-  //   Axios.post("http://localhost:3001/addstudents/admin", {
-  //     username: username,
-  //     account_id: account_id,
-  //     name: name,
-  //     universityNumber: universityNumber,
-  //     curriculum: curriculum,
-  //     academicYear: academicYear,
-  //     // placementYear: parseInt(placementYear),
-  //     courseYear: parseInt(courseYear),
-  //   })
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const confirmHandleImport = (e) => {
+    handleCloseImportConfirmation();
+    alert(`File to be uploaded is ${fileName}. Add API call to upload to DB`);
+  };
 
   const handleUpload = (e) => {
+    if (
+      !name &&
+      !universityNumber &&
+      !academicYear &&
+      !placementYear &&
+      !courseYear
+    ) {
+      setOpenFieldError(true);
+    } else if (
+      showUidErrorMsg ||
+      showCourseErrorMsg ||
+      showAcademicErrorMsg ||
+      showPlacementErrorMsg
+    ) {
+      setOpenUploadError(true);
+    } else {
+      setOpenUploadConfirmation(true);
+    }
+  };
+
+  const confirmHandleUpload = (e) => {
+    handleCloseUploadConfirmation();
     const username = localStorage.getItem("username");
     const account_id = localStorage.getItem("userId");
 
-    if (!showUidErrorMsg && !showAcademicErrorMsg && !showPlacementErrorMsg) {
-      Axios.post("http://localhost:3001/addstudents/admin", {
-        username: username,
-        account_id: account_id,
-        name: name,
-        universityNumber: universityNumber,
-        curriculum: curriculum,
-        academicYear: academicYear,
-        // placementYear: parseInt(placementYear),
-        courseYear: parseInt(courseYear),
+    Axios.post("http://localhost:3001/addstudents/admin", {
+      username: username,
+      account_id: account_id,
+      name: name,
+      universityNumber: universityNumber,
+      curriculum: curriculum,
+      academicYear: academicYear,
+      placementYear: placementYear,
+      courseYear: parseInt(courseYear),
+    })
+      .then((res) => {
+        console.log(res);
       })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      alert(
-        `There is an error in the form. Please make sure there are no error messages before submitting!`
-      );
-    }
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   if (authorized === false) {
@@ -204,7 +232,7 @@ function AddStudent({ authorized }) {
                 }}
                 onClick={handleImport}
               >
-                Upload
+                Import
               </Button>
 
               {/* Import
@@ -329,7 +357,7 @@ function AddStudent({ authorized }) {
                         setCourseYear(e.target.value);
                         setShowCourseErrorMsg(false);
                       } else {
-                        setPlacementYear(e.target.value);
+                        setCourseYear(e.target.value);
                         setShowCourseErrorMsg(true);
                       }
                     }}
@@ -422,6 +450,113 @@ function AddStudent({ authorized }) {
               </CardContent>
             </Card>
           </Box>
+          <Dialog
+            open={openImportError}
+            onClose={handleCloseImportError}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"No file selected!"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Please select a file to upload by selecting a file from your
+                local directory or drag and drop to the designated area.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseImportError} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openFieldError}
+            onClose={handleCloseFieldError}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"All fields must be completed!"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Please ensure that all fields are completed before uploading the
+                record.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseFieldError} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openUploadError}
+            onClose={handleCloseUploadError}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Unable to submit form!"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Please make sure all information have been entered correctly and
+                no error messages if showing before submitting this form.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseUploadError} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openImportConfirmation}
+            onClose={handleCloseImportConfirmation}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Are you sure you would like to submit the form?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Please note you may still make changes to the form after
+                submission.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={confirmHandleImport} autoFocus>
+                Yes
+              </Button>
+              <Button onClick={handleCloseImportConfirmation}>No</Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openUploadConfirmation}
+            onClose={handleCloseUploadConfirmation}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Are you sure you would like to submit the form?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Please note you may still make changes to the form after
+                submission.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={confirmHandleUpload} autoFocus>
+                Yes
+              </Button>
+              <Button onClick={handleCloseUploadConfirmation}>No</Button>
+            </DialogActions>
+          </Dialog>
         </Container>
       </div>
     </>
