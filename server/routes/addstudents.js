@@ -24,7 +24,6 @@ router.post("/admin", validateToken, async (req, res) => {
 //to get name of modifier (user who is adding the student record(s))
   const modifier = await user_account.findUnique({
     where: {
-      //find record req.body.username in username foreign key field in placement model
       username: req.body.username,
     },
   });
@@ -37,7 +36,6 @@ router.post("/admin", validateToken, async (req, res) => {
       student_uid: req.body.universityNumber
     },
    select: {
-    
           account_id: true
     },
       //student_uid: req.body.universityNumber,
@@ -49,17 +47,13 @@ router.post("/admin", validateToken, async (req, res) => {
 if (res !== undefined) {
     try {
       const newStudent = await student.create({
-        //Argument course_year for data.course_year is missing.
-        //Argument user_account for data.user_account is missing.
         data: {
           student_uid: req.body.universityNumber,
           english_name: req.body.name,
           acad_year: req.body.academicYear,
-          //course_year: req.body.placementYear,
           course_year: req.body.courseYear,
           curriculum: req.body.curriculum,
           modified_by: modifier.username,
-          //account_id is unknown
           user_account : {
             connect : {account_id: student_account.account_id,},
           },
@@ -80,7 +74,6 @@ if (res !== undefined) {
             connect : {student_uid: req.body.universityNumber,},
 
           },
-          //connect : {account_id: student_account.account_id, student_uid: req.body.universityNumber,},
           placement_year: req.body.placementYear,
           created_by: modifier.username,
           modified_by: modifier.username,

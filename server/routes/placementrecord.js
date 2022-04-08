@@ -84,7 +84,9 @@ router.post(
     // console.log(req.file, req.body);
   }
 );
-/*router.get("/student/info`", validateToken, async (req, res) => {
+router.get("/student", validateToken, async (req, res) => {
+  console.log(req.body);
+
   //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
   const studentNumber = req.body.studentNumber;
 
@@ -102,18 +104,22 @@ router.post(
         english_name: true,
         curriculum: true,
       },
-      
+
+      include: {
+        placement: true,
+      },
     });
-    console.log(req.body);
+    console.log(student_info);
     
 	}
 	catch (error) {
     console.error("Student not found!")
 		console.log(error);
-		//res.status(500).json(error);
 	}
 
-});*/
+
+
+});
 
 
 router.post("/student", validateToken, async (req, res) => {
@@ -142,7 +148,6 @@ router.post("/student", validateToken, async (req, res) => {
   //const username = await placement.findUnique({
   const user = await user_account.findUnique({
     where: {
-      //find record req.body.username in username foreign key field in placement model
       username: req.body.username,
     },
   });
@@ -264,36 +269,5 @@ router.post("/student", validateToken, async (req, res) => {
     res.status(400).send({ message: "Invalid placement record!" });
   }**/
 });
-
-/**router.post("/student", validateToken, async (req, res) => {
-     
-    try {
-        
-      } catch (e) {
-        console.log(e);
-        res.status(400).send({
-          message: "Oops! Something went wrong.",
-        });
-      }
-    });**/
-
-/** try {
-      const comment = await prisma.comments.create({
-        data: {
-          message: req.body.message,
-          user_id: req.body.author,
-          activity_id: req.body.activity_id,
-        },
-      });
-      res.status(201).send({
-        message: "comment posted",
-      });
-    } catch (e) {
-      console.log(e);
-      res.status(400).send({
-        message: "something went wrong",
-      });
-    }
-  });**/
 
 module.exports = router;
