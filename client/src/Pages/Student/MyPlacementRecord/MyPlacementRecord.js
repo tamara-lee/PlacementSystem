@@ -65,8 +65,8 @@ function MyPlacementRecord({ authorized }) {
   const [endDate, setEndDate] = useState(null);
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
-  const [paymentType, setPaymentType] = useState("");
-  const [salary, setSalary] = useState("");
+  const [paymentType, setPaymentType] = useState("unpaid");
+  const [salary, setSalary] = useState(null);
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
