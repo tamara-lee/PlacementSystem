@@ -169,7 +169,7 @@ function MyPlacementRecord({ authorized }) {
   };
 
   const getForm = () => {
-    Axios.get("http://localhost:3001/student/info", {
+    Axios.get("http://localhost:3001/placementrecord/student/info", {
       studentNumber: student_uid,
     })
       .then((res) => {

@@ -238,7 +238,12 @@ function StudentRecords({ authorized }) {
 
   const selectAll = (e) => {};
 
-  const handleStudent = (e) => {
+  const handleStudent = (selectedUsername, selectedUid) => {
+    localStorage.setItem("studentSelectedUsername", selectedUsername);
+    localStorage.setItem("studentSelectedUid", selectedUid);
+
+    console.log("the selected username is " + selectedUsername);
+    console.log("the selected uid is " + selectedUid);
     return history.push("/admin/edit/studentrecord");
   };
 
@@ -529,10 +534,21 @@ function StudentRecords({ authorized }) {
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                        <Button onClick={handleStudent}>Edit</Button>
+                        <Button
+                          onClick={handleStudent(row.username, row.student_uid)}
+                        >
+                          Edit
+                        </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Button onClick={handlePlacement}>Edit</Button>
+                        <Button
+                          onClick={handlePlacement(
+                            row.username,
+                            row.student_uid
+                          )}
+                        >
+                          Edit
+                        </Button>
                       </TableCell>
                       <TableCell align="center">
                         <Button disabled>Test</Button>
