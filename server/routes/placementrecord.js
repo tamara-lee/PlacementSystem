@@ -85,7 +85,7 @@ router.post(
   }
 );
 router.post("/student/info", validateToken, async (req, res) => {
-  console.log(req.body);
+ // console.log(req.body);
 
   //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
   const studentNumber = req.body.studentNumber;
@@ -109,17 +109,15 @@ router.post("/student/info", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    console.log(student_info);
-    
+    //console.log(student_info);
+    res.json(student_info);
+   // console.log(res.json(student_info));
 	}
 	catch (error) {
     console.error("Student not found!")
 		console.log(error);
 	}
-  console.log("res",res);
-  //console.log("res.data",res.data);
-
-
+  //console.log("res",res);
 
 
 });
