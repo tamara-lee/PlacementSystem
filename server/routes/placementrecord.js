@@ -99,11 +99,11 @@ router.post("/student/info", validateToken, async (req, res) => {
         student_uid: studentNumber,
 
       },
-      select: {
+     /* select: {
         student_uid: true,
         english_name: true,
         curriculum: true,
-      },
+      },*/
 
       include: {
         placement: true,
@@ -116,6 +116,9 @@ router.post("/student/info", validateToken, async (req, res) => {
     console.error("Student not found!")
 		console.log(error);
 	}
+  console.log("res",res);
+  //console.log("res.data",res.data);
+
 
 
 
