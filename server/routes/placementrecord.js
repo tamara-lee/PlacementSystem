@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
 const router = require("express").Router();
 const cors = require("cors");
 const multer = require("multer");
+
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     if (file.fieldname === "appointment") {
@@ -24,27 +25,13 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, callback) {
+    //callback(null, file.originalname);
     callback(null, file.originalname);
   },
 });
 const upload = multer({ storage });
 const fs = require("fs");
 const { duration } = require("moment");
-
-/**router.get("/student", validateToken, async (req, res) => {
-  const student_info = await student.findUnique({
-    where: {
-      //find record req.body.username in username foreign key field in placement model
-      student_uid: req.body.studentNumber,
-    },
-    select: {
-      student_uid: true,
-      english_name: true,
-      curriculum: true,
-    }
-  });
-
-});**/
 
 router.get("/student/acadyear", async (req, res) => {
   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
@@ -84,7 +71,7 @@ router.post(
     // console.log(req.file, req.body);
   }
 );
-router.post("/student/info", validateToken, async (req, res) => {
+/*router.post("/student/info", validateToken, async (req, res) => {
  // console.log(req.body);
 
   //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
@@ -93,34 +80,22 @@ router.post("/student/info", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
       where: {
-        //find record req.body.username in username foreign key field in placement model
-        //student_uid: req.body.studentNumber,
         student_uid: studentNumber,
       },
-      /* select: {
-        student_uid: true,
-        english_name: true,
-        curriculum: true,
-      },*/
-
       include: {
         placement: true,
       },
     });
-    //console.log(student_info);
     res.json(student_info);
-   // console.log(res.json(student_info));
 	}
 	catch (error) {
     console.error("Student not found!")
 		console.log(error);
 	}
-  //console.log("res",res);
-
-
-});
+});*/
 
 router.post("/student", validateToken, async (req, res) => {
+  console.log(req.body);
   const studentName = req.body.studentName;
   const studentNumber = req.body.studentNumber;
   const studentCurriculum = req.body.studentCurriculum;
@@ -154,15 +129,6 @@ router.post("/student", validateToken, async (req, res) => {
       .status(400)
       .json({ error: "User does not exist in the Placement System." });
   }
-
-  /* const student_table_record = await student.findUnique({
-    where: {
-      //find record req.body.username in username foreign key field in placement model
-      student_uid: studentNumber,
-    },
-  });
-
-  const student_table_uid = student_table_record.student_uid;*/
 
   if (res !== undefined) {
     try {

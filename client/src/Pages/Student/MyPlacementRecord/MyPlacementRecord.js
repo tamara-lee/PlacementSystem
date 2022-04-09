@@ -34,6 +34,7 @@ const Container = styled.div`
 `;
 
 function MyPlacementRecord({ authorized }) {
+  console.log("page refresh");
   const history = useHistory();
   Axios.defaults.withCredentials = true;
   useEffect(() => {
