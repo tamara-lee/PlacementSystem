@@ -185,26 +185,26 @@ function MyPlacementRecord({ authorized }) {
       studentNumber: student_uid,
     })
       .then((res) => {
-        setStudentName(res.data.studentName);
-        setStudentNumber(res.data.studentNumber);
-        setStudentCurriculum(res.data.studentCurriculum);
-        setCompanyName(res.data.companyName);
-        setJobTitle(res.data.jobTitle);
-        setJobNature(res.data.jobNature);
-        setStartDate(res.data.startDate);
-        setEndDate(res.data.endDate);
-        setDuration(res.data.duration);
-        setLocation(res.data.location);
-        setPaymentType(res.data.paymentType);
-        setSalary(res.data.salary);
-        setSupervisorName(res.data.supervisorName);
-        setSupervisorPhone(res.data.supervisorPhone);
-        setSupervisorEmail(res.data.supervisorEmail);
-        setConsentForm(res.data.consentForm);
-        setAppointmentLetter(res.data.appointmentLetter);
-        setFeedbackForm(res.data.feedbackForm);
-        setFeedbackComment(res.data.feedbackComment);
-        setPlacementStatus(res.data.placementStatus);
+        setStudentName(res.data.english_name);
+        setStudentNumber(res.data.student_uid);
+        setStudentCurriculum(res.data.curriculum);
+        setCompanyName(res.data.placement.company_name);
+        setJobTitle(res.data.placement.job_title);
+        setJobNature(res.data.placement.job_nature);
+        setStartDate(res.data.placement.start_date);
+        setEndDate(res.data.placement.end_date);
+        setDuration(res.data.placement.employment_duration);
+        setLocation(res.data.placement.working_location);
+        setPaymentType(res.data.placement.payment_type);
+        setSalary(res.data.placement.salary);
+        setSupervisorName(res.data.placement.supervisor_name);
+        setSupervisorPhone(res.data.placement.supervisor_telephone);
+        setSupervisorEmail(res.data.placement.supervisor_email);
+        setConsentForm(res.data.placement.consent_form);
+        setAppointmentLetter(res.data.placement.appointment_letter);
+        setFeedbackForm(res.data.placement.feedback_form);
+        setFeedbackComment(res.data.placement.feedback_comment);
+        setPlacementStatus(res.data.placement_status);
       })
       .catch((error) => {
         console.log(error.response);

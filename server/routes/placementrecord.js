@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
       // else uploading consent form
       callback(null, "./server/upload/consent");
     } else if (file.fieldname === "feedback") {
-      // else uploading feedback form 
+      // else uploading feedback form
       callback(null, "./server/upload/feedback");
     }
   },
@@ -90,16 +90,14 @@ router.post("/student/info", validateToken, async (req, res) => {
   //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
   const studentNumber = req.body.studentNumber;
 
-
   try {
     const student_info = await student.findUnique({
       where: {
         //find record req.body.username in username foreign key field in placement model
         //student_uid: req.body.studentNumber,
         student_uid: studentNumber,
-
       },
-     /* select: {
+      /* select: {
         student_uid: true,
         english_name: true,
         curriculum: true,
@@ -109,24 +107,17 @@ router.post("/student/info", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    console.log(student_info);
-    
-	}
-	catch (error) {
-    console.error("Student not found!")
-		console.log(error);
-	}
-  console.log("res",res);
+    // console.log(student_info);
+    res.json(student_info);
+  } catch (error) {
+    console.error("Student not found!");
+    console.log(error);
+  }
+  console.log("res.data", res.data);
   //console.log("res.data",res.data);
-
-
-
-
 });
 
-
 router.post("/student", validateToken, async (req, res) => {
-  
   const studentName = req.body.studentName;
   const studentNumber = req.body.studentNumber;
   const studentCurriculum = req.body.studentCurriculum;
@@ -155,11 +146,13 @@ router.post("/student", validateToken, async (req, res) => {
     },
   });
 
-  if (!user){
-    res.status(400).json({ error: "User does not exist in the Placement System." });
+  if (!user) {
+    res
+      .status(400)
+      .json({ error: "User does not exist in the Placement System." });
   }
-  
- /* const student_table_record = await student.findUnique({
+
+  /* const student_table_record = await student.findUnique({
     where: {
       //find record req.body.username in username foreign key field in placement model
       student_uid: studentNumber,
@@ -173,8 +166,8 @@ router.post("/student", validateToken, async (req, res) => {
       // do parse
       const placementRecord = await placement.update({
         where: {
-         username: user.username,
-      },   
+          username: user.username,
+        },
         data: {
           //appointment_letter:
           //feedback_form:
@@ -191,8 +184,8 @@ router.post("/student", validateToken, async (req, res) => {
           supervisor_name: supervisorName,
           supervisor_telephone: supervisorPhone,
           supervisor_email: supervisorEmail,
-          user_account : {
-            connect : {account_id: user.account_id,},
+          user_account: {
+            connect: { account_id: user.account_id },
           },
           modified_by: user.username,
           //consent_form:
