@@ -173,6 +173,7 @@ function EditPlacementRecord({ authorized }) {
       studentNumber: student_uid,
     })
       .then((res) => {
+        console.log(res.data);
         setStudentName(res.data.english_name);
         setStudentNumber(res.data.student_uid);
         setStudentCurriculum(res.data.curriculum);
