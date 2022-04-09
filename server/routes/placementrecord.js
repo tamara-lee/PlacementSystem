@@ -84,7 +84,7 @@ router.post(
     // console.log(req.file, req.body);
   }
 );
-router.get("/student", validateToken, async (req, res) => {
+router.post("/student/info", validateToken, async (req, res) => {
   console.log(req.body);
 
   //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
