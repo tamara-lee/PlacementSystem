@@ -66,7 +66,7 @@ function EditPlacementRecord({ authorized }) {
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("unpaid");
-  const [salary, setSalary] = useState(null);
+  const [salary, setSalary] = useState(undefined);
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
@@ -169,25 +169,26 @@ function EditPlacementRecord({ authorized }) {
   };
 
   const getForm = () => {
-    Axios.get("http://localhost:3001/placementrecord/student/info", {
+    console.log(student_uid);
+    // Axios.get("http://localhost:3001/placementrecord/student/info", {
+    //   studentNumber: student_uid,
+    // })
+    //   .then((res) => {
+    //     setStudentName(res.data.studentName);
+    //     setStudentNumber(res.data.studentNumber);
+    //     setStudentCurriculum(res.data.studentCurriculum);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response);
+    //   });
+
+    Axios.get("http://localhost:3001/placementrecord/student", {
       studentNumber: student_uid,
     })
       .then((res) => {
         setStudentName(res.data.studentName);
         setStudentNumber(res.data.studentNumber);
         setStudentCurriculum(res.data.studentCurriculum);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-
-    Axios.get("http://localhost:3001/placementrecord/student", {
-      studentNumber: student_uid,
-    })
-      .then((res) => {
-        // setStudentName(res.data.studentName);
-        // setStudentNumber(res.data.studentNumber);
-        // setStudentCurriculum(res.data.studentCurriculum);
         setCompanyName(res.data.companyName);
         setJobTitle(res.data.jobTitle);
         setJobNature(res.data.jobNature);

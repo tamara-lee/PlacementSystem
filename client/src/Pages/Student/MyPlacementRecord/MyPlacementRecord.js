@@ -169,25 +169,25 @@ function MyPlacementRecord({ authorized }) {
   };
 
   const getForm = () => {
-    Axios.get("http://localhost:3001/placementrecord/student/info", {
+    // Axios.get("http://localhost:3001/placementrecord/student/info", {
+    //   studentNumber: student_uid,
+    // })
+    //   .then((res) => {
+    //     setStudentName(res.data.studentName);
+    //     setStudentNumber(res.data.studentNumber);
+    //     setStudentCurriculum(res.data.studentCurriculum);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response);
+    //   });
+
+    Axios.post("http://localhost:3001/placementrecord/student/info", {
       studentNumber: student_uid,
     })
       .then((res) => {
         setStudentName(res.data.studentName);
         setStudentNumber(res.data.studentNumber);
         setStudentCurriculum(res.data.studentCurriculum);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-
-    Axios.get("http://localhost:3001/placementrecord/student", {
-      studentNumber: student_uid,
-    })
-      .then((res) => {
-        // setStudentName(res.data.studentName);
-        // setStudentNumber(res.data.studentNumber);
-        // setStudentCurriculum(res.data.studentCurriculum);
         setCompanyName(res.data.companyName);
         setJobTitle(res.data.jobTitle);
         setJobNature(res.data.jobNature);
@@ -325,6 +325,7 @@ function MyPlacementRecord({ authorized }) {
     })
       .then((response) => {
         console.log(response.data);
+        getForm();
         // if (response.data === "Successfully submitted") {
         //   console.log(response.data);
         // }

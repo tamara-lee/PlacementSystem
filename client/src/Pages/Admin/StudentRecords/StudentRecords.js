@@ -42,21 +42,6 @@ import CardContent from "@mui/material/CardContent";
 import studentRecords from "../../../mock data/test_data.json";
 import tableRecords from "../../../mock data/records.json";
 
-// Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
-//   (response) => {
-//     console.log(response);
-//   }
-// );
-// Axios.get(
-//   "http://localhost:3001/placementrecord/student/placementyear",
-//   {}
-// ).then((response) => {
-//   console.log(response);
-// });
-
-// get json of all student records
-// get json of all placement records
-
 function StudentRecords({ authorized }) {
   const history = useHistory();
 
@@ -238,17 +223,26 @@ function StudentRecords({ authorized }) {
 
   const selectAll = (e) => {};
 
-  const handleStudent = (selectedUsername, selectedUid) => {
-    localStorage.setItem("studentSelectedUsername", selectedUsername);
-    localStorage.setItem("studentSelectedUid", selectedUid);
+  const [selectedUsername, setSelectedUsername] = useState("");
+  const handleStudent = (event) => {
+    // event.preventDefault();
+    console.log("edit student clicked!");
+    console.log(event);
+    // e.preventDefault();
+    // localStorage.setItem("studentSelectedUsername", selectedUsername);
+    // localStorage.setItem("studentSelectedUid", selectedUid);
 
-    console.log("the selected username is " + selectedUsername);
-    console.log("the selected uid is " + selectedUid);
+    // console.log("the selected username is " + selectedUsername);
+    // console.log("the selected uid is " + selectedUid);
     return history.push("/admin/edit/studentrecord");
+    // history.push("/admin/edit/studentrecord");
   };
 
-  const handlePlacement = (e) => {
+  const handlePlacement = (event) => {
+    event.preventDefault();
+    console.log("edit placement clicked!");
     return history.push("/admin/edit/placementrecord");
+    // history.push("/admin/edit/placementrecord");
   };
 
   const handleClickOpen = () => {
@@ -535,20 +529,14 @@ function StudentRecords({ authorized }) {
                       </TableCell>
                       <TableCell align="center">
                         <Button
-                          onClick={handleStudent(row.username, row.student_uid)}
+                          dataItem={row}
+                          onClick={this.handleStudent(row)}
                         >
                           Edit
                         </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Button
-                          onClick={handlePlacement(
-                            row.username,
-                            row.student_uid
-                          )}
-                        >
-                          Edit
-                        </Button>
+                        <Button onClick={handlePlacement}>Edit</Button>
                       </TableCell>
                       <TableCell align="center">
                         <Button disabled>Test</Button>
