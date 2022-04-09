@@ -1,17 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import Axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import NavigationBar from "../../../components/NavBar/NavBar";
 import { Redirect } from "react-router-dom";
 import "./style.css";
-// import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { IoIosInformationCircle } from "react-icons/io";
-import "../../../global.js";
 import moment from "moment";
 
 // for date picker
@@ -34,19 +28,17 @@ const Container = styled.div`
 `;
 
 function MyPlacementRecord({ authorized }) {
-  console.log("page refreshed!");
-  const history = useHistory();
   Axios.defaults.withCredentials = true;
+
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
-      .then((response) => {})
+      .then((res) => {})
       .catch((error) => {
         console.log(error.response);
         if (
           error.response.data.error ===
-          "User is not authenticated!\nPlease log in."
+          "User is not authenticated!\\nPlease log in."
         ) {
-          console.log("logged out.");
           localStorage.setItem("userState", false);
           alert("You have been logged out. Please refresh and log in again.");
         }
@@ -67,7 +59,7 @@ function MyPlacementRecord({ authorized }) {
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("unpaid");
-  const [salary, setSalary] = useState(null);
+  const [salary, setSalary] = useState(undefined);
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
@@ -77,20 +69,46 @@ function MyPlacementRecord({ authorized }) {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
+  const [showSupervisorText, setShowSupervisorText] = useState(false);
+  const [showCommentText, setShowCommentText] = useState(false);
+  const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
+  const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
+  const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
+
+  const [period, setPeriod] = React.useState([null, null]);
+  const [consentFormName, setConsentFormName] = useState("");
+  const [appointmentLetterName, setAppointmentLetterName] = useState("");
+  const [feedbackFormName, setFeedbackFormName] = useState("");
+
   const [openError, setOpenError] = React.useState(false);
   const [openConfirmation, setOpenConfirmation] = React.useState(false);
 
-  const [period, setPeriod] = React.useState([null, null]);
-
-  const handleCloseError = (e) => {
+  // pop-up handlers
+  const handleCloseError = () => {
     setOpenError(false);
   };
 
-  const handleCloseConfirmation = (e) => {
+  const handleCloseConfirmation = () => {
     setOpenConfirmation(false);
   };
 
-  // test chat messages
+  // document handlers
+  const consentFormHandler = (e) => {
+    setConsentForm(e.target.files[0]);
+    setConsentFormName(e.target.files[0].name);
+  };
+
+  const appointmentLetterHandler = (e) => {
+    setAppointmentLetter(e.target.files[0]);
+    setAppointmentLetterName(e.target.files[0].name);
+  };
+
+  const feedbackFormHandler = (e) => {
+    setFeedbackForm(e.target.files[0]);
+    setFeedbackFormName(e.target.files[0].name);
+  };
+
+  // test chat test messages
   const [msg1, setMsg1] = useState(
     "Job nature is not detailed enough. Please add more information."
   );
@@ -100,16 +118,22 @@ function MyPlacementRecord({ authorized }) {
   const [msg3, setMsg3] = useState("Looks good.");
   const [createTime, setCreateTime] = useState(Date().toLocaleString());
 
-  // states
-  const [showSupervisorText, setShowSupervisorText] = useState(false);
-  const [showCommentText, setShowCommentText] = useState(false);
-  const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
-  const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
-  const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
+  // error checking handlers
+  const checkEmail = (e) => {
+    if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-  const [consentFormName, setConsentFormName] = useState("");
-  const [appointmentLetterName, setAppointmentLetterName] = useState("");
-  const [feedbackFormName, setFeedbackFormName] = useState("");
+  const checkPhone = (e) => {
+    if (/^\+?\d+$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // Remark states
   const dummy = useRef();
@@ -133,79 +157,35 @@ function MyPlacementRecord({ authorized }) {
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  if (authorized === false) {
-    console.log(authorized);
-    return <Redirect to="/" />;
-  }
-
-  const checkEmail = (e) => {
-    if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(e)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const checkPhone = (e) => {
-    if (/^\+?\d+$/.test(e)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const consentFormHandler = (e) => {
-    setConsentForm(e.target.files[0]);
-    setConsentFormName(e.target.files[0].name);
-  };
-
-  const appointmentLetterHandler = (e) => {
-    setAppointmentLetter(e.target.files[0]);
-    setAppointmentLetterName(e.target.files[0].name);
-  };
-
-  const feedbackFormHandler = (e) => {
-    setFeedbackForm(e.target.files[0]);
-    setFeedbackFormName(e.target.files[0].name);
-  };
-
   const getForm = () => {
-    // Axios.get("http://localhost:3001/placementrecord/student/info", {
-    //   studentNumber: student_uid,
-    // })
-    //   .then((res) => {
-    //     setStudentName(res.data.studentName);
-    //     setStudentNumber(res.data.studentNumber);
-    //     setStudentCurriculum(res.data.studentCurriculum);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response);
-    //   });
-
-    Axios.post("http://localhost:3001/placementrecord/student/info", {
-      studentNumber: student_uid,
+    // should change to get request because this request will always be called when re-rendering
+    // cannot be avoided
+    Axios.get("http://localhost:3001/placementrecord/student", {
+      params: {
+        studentNumber: student_uid,
+      },
     })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setStudentName(res.data.english_name);
         setStudentNumber(res.data.student_uid);
         setStudentCurriculum(res.data.curriculum);
-        setCompanyName(res.data.placement.company_name);
-        setJobTitle(res.data.placement.job_title);
-        setJobNature(res.data.placement.job_nature);
-        setStartDate(res.data.placement.start_date);
-        setEndDate(res.data.placement.end_date);
-        setDuration(res.data.placement.employment_duration);
-        setLocation(res.data.placement.working_location);
-        setPaymentType(res.data.placement.payment_type);
-        setSalary(res.data.placement.salary);
-        setSupervisorName(res.data.placement.supervisor_name);
-        setSupervisorPhone(res.data.placement.supervisor_telephone);
-        setSupervisorEmail(res.data.placement.supervisor_email);
-        setConsentForm(res.data.placement.consent_form);
-        setAppointmentLetter(res.data.placement.appointment_letter);
-        setFeedbackForm(res.data.placement.feedback_form);
-        setFeedbackComment(res.data.placement.feedback_comment);
+        setCompanyName(res.data.placement[0].company_name);
+        setJobTitle(res.data.placement[0].job_title);
+        setJobNature(res.data.placement[0].job_nature);
+        setStartDate(res.data.placement[0].start_date);
+        setEndDate(res.data.placement[0].end_date);
+        setDuration(res.data.placement[0].employment_duration);
+        setLocation(res.data.placement[0].working_location);
+        setPaymentType(res.data.placement[0].payment_type);
+        setSalary(res.data.placement[0].salary);
+        setSupervisorName(res.data.placement[0].supervisor_name);
+        setSupervisorPhone(res.data.placement[0].supervisor_telephone);
+        setSupervisorEmail(res.data.placement[0].supervisor_email);
+        setConsentForm(res.data.placement[0].consent_form);
+        setAppointmentLetter(res.data.placement[0].appointment_letter);
+        setFeedbackForm(res.data.placement[0].feedback_form);
+        setFeedbackComment(res.data.placement[0].feedback_comment);
         setPlacementStatus(res.data.placement_status);
       })
       .catch((error) => {
@@ -213,74 +193,8 @@ function MyPlacementRecord({ authorized }) {
       });
   };
 
-  // const submitForm = () => {
-  //   if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
-  //     setOpenError(true);
-  //   } else {
-  //     confirmSubmitForm
-  //   }
-  // }
-
-  // const confirmSubmitForm = () => {
-  //   // console.log("Submit button clicked!");
-  //   const username = localStorage.getItem("username");
-  //   const student_uid = localStorage.getItem("userUid")
-
-  //   if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
-  //     setOpenError(true);
-  //   } else {
-  //     const formData = new FormData();
-
-  //     if (appointmentLetter) {
-  //       formData.append(
-  //         "appointment",
-  //         appointmentLetter,
-  //         appointmentLetter.name
-  //       );
-  //     }
-  //     if (consentForm) {
-  //       formData.append("consent", consentForm, consentForm.name);
-  //     }
-  //     if (feedbackForm) {
-  //       formData.append("feedback", feedbackForm, feedbackForm.name);
-  //     }
-
-  //     console.log("username is " + localStorage.getItem("username"));
-  //     Axios.post("http://localhost:3001/placementrecord/student", {
-  //       username: username,
-  //       studentName: studentName,
-  //       // studentNumber: studentNumber,
-  //       studentNumber: student_uid,
-  //       studentCurriculum: studentCurriculum,
-  //       companyName: companyName,
-  //       jobTitle: jobTitle,
-  //       jobNature: jobNature,
-  //       startDate: startDate,
-  //       endDate: endDate,
-  //       duration: duration,
-  //       location: location,
-  //       paymentType: paymentType,
-  //       salary: salary,
-  //       supervisorName: supervisorName,
-  //       supervisorPhone: supervisorPhone,
-  //       supervisorEmail: supervisorEmail,
-  //       feedbackComment: feedbackComment,
-  //       placementStatus: placementStatus,
-  //       formData,
-  //     })
-  //       .then((response) => {
-  //         console.log(response.data);
-  //         // if (response.data === "Successfully submitted") {
-  //         //   console.log(response.data);
-  //         // }
-  //       })
-  //       .catch((error) => {
-  //         console.log(error.response);
-  //       });
-  //   }
-  // };
-
-  const submitForm = (e) => {
+  const submitForm = () => {
+    // the updating useState triggers re-render
     if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
     } else {
@@ -288,7 +202,7 @@ function MyPlacementRecord({ authorized }) {
     }
   };
 
-  const confirmSubmitForm = (e) => {
+  const confirmSubmitForm = () => {
     handleCloseConfirmation();
 
     const formData = new FormData();
@@ -306,7 +220,6 @@ function MyPlacementRecord({ authorized }) {
     Axios.post("http://localhost:3001/placementrecord/student", {
       username: username,
       studentName: studentName,
-      // studentNumber: studentNumber,
       studentNumber: student_uid,
       studentCurriculum: studentCurriculum,
       companyName: companyName,
@@ -327,10 +240,6 @@ function MyPlacementRecord({ authorized }) {
     })
       .then((response) => {
         console.log(response.data);
-
-        // if (response.data === "Successfully submitted") {
-        //   console.log(response.data);
-        // }
       })
       .catch((error) => {
         console.log(error.response);
@@ -339,6 +248,11 @@ function MyPlacementRecord({ authorized }) {
   };
 
   getForm();
+
+  if (authorized === false) {
+    console.log(authorized);
+    return <Redirect to="/" />;
+  }
 
   return (
     <>
@@ -412,7 +326,6 @@ function MyPlacementRecord({ authorized }) {
                   }}
                 />
                 <div className="col">
-                  {/* <label htmlFor="startDate">START DATE to END DATE</label> */}
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DateRangePicker
                       inputFormat="dd/MM/yyyy"
@@ -446,47 +359,6 @@ function MyPlacementRecord({ authorized }) {
                       )}
                     />
                   </LocalizationProvider>
-                  {/* <DatePicker
-                    className="date-picker"
-                    selected={startDate}
-                    selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
-                    onChange={(date) => {
-                      setStartDate(date);
-                      updateDurationStart(date);
-                    }}
-                    locale="en-GB"
-                    showWeekNumbers
-                    id="startDate"
-                    value={startDate}
-                  /> */}
-                  {/* <label htmlFor="endDate">END DATE</label> */}
-                  {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      value={endDate}
-                      onChange={(newValue) => {
-                        setEndDate(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider> */}
-                  {/* <DatePicker
-                    className="date-picker"
-                    selected={endDate}
-                    selectsEnd
-                    startDate={startDate}
-                    endDate={endDate}
-                    minDate={startDate}
-                    onChange={(date) => {
-                      setEndDate(date);
-                      updateDurationEnd(date);
-                    }}
-                    locale="en-GB"
-                    showWeekNumbers
-                    id="endDate"
-                    value={endDate}
-                  /> */}
                 </div>
                 <label htmlFor="duration" className="duration">
                   DURATION (WEEKS)
@@ -718,7 +590,6 @@ function MyPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">PLACEMENT STATUS</p>
               <div className="container">
-                {/* <label htmlFor="placementStatus">Placement Status</label> */}
                 <select
                   className="input"
                   name="placementStatus"
@@ -768,14 +639,7 @@ function MyPlacementRecord({ authorized }) {
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            className="form-submit"
-            onClick={(e) => {
-              e.preventDefault();
-              submitForm();
-            }}
-          >
+          <button type="button" className="form-submit" onClick={submitForm}>
             Save & Submit
           </button>
           <Dialog
@@ -785,23 +649,16 @@ function MyPlacementRecord({ authorized }) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Unable to submit form!"}
+              {"Error(s) in form!"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Please make sure all information have been entered correctly and
-                no error messages if showing before submitting this form.
+                Please check the error message(s) in red and fix them before
+                submitting the form.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleCloseError();
-                }}
-                autoFocus
-              >
+              <Button type="button" onClick={handleCloseError} autoFocus>
                 OK
               </Button>
             </DialogActions>
@@ -812,34 +669,18 @@ function MyPlacementRecord({ authorized }) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Are you sure you would like to submit the form?"}
-            </DialogTitle>
+            <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Please note you may still make changes to the form after
-                submission.
+                You may still make changes to the form after submission.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  confirmSubmitForm();
-                }}
-                autoFocus
-              >
-                Yes
-              </Button>
-              <Button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleCloseConfirmation();
-                }}
-              >
+              <Button type="button" onClick={handleCloseConfirmation}>
                 No
+              </Button>
+              <Button type="button" onClick={confirmSubmitForm} autoFocus>
+                Yes
               </Button>
             </DialogActions>
           </Dialog>
@@ -851,7 +692,6 @@ function MyPlacementRecord({ authorized }) {
 
 function RemarkMessage(props) {
   // const { text, uid, photoURL } = props.message;
-
   // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
 
   const messageClass = "sent";

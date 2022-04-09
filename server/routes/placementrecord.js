@@ -15,13 +15,13 @@ const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     if (file.fieldname === "appointment") {
       // if uploading appointment letter
-      callback(null, "./server/upload/appointment");
+      callback(null, "./upload/appointment");
     } else if (file.fieldname === "consent") {
       // else uploading consent form
-      callback(null, "./server/upload/consent");
+      callback(null, "./upload/consent");
     } else if (file.fieldname === "feedback") {
       // else uploading feedback form
-      callback(null, "./server/upload/feedback");
+      callback(null, "./upload/feedback");
     }
   },
   filename: function (req, file, callback) {
@@ -31,7 +31,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const fs = require("fs");
-const { duration } = require("moment");
 
 router.get("/student/acadyear", async (req, res) => {
   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
@@ -68,7 +67,7 @@ router.post(
     },
   ]),
   async (req, res) => {
-    // console.log(req.file, req.body);
+    console.log(req.file, req.body);
   }
 );
 /*router.post("/student/info", validateToken, async (req, res) => {
@@ -93,6 +92,23 @@ router.post(
 		console.log(error);
 	}
 });*/
+
+router.get("/student", validateToken, async (req, res) => {
+  try {
+    const student_info = await student.findUnique({
+      where: {
+        student_uid: req.query.studentNumber,
+      },
+      include: {
+        placement: true,
+      },
+    });
+    res.json(student_info);
+  } catch (error) {
+    console.error("Student not found!");
+    console.log(error);
+  }
+});
 
 router.post("/student", validateToken, async (req, res) => {
   console.log(req.body);

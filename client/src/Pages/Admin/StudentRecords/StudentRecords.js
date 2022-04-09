@@ -528,12 +528,9 @@ function StudentRecords({ authorized }) {
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                        <Button
-                          dataItem={row}
-                          onClick={this.handleStudent(row)}
-                        >
+                        {/* <Button dataItem={row} onClick={handleStudent(row)}>
                           Edit
-                        </Button>
+                        </Button> */}
                       </TableCell>
                       <TableCell align="center">
                         <Button onClick={handlePlacement}>Edit</Button>

@@ -56,7 +56,7 @@ function App() {
               />
             )}
           />
-          {<Route exact path="/testfileupload" component={TestFileUpload} />}
+          <Route exact path="/testfileupload" component={TestFileUpload} />
           <Route exact path="/logout" component={Logout} />
         </Switch>
       </Routes>

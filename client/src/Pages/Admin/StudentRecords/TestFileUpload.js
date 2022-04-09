@@ -28,16 +28,22 @@ function TestFileUpload() {
   const handleSubmission = () => {
     const formData = new FormData();
 
-    formData.append("appointment", selectedFile1, selectedFile1.name);
-    formData.append("consent", selectedFile2, selectedFile2.name);
-    formData.append("feedback", selectedFile3, selectedFile3.name);
+    if (selectedFile1) {
+      formData.append("appointment", selectedFile1, selectedFile1.name);
+    }
+    if (selectedFile2) {
+      formData.append("consent", selectedFile2, selectedFile2.name);
+    }
+    if (selectedFile3) {
+      formData.append("feedback", selectedFile3, selectedFile3.name);
+    }
 
     Axios.post("http://localhost:3001/placementrecord/testpage", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     })
-      .then((res) => res.json())
+      .then((res) => console.log(res))
       .catch((error) => {
         console.error("Error:", error);
       });

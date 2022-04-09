@@ -22,6 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 function AddStudent({ authorized }) {
   Axios.defaults.withCredentials = true;
+
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -31,7 +32,6 @@ function AddStudent({ authorized }) {
           error.response.data.error ===
           "User is not authenticated!\nPlease log in."
         ) {
-          console.log("logged out.");
           localStorage.setItem("userState", false);
           alert("You have been logged out. Please refresh and log in again.");
         }
@@ -45,13 +45,11 @@ function AddStudent({ authorized }) {
   const [placementYear, setPlacementYear] = useState("");
   const [courseYear, setCourseYear] = useState("");
 
-  const [openUploadError, setOpenUploadError] = React.useState(false);
-  const [openFieldError, setOpenFieldError] = React.useState(false);
-  const [openImportError, setOpenImportError] = React.useState(false);
-  const [openUploadConfirmation, setOpenUploadConfirmation] =
-    React.useState(false);
-  const [openImportConfirmation, setOpenImportConfirmation] =
-    React.useState(false);
+  const [openUploadError, setOpenUploadError] = useState(false);
+  const [openFieldError, setOpenFieldError] = useState(false);
+  const [openImportError, setOpenImportError] = useState(false);
+  const [openUploadConfirmation, setOpenUploadConfirmation] = useState(false);
+  const [openImportConfirmation, setOpenImportConfirmation] = useState(false);
 
   const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
   const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
@@ -118,7 +116,7 @@ function AddStudent({ authorized }) {
     alert(`File to be uploaded is ${fileName}. Add API call to upload to DB`);
   };
 
-  const handleUpload = (e) => {
+  const handleUpload = () => {
     if (
       !name &&
       !universityNumber &&
@@ -139,8 +137,9 @@ function AddStudent({ authorized }) {
     }
   };
 
-  const confirmHandleUpload = (e) => {
+  const confirmHandleUpload = () => {
     handleCloseUploadConfirmation();
+
     const username = localStorage.getItem("username");
     const account_id = localStorage.getItem("userId");
 
@@ -499,12 +498,12 @@ function AddStudent({ authorized }) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Unable to submit form!"}
+              {"Error(s) in form!"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Please make sure all information have been entered correctly and
-                no error messages if showing before submitting this form.
+                Please check the error message(s) in red and fix them before
+                submitting the form.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -520,19 +519,18 @@ function AddStudent({ authorized }) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Are you sure you would like to submit the form?"}
+              {"Confirm import of " + fileName + " ?"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Please note you may still make changes to the form after
-                submission.
+                Please ensure the correct file is selected.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
+              <Button onClick={handleCloseImportConfirmation}>No</Button>
               <Button onClick={confirmHandleImport} autoFocus>
                 Yes
               </Button>
-              <Button onClick={handleCloseImportConfirmation}>No</Button>
             </DialogActions>
           </Dialog>
           <Dialog
@@ -541,20 +539,17 @@ function AddStudent({ authorized }) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Are you sure you would like to submit the form?"}
-            </DialogTitle>
+            <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Please note you may still make changes to the form after
-                submission.
+                Student record will be added after submission.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
+              <Button onClick={handleCloseUploadConfirmation}>No</Button>
               <Button onClick={confirmHandleUpload} autoFocus>
                 Yes
               </Button>
-              <Button onClick={handleCloseUploadConfirmation}>No</Button>
             </DialogActions>
           </Dialog>
         </Container>

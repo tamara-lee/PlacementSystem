@@ -1,18 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import { Redirect } from "react-router-dom";
 import "./style.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import { AppointmentLetterModal } from "../../../components/Modal/AppointmentLetterModal";
-import { IconContext } from "react-icons";
-import { IoIosInformationCircle } from "react-icons/io";
-import "../../../global.js";
+import Typography from "@mui/material/Typography";
 
 const Container = styled.div`
   justify-content: center;
@@ -20,7 +14,22 @@ const Container = styled.div`
 `;
 
 function EditStudentRecord({ authorized }) {
-  const history = useHistory();
+  Axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    Axios.get("http://localhost:3001/auth/login")
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error.response);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          localStorage.setItem("userState", false);
+          alert("You have been logged out. Please refresh and log in again.");
+        }
+      });
+  }, []);
 
   // sample text
   const [studentName, setStudentName] = useState("John Doe");
@@ -104,58 +113,59 @@ function EditStudentRecord({ authorized }) {
   getForm();
   return (
     <>
-      {/* <Navbar /> */}
       <NavigationBar />
       <Container>
         <form>
-          <div className="row">
-            <div className="column">
-              <p className="container-title">STUDENT RECORD</p>
-              <div className="container">
-                <label htmlFor="studentName">NAME</label>
-                <input
-                  className="input"
-                  type="text"
-                  id="studentName"
-                  value={studentName}
-                />
-                <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
-                <input
-                  className="input"
-                  type="text"
-                  id="studentNo"
-                  value={studentNumber}
-                />
-                <label htmlFor="curriculum">CURRICULUM</label>
-                <input
-                  className="input"
-                  type="text"
-                  id="curriculum"
-                  value={studentCurriculum}
-                />
-                <label htmlFor="academicYear">ACADEMIC YEAR</label>
-                <input
-                  className="input"
-                  type="number"
-                  id="academicYear"
-                  value={academicYear}
-                />
-                <label htmlFor="placementYear">PLACEMENT YEAR</label>
-                <input
-                  className="input"
-                  type="number"
-                  id="placementYear"
-                  value={placementYear}
-                />
-                <label htmlFor="courseYear">COURSE YEAR</label>
-                <input
-                  className="input"
-                  type="number"
-                  id="courseYear"
-                  value={courseYear}
-                />
-              </div>
-            </div>
+          <Typography
+            style={{
+              fontSize: "18px",
+            }}
+          >
+            STUDENT RECORD
+          </Typography>
+          <div className="container">
+            <label htmlFor="studentName">NAME</label>
+            <input
+              className="input"
+              type="text"
+              id="studentName"
+              value={studentName}
+            />
+            <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
+            <input
+              className="input"
+              type="text"
+              id="studentNo"
+              value={studentNumber}
+            />
+            <label htmlFor="curriculum">CURRICULUM</label>
+            <input
+              className="input"
+              type="text"
+              id="curriculum"
+              value={studentCurriculum}
+            />
+            <label htmlFor="academicYear">ACADEMIC YEAR</label>
+            <input
+              className="input"
+              type="number"
+              id="academicYear"
+              value={academicYear}
+            />
+            <label htmlFor="placementYear">PLACEMENT YEAR</label>
+            <input
+              className="input"
+              type="number"
+              id="placementYear"
+              value={placementYear}
+            />
+            <label htmlFor="courseYear">COURSE YEAR</label>
+            <input
+              className="input"
+              type="number"
+              id="courseYear"
+              value={courseYear}
+            />
           </div>
           <button className="form-submit" onClick={submitForm}>
             Save & Submit
