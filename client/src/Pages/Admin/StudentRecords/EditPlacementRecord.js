@@ -43,6 +43,7 @@ function EditPlacementRecord({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
+    getForm();
   }, []);
 
   const username = localStorage.getItem("username");
@@ -75,13 +76,15 @@ function EditPlacementRecord({ authorized }) {
   const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
-  const [period, setPeriod] = React.useState([null, null]);
+  const [period, setPeriod] = useState([null, null]);
   const [consentFormName, setConsentFormName] = useState("");
   const [appointmentLetterName, setAppointmentLetterName] = useState("");
   const [feedbackFormName, setFeedbackFormName] = useState("");
 
-  const [openError, setOpenError] = React.useState(false);
-  const [openConfirmation, setOpenConfirmation] = React.useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFail, setOpenFail] = useState(false);
 
   // pop-up handlers
   const handleCloseError = () => {
@@ -90,6 +93,14 @@ function EditPlacementRecord({ authorized }) {
 
   const handleCloseConfirmation = () => {
     setOpenConfirmation(false);
+  };
+
+  const handleCloseSuccess = () => {
+    setOpenSuccess(false);
+  };
+
+  const handleCloseFail = () => {
+    setOpenFail(false);
   };
 
   // document handlers
@@ -164,27 +175,108 @@ function EditPlacementRecord({ authorized }) {
       },
     })
       .then((res) => {
-        // console.log(res.data);
-        setStudentName(res.data.english_name);
-        setStudentNumber(res.data.student_uid);
-        setStudentCurriculum(res.data.curriculum);
-        setCompanyName(res.data.placement[0].company_name);
-        setJobTitle(res.data.placement[0].job_title);
-        setJobNature(res.data.placement[0].job_nature);
-        setStartDate(res.data.placement[0].start_date);
-        setEndDate(res.data.placement[0].end_date);
-        setDuration(res.data.placement[0].employment_duration);
-        setLocation(res.data.placement[0].working_location);
-        setPaymentType(res.data.placement[0].payment_type);
-        setSalary(res.data.placement[0].salary);
-        setSupervisorName(res.data.placement[0].supervisor_name);
-        setSupervisorPhone(res.data.placement[0].supervisor_telephone);
-        setSupervisorEmail(res.data.placement[0].supervisor_email);
-        setConsentForm(res.data.placement[0].consent_form);
-        setAppointmentLetter(res.data.placement[0].appointment_letter);
-        setFeedbackForm(res.data.placement[0].feedback_form);
-        setFeedbackComment(res.data.placement[0].feedback_comment);
-        setPlacementStatus(res.data.placement_status);
+        setStudentName(
+          res.data.english_name == null ? undefined : res.data.english_name
+        );
+        setStudentNumber(
+          res.data.student_uid == null ? undefined : res.data.student_uid
+        );
+        setStudentCurriculum(
+          res.data.curriculum == null ? undefined : res.data.curriculum
+        );
+        setCompanyName(
+          res.data.placement[0].company_name == null
+            ? undefined
+            : res.data.placement[0].company_name
+        );
+        setJobTitle(
+          res.data.placement[0].job_title == null
+            ? undefined
+            : res.data.placement[0].job_title
+        );
+        setJobNature(
+          res.data.placement[0].job_nature == null
+            ? undefined
+            : res.data.placement[0].job_nature
+        );
+        setStartDate(
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date
+        );
+        setEndDate(
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date
+        );
+        setPeriod([
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date,
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date,
+        ]);
+        setDuration(
+          res.data.placement[0].employment_duration == null
+            ? undefined
+            : res.data.placement[0].employment_duration
+        );
+        setLocation(
+          res.data.placement[0].working_location == null
+            ? undefined
+            : res.data.placement[0].working_location
+        );
+        setPaymentType(
+          res.data.placement[0].payment_type == null
+            ? undefined
+            : res.data.placement[0].payment_type
+        );
+        setSalary(
+          res.data.placement[0].salary == null
+            ? undefined
+            : res.data.placement[0].salary
+        );
+        setSupervisorName(
+          res.data.placement[0].supervisor_name == null
+            ? undefined
+            : res.data.placement[0].supervisor_name
+        );
+        setSupervisorPhone(
+          res.data.placement[0].supervisor_telephone == null
+            ? undefined
+            : res.data.placement[0].supervisor_telephone
+        );
+        setSupervisorEmail(
+          res.data.placement[0].supervisor_email == null
+            ? undefined
+            : res.data.placement[0].supervisor_email
+        );
+        setConsentForm(
+          res.data.placement[0].consent_form == null
+            ? undefined
+            : res.data.placement[0].consent_form
+        );
+        setAppointmentLetter(
+          res.data.placement[0].appointment_letter == null
+            ? undefined
+            : res.data.placement[0].appointment_letter
+        );
+        setFeedbackForm(
+          res.data.placement[0].feedback_form == null
+            ? undefined
+            : res.data.placement[0].feedback_form
+        );
+        setFeedbackComment(
+          res.data.placement[0].feedback_comment == null
+            ? undefined
+            : res.data.placement[0].feedback_comment
+        );
+        setPlacementStatus(
+          res.data.placement_status == null
+            ? "waiting"
+            : res.data.placement_status
+        );
       })
       .catch((error) => {
         console.log(error.response);
@@ -214,42 +306,158 @@ function EditPlacementRecord({ authorized }) {
       formData.append("feedback", feedbackForm, feedbackForm.name);
     }
 
-    Axios.post("http://localhost:3001/placementrecord/student", {
-      username: username,
-      studentName: studentName,
-      studentNumber: student_uid,
-      studentCurriculum: studentCurriculum,
-      companyName: companyName,
-      jobTitle: jobTitle,
-      jobNature: jobNature,
-      startDate: startDate,
-      endDate: endDate,
-      duration: duration,
-      location: location,
-      paymentType: paymentType,
-      salary: salary,
-      supervisorName: supervisorName,
-      supervisorPhone: supervisorPhone,
-      supervisorEmail: supervisorEmail,
-      feedbackComment: feedbackComment,
-      placementStatus: placementStatus,
-      formData,
-    })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-    getForm();
-  };
+    // formData.append(username, username);
+    // formData.append(studentName, studentName);
+    // formData.append(studentNumber, student_uid);
+    // formData.append(studentCurriculum, studentCurriculum);
+    // formData.append(companyName, companyName);
+    // formData.append(jobTitle, jobTitle);
+    // formData.append(jobNature, jobNature);
+    // formData.append(startDate, startDate);
+    // formData.append(endDate, endDate);
+    // formData.append(duration, duration);
+    // formData.append(location, location);
+    // formData.append(paymentType, paymentType);
+    // formData.append(salary, salary);
+    // formData.append(supervisorName, supervisorName);
+    // formData.append(supervisorPhone, supervisorPhone);
+    // formData.append(supervisorEmail, supervisorEmail);
+    // formData.append(feedbackComment, feedbackComment);
+    // formData.append(placementStatus, placementStatus);
+    // formData.append(supervisorEmail, supervisorEmail);
 
-  getForm();
+    try {
+      Axios.post("http://localhost:3001/placementrecord/student", {
+        username: username,
+        studentName: studentName,
+        studentNumber: student_uid,
+        studentCurriculum: studentCurriculum,
+        companyName: companyName,
+        jobTitle: jobTitle,
+        jobNature: jobNature,
+        startDate: startDate,
+        endDate: endDate,
+        duration: duration,
+        location: location,
+        paymentType: paymentType,
+        salary: salary,
+        supervisorName: supervisorName,
+        supervisorPhone: supervisorPhone,
+        supervisorEmail: supervisorEmail,
+        feedbackComment: feedbackComment,
+        placementStatus: placementStatus,
+        formData,
+      })
+        .then((res) => {
+          setOpenSuccess(true);
+          setCompanyName(
+            res.data.placement[0].company_name == null
+              ? undefined
+              : res.data.placement[0].company_name
+          );
+          setJobTitle(
+            res.data.placement[0].job_title == null
+              ? undefined
+              : res.data.placement[0].job_title
+          );
+          setJobNature(
+            res.data.placement[0].job_nature == null
+              ? undefined
+              : res.data.placement[0].job_nature
+          );
+          setStartDate(
+            res.data.placement[0].start_date == null
+              ? undefined
+              : res.data.placement[0].start_date
+          );
+          setEndDate(
+            res.data.placement[0].end_date == null
+              ? undefined
+              : res.data.placement[0].end_date
+          );
+          setPeriod([
+            res.data.placement[0].start_date == null
+              ? undefined
+              : res.data.placement[0].start_date,
+            res.data.placement[0].end_date == null
+              ? undefined
+              : res.data.placement[0].end_date,
+          ]);
+          setDuration(
+            res.data.placement[0].employment_duration == null
+              ? undefined
+              : res.data.placement[0].employment_duration
+          );
+          setLocation(
+            res.data.placement[0].working_location == null
+              ? undefined
+              : res.data.placement[0].working_location
+          );
+          setPaymentType(
+            res.data.placement[0].payment_type == null
+              ? undefined
+              : res.data.placement[0].payment_type
+          );
+          setSalary(
+            res.data.placement[0].salary == null
+              ? undefined
+              : res.data.placement[0].salary
+          );
+          setSupervisorName(
+            res.data.placement[0].supervisor_name == null
+              ? undefined
+              : res.data.placement[0].supervisor_name
+          );
+          setSupervisorPhone(
+            res.data.placement[0].supervisor_telephone == null
+              ? undefined
+              : res.data.placement[0].supervisor_telephone
+          );
+          setSupervisorEmail(
+            res.data.placement[0].supervisor_email == null
+              ? undefined
+              : res.data.placement[0].supervisor_email
+          );
+          setConsentForm(
+            res.data.placement[0].consent_form == null
+              ? undefined
+              : res.data.placement[0].consent_form
+          );
+          setAppointmentLetter(
+            res.data.placement[0].appointment_letter == null
+              ? undefined
+              : res.data.placement[0].appointment_letter
+          );
+          setFeedbackForm(
+            res.data.placement[0].feedback_form == null
+              ? undefined
+              : res.data.placement[0].feedback_form
+          );
+          setFeedbackComment(
+            res.data.placement[0].feedback_comment == null
+              ? undefined
+              : res.data.placement[0].feedback_comment
+          );
+          setPlacementStatus(
+            res.data.placement_status == null
+              ? "waiting"
+              : res.data.placement_status
+          );
+          getForm();
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
+    } catch (error) {
+      setOpenFail(true);
+    }
+  };
 
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
+
   return (
     <>
       <NavigationBar />
@@ -264,7 +472,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentName"
-                  value={studentName}
+                  defaultValue={studentName}
                   readOnly
                 />
                 <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
@@ -272,7 +480,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentNo"
-                  value={studentNumber}
+                  defaultValue={studentNumber}
                   readOnly
                 />
                 <label htmlFor="curriculum">CURRICULUM</label>
@@ -280,7 +488,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="curriculum"
-                  value={studentCurriculum}
+                  defaultValue={studentCurriculum}
                   readOnly
                 />
               </div>
@@ -291,7 +499,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="companyName"
-                  value={companyName}
+                  defaultValue={companyName}
                   placeholder="Microsoft"
                   maxLength="100"
                   onChange={(e) => {
@@ -303,7 +511,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="jobTitle"
-                  value={jobTitle}
+                  defaultValue={jobTitle}
                   placeholder="Software Engineer Intern"
                   maxLength="50"
                   onChange={(e) => {
@@ -315,7 +523,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="jobNature"
-                  value={jobNature}
+                  defaultValue={jobNature}
                   placeholder="The scope of the position is ..."
                   onChange={(e) => {
                     setJobNature(e.target.value);
@@ -330,17 +538,17 @@ function EditPlacementRecord({ authorized }) {
                       value={period}
                       onChange={(newPeriod) => {
                         setPeriod(newPeriod);
-                        const duration = moment.duration(
+                        const difference = moment.duration(
                           moment(newPeriod[1]).diff(
                             moment(newPeriod[0]),
                             "weeks",
                             true
                           )
                         );
-                        setDuration(Math.floor(duration).toString());
+                        setDuration(Math.floor(difference).toString());
                         setStartDate(newPeriod[0]);
                         setEndDate(newPeriod[1]);
-                        if (duration < 4) {
+                        if (difference < 4) {
                           setShowDurationErrorMsg(true);
                         } else {
                           setShowDurationErrorMsg(false);
@@ -368,7 +576,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="duration"
-                  value={duration}
+                  defaultValue={duration}
                   placeholder="0"
                   maxLength="20"
                   disabled
@@ -378,7 +586,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="location"
-                  value={location}
+                  defaultValue={location}
                   placeholder="Hong Kong"
                   maxLength="50"
                   onChange={(e) => {
@@ -390,7 +598,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   name="paymentType"
                   id="paymentType"
-                  value={paymentType}
+                  defaultValue={paymentType}
                   onChange={(e) => {
                     setPaymentType(e.target.value);
                   }}
@@ -404,7 +612,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="number"
                   id="salary"
-                  value={salary}
+                  defaultValue={salary}
                   placeholder="0.00"
                   onChange={(e) => {
                     setSalary(e.target.value);
@@ -439,7 +647,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="supervisorName"
-                  value={supervisorName}
+                  defaultValue={supervisorName}
                   placeholder="Mr. Wong Man Yi"
                   maxLength="50"
                   onChange={(e) => {
@@ -459,7 +667,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="tel"
                   id="supervisorPhone"
-                  value={supervisorPhone}
+                  defaultValue={supervisorPhone}
                   placeholder="12345678"
                   onChange={(e) => {
                     if (e.target.value == "") {
@@ -486,7 +694,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="email"
                   id="supervisorEmail"
-                  value={supervisorEmail}
+                  defaultValue={supervisorEmail}
                   placeholder="wongmanyi@microsoft.com"
                   pattern="[\w.-]+@[\w.]+"
                   onChange={(e) => {
@@ -577,7 +785,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="feedbackComment"
-                  value={feedbackComment}
+                  defaultValue={feedbackComment}
                   onChange={(e) => {
                     setFeedbackComment(e.target.value);
                   }}
@@ -589,6 +797,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   name="placementStatus"
                   id="placementStatus"
+                  defaultValue={placementStatus}
                   onChange={(e) => {
                     setPlacementStatus(e.target.value);
                   }}
@@ -613,7 +822,7 @@ function EditPlacementRecord({ authorized }) {
                 </div>
                 <div className="new-remark">
                   <input
-                    value={remarkState}
+                    defaultValue={remarkState}
                     onChange={(e) => setRemarkState(e.target.value)}
                     placeholder="Input message here..."
                     maxLength="50"
@@ -675,6 +884,36 @@ function EditPlacementRecord({ authorized }) {
               </Button>
               <Button type="button" onClick={confirmSubmitForm} autoFocus>
                 Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openSuccess}
+            onClose={handleCloseSuccess}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Successfully submitted changes!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button type="button" onClick={handleCloseSuccess} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openFail}
+            onClose={handleCloseFail}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Error in submitting form!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button type="button" onClick={handleCloseFail} autoFocus>
+                OK
               </Button>
             </DialogActions>
           </Dialog>

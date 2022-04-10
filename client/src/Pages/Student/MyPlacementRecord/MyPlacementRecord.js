@@ -274,7 +274,7 @@ function MyPlacementRecord({ authorized }) {
         );
         setPlacementStatus(
           res.data.placement_status == null
-            ? undefined
+            ? "waiting"
             : res.data.placement_status
         );
       })
@@ -293,7 +293,6 @@ function MyPlacementRecord({ authorized }) {
 
   const confirmSubmitForm = () => {
     handleCloseConfirmation();
-    console.log("confirm submit clicked!");
 
     const formData = new FormData();
 
@@ -306,6 +305,7 @@ function MyPlacementRecord({ authorized }) {
     if (feedbackForm) {
       formData.append("feedback", feedbackForm, feedbackForm.name);
     }
+
     // formData.append(username, username);
     // formData.append(studentName, studentName);
     // formData.append(studentNumber, student_uid);
@@ -440,7 +440,7 @@ function MyPlacementRecord({ authorized }) {
           );
           setPlacementStatus(
             res.data.placement_status == null
-              ? undefined
+              ? "waiting"
               : res.data.placement_status
           );
           getForm();
@@ -548,7 +548,7 @@ function MyPlacementRecord({ authorized }) {
                         setDuration(Math.floor(difference).toString());
                         setStartDate(newPeriod[0]);
                         setEndDate(newPeriod[1]);
-                        if (duration < 4) {
+                        if (difference < 4) {
                           setShowDurationErrorMsg(true);
                         } else {
                           setShowDurationErrorMsg(false);
@@ -800,6 +800,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   name="placementStatus"
                   id="placementStatus"
+                  defaultValue={placementStatus}
                   onChange={(e) => {
                     setPlacementStatus(e.target.value);
                   }}
