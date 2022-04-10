@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const fs = require("fs");
 
+
+
 const cookieParser = require("cookie-parser");
 const { createTokens, validateToken } = require("./JWT");
 //const session = require("express-session");
@@ -15,6 +17,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+//app.use(multer().any());
+var busboy = require('connect-busboy');    
+app.use(busboy());
 
 app.use(
   cors({

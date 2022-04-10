@@ -37,15 +37,16 @@ router.post("/admin", validateToken, async (req, res) => {
     try {
       const newStudent = await student.create({
         data: {
+          user_account : {
+            connect : {account_id: student_account.account_id,},
+          },
           student_uid: req.body.universityNumber,
           english_name: req.body.name,
           acad_year: req.body.academicYear,
           course_year: req.body.courseYear,
           curriculum: req.body.curriculum,
           modified_by: modifier.username,
-          user_account : {
-            connect : {account_id: student_account.account_id,},
-          },
+        
         },
       });
      console.log(newStudent);

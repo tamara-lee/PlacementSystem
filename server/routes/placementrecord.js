@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, callback) {
     //callback(null, file.originalname);
-    callback(null, file.fieldname + "-" + file.originalname + Date.now());
+   callback(null, file.fieldname + "-" +  + Date.now() + "-" + file.originalname);
   },
 });
 const upload = multer({ storage });
@@ -67,6 +67,10 @@ router.post(
     },
   ]),
   async (req, res) => {
+    console.log("req");
+    console.log(req.files["consent"]);
+    console.log(req.files["consent"][0]);
+
     console.log(req.file, req.body);
   }
 );
@@ -126,9 +130,14 @@ router.post(
       maxCount: 1,
     },
   ]),
-  validateToken,
   async (req, res) => {
-    console.log(req.body);
+    console.log("console.log(req.files[consent][0])");
+    console.log(req.body.files);
+   // console.log(req.body.formData.files);
+    const formData = req.body.formData;
+   // console.log(formData.));
+
+
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
@@ -207,65 +216,6 @@ router.post(
     //to hand accessing of pdf files in express
     //https://expressjs.com/en/starter/static-files.html
 
-    /** try{
-    const placmentRecord = await placement.upsert({
-      where: { 
-        student_uid: studentNumber,
-      },
-      update: {
-        //placement_year
-        //appointment_letter
-        //feedback_form:
-        feedback_comment: feedbackComment,
-        company_name: companyName,
-        job_title: jobTitle,
-        job_nature: jobNature,
-        //employment_duration:
-        start_date: startDate,
-        end_date: endDate,
-        working_location: location,
-        salary: salary,
-        payment_type: paymentType,
-        supervisor_name: supervisorName,
-        supervisor_telephone: supervisorPhone,
-        supervisor_email: supervisorEmail,
-        modified_by: username,
-        //last_modified:
-        //consent_form:
-      },
-      create: {
-        username: username,
-        student_uid: studentNumber,
-        //placement_year
-        //appointment_letter
-        //feedback_form:
-        feedback_comment: feedbackComment,
-        company_name: companyName,
-        job_title: jobTitle,
-        job_nature: jobNature,
-        //employment_duration:
-        start_date: startDate,
-        end_date: endDate,
-        working_location: location,
-        salary: salary,
-        payment_type: paymentType,
-        supervisor_name: supervisorName,
-        supervisor_telephone: supervisorPhone,
-        supervisor_email: supervisorEmail,
-        modified_by: username,
-        //last_modified:
-        created_by: studentNumber,
-        //creation_time:
-        //consent_form:
-
-      }
-    });
-
-    res.json(placmentRecord);
-
-  } catch (e){
-    res.status(400).send({ message: "Invalid placement record!" });
-  }**/
   }
 );
 //to hand accessing of pdf files in express

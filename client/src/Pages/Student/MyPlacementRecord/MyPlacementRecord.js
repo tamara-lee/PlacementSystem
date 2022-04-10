@@ -338,7 +338,8 @@ function MyPlacementRecord({ authorized }) {
       feedbackComment: feedbackComment,
       placementStatus: placementStatus,
       formData,
-    })
+    }, { 'Content-Type': 'multipart/form-data' },
+    )
       .then((res) => {
         setCompanyName(
           res.data.placement[0].company_name == null
