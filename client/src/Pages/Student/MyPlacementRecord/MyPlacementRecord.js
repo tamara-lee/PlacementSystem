@@ -60,7 +60,7 @@ function MyPlacementRecord({ authorized }) {
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("unpaid");
-  const [salary, setSalary] = useState("");
+  const [salary, setSalary] = useState(undefined);
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
@@ -83,6 +83,8 @@ function MyPlacementRecord({ authorized }) {
 
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFail, setOpenFail] = useState(false);
 
   // pop-up handlers
   const handleCloseError = () => {
@@ -91,6 +93,14 @@ function MyPlacementRecord({ authorized }) {
 
   const handleCloseConfirmation = () => {
     setOpenConfirmation(false);
+  };
+
+  const handleCloseSuccess = () => {
+    setOpenSuccess(false);
+  };
+
+  const handleCloseFail = () => {
+    setOpenFail(false);
   };
 
   // document handlers
@@ -159,8 +169,6 @@ function MyPlacementRecord({ authorized }) {
   };
 
   const getForm = () => {
-    // should change to get request because this request will always be called when re-rendering
-    // cannot be avoided
     Axios.get("http://localhost:3001/placementrecord/student", {
       params: {
         studentNumber: student_uid,
@@ -318,126 +326,131 @@ function MyPlacementRecord({ authorized }) {
     // formData.append(placementStatus, placementStatus);
     // formData.append(supervisorEmail, supervisorEmail);
 
-    Axios.post("http://localhost:3001/placementrecord/student", {
-      username: username,
-      studentName: studentName,
-      studentNumber: student_uid,
-      studentCurriculum: studentCurriculum,
-      companyName: companyName,
-      jobTitle: jobTitle,
-      jobNature: jobNature,
-      startDate: startDate,
-      endDate: endDate,
-      duration: duration,
-      location: location,
-      paymentType: paymentType,
-      salary: salary,
-      supervisorName: supervisorName,
-      supervisorPhone: supervisorPhone,
-      supervisorEmail: supervisorEmail,
-      feedbackComment: feedbackComment,
-      placementStatus: placementStatus,
-      formData,
-    })
-      .then((res) => {
-        setCompanyName(
-          res.data.placement[0].company_name == null
-            ? undefined
-            : res.data.placement[0].company_name
-        );
-        setJobTitle(
-          res.data.placement[0].job_title == null
-            ? undefined
-            : res.data.placement[0].job_title
-        );
-        setJobNature(
-          res.data.placement[0].job_nature == null
-            ? undefined
-            : res.data.placement[0].job_nature
-        );
-        setStartDate(
-          res.data.placement[0].start_date == null
-            ? undefined
-            : res.data.placement[0].start_date
-        );
-        setEndDate(
-          res.data.placement[0].end_date == null
-            ? undefined
-            : res.data.placement[0].end_date
-        );
-        setPeriod([
-          res.data.placement[0].start_date == null
-            ? undefined
-            : res.data.placement[0].start_date,
-          res.data.placement[0].end_date == null
-            ? undefined
-            : res.data.placement[0].end_date,
-        ]);
-        setDuration(
-          res.data.placement[0].employment_duration == null
-            ? undefined
-            : res.data.placement[0].employment_duration
-        );
-        setLocation(
-          res.data.placement[0].working_location == null
-            ? undefined
-            : res.data.placement[0].working_location
-        );
-        setPaymentType(
-          res.data.placement[0].payment_type == null
-            ? undefined
-            : res.data.placement[0].payment_type
-        );
-        setSalary(
-          res.data.placement[0].salary == null
-            ? undefined
-            : res.data.placement[0].salary
-        );
-        setSupervisorName(
-          res.data.placement[0].supervisor_name == null
-            ? undefined
-            : res.data.placement[0].supervisor_name
-        );
-        setSupervisorPhone(
-          res.data.placement[0].supervisor_telephone == null
-            ? undefined
-            : res.data.placement[0].supervisor_telephone
-        );
-        setSupervisorEmail(
-          res.data.placement[0].supervisor_email == null
-            ? undefined
-            : res.data.placement[0].supervisor_email
-        );
-        setConsentForm(
-          res.data.placement[0].consent_form == null
-            ? undefined
-            : res.data.placement[0].consent_form
-        );
-        setAppointmentLetter(
-          res.data.placement[0].appointment_letter == null
-            ? undefined
-            : res.data.placement[0].appointment_letter
-        );
-        setFeedbackForm(
-          res.data.placement[0].feedback_form == null
-            ? undefined
-            : res.data.placement[0].feedback_form
-        );
-        setFeedbackComment(
-          res.data.placement[0].feedback_comment == null
-            ? undefined
-            : res.data.placement[0].feedback_comment
-        );
-        setPlacementStatus(
-          res.data.placement_status == null
-            ? undefined
-            : res.data.placement_status
-        );
-        getForm();
+    try {
+      Axios.post("http://localhost:3001/placementrecord/student", {
+        username: username,
+        studentName: studentName,
+        studentNumber: student_uid,
+        studentCurriculum: studentCurriculum,
+        companyName: companyName,
+        jobTitle: jobTitle,
+        jobNature: jobNature,
+        startDate: startDate,
+        endDate: endDate,
+        duration: duration,
+        location: location,
+        paymentType: paymentType,
+        salary: salary,
+        supervisorName: supervisorName,
+        supervisorPhone: supervisorPhone,
+        supervisorEmail: supervisorEmail,
+        feedbackComment: feedbackComment,
+        placementStatus: placementStatus,
+        formData,
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((res) => {
+          setOpenSuccess(true);
+          setCompanyName(
+            res.data.placement[0].company_name == null
+              ? undefined
+              : res.data.placement[0].company_name
+          );
+          setJobTitle(
+            res.data.placement[0].job_title == null
+              ? undefined
+              : res.data.placement[0].job_title
+          );
+          setJobNature(
+            res.data.placement[0].job_nature == null
+              ? undefined
+              : res.data.placement[0].job_nature
+          );
+          setStartDate(
+            res.data.placement[0].start_date == null
+              ? undefined
+              : res.data.placement[0].start_date
+          );
+          setEndDate(
+            res.data.placement[0].end_date == null
+              ? undefined
+              : res.data.placement[0].end_date
+          );
+          setPeriod([
+            res.data.placement[0].start_date == null
+              ? undefined
+              : res.data.placement[0].start_date,
+            res.data.placement[0].end_date == null
+              ? undefined
+              : res.data.placement[0].end_date,
+          ]);
+          setDuration(
+            res.data.placement[0].employment_duration == null
+              ? undefined
+              : res.data.placement[0].employment_duration
+          );
+          setLocation(
+            res.data.placement[0].working_location == null
+              ? undefined
+              : res.data.placement[0].working_location
+          );
+          setPaymentType(
+            res.data.placement[0].payment_type == null
+              ? undefined
+              : res.data.placement[0].payment_type
+          );
+          setSalary(
+            res.data.placement[0].salary == null
+              ? undefined
+              : res.data.placement[0].salary
+          );
+          setSupervisorName(
+            res.data.placement[0].supervisor_name == null
+              ? undefined
+              : res.data.placement[0].supervisor_name
+          );
+          setSupervisorPhone(
+            res.data.placement[0].supervisor_telephone == null
+              ? undefined
+              : res.data.placement[0].supervisor_telephone
+          );
+          setSupervisorEmail(
+            res.data.placement[0].supervisor_email == null
+              ? undefined
+              : res.data.placement[0].supervisor_email
+          );
+          setConsentForm(
+            res.data.placement[0].consent_form == null
+              ? undefined
+              : res.data.placement[0].consent_form
+          );
+          setAppointmentLetter(
+            res.data.placement[0].appointment_letter == null
+              ? undefined
+              : res.data.placement[0].appointment_letter
+          );
+          setFeedbackForm(
+            res.data.placement[0].feedback_form == null
+              ? undefined
+              : res.data.placement[0].feedback_form
+          );
+          setFeedbackComment(
+            res.data.placement[0].feedback_comment == null
+              ? undefined
+              : res.data.placement[0].feedback_comment
+          );
+          setPlacementStatus(
+            res.data.placement_status == null
+              ? undefined
+              : res.data.placement_status
+          );
+          getForm();
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
+    } catch (error) {
+      setOpenFail(true);
+    }
   };
 
   if (authorized === false) {
@@ -874,6 +887,36 @@ function MyPlacementRecord({ authorized }) {
               </Button>
               <Button type="button" onClick={confirmSubmitForm} autoFocus>
                 Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openSuccess}
+            onClose={handleCloseSuccess}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Successfully submitted changes!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button type="button" onClick={handleCloseSuccess} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openFail}
+            onClose={handleCloseFail}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Error in submitting form!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button type="button" onClick={handleCloseFail} autoFocus>
+                OK
               </Button>
             </DialogActions>
           </Dialog>
