@@ -35,26 +35,22 @@ router.post("/admin", validateToken, async (req, res) => {
   });
 
   //returns all existing FAQ fields
-/*router.get("/admin", validateToken, async (req, res) => {
+router.get("/", validateToken, async (req, res) => {
   try {
     const allFAQs = await faq.findMany();
     console.log(allFAQs);
+    res.json(allFAQs);
 
   } catch (error) {
     console.log(error);
   }
-
 });
 
-router.get("/student", validateToken, async (req, res) => {});
 
-//update one or multiple records?
-//might have difficulty in updating multiple records because of the WHERE clause
 router.put("/admin", validateToken, async (req, res) => { 
   console.log(req.body);
   const modifier = await user_account.findUnique({
     where: {
-      //find record req.body.username in username foreign key field in placement model
       username: req.body.username,
     },
   });
@@ -63,7 +59,7 @@ router.put("/admin", validateToken, async (req, res) => {
       const updatedFAQ = await faq.update({
         //req.body will need to pass faq_id so that backend can locate which faq is being updated
           where: {
-            faq_id: req.body.id
+            faq_id: req.body.faq_id
 
           },
           data: {
@@ -76,6 +72,7 @@ router.put("/admin", validateToken, async (req, res) => {
           }
       });
       console.log(updatedFAQ);
+      res.json()
 
   } catch (error){
     console.log(error);
@@ -83,11 +80,19 @@ router.put("/admin", validateToken, async (req, res) => {
   }
 });
 
-//delete one or multiple records?
-//might have difficulty in deleting multiple records because of the WHERE clause
 router.delete("/admin", validateToken, async (req, res) => {
-
-});*/
+  try {
+    const deletedFAQ = await faq.delete({
+      //req.body will need to pass faq_id so that backend can locate which faq is being deleted
+        where: {
+          faq_id: req.body.faq_id
+        },
+    });
+    console.log("delete successful");
+} catch (error){
+  console.log(error);
+}
+});
 
 
 module.exports = router;

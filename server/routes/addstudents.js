@@ -4,23 +4,12 @@ const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
-const {user } = new PrismaClient();
 const prisma = new PrismaClient();
 const router = require("express").Router();
 const cors = require("cors");
 
 router.post("/admin", validateToken, async (req, res) => {
   console.log(req.body)
- /* try {
-    console.log(req.body);
-
-    //res.json(req.body);
-  } catch (e) {
-    console.log(e);
-    res.status(400).send({ message: "error in getting req.body" });
-  }*/
-  //can we use the account_id of the created student to validate if student exists
-
 //to get name of modifier (user who is adding the student record(s))
   const modifier = await user_account.findUnique({
     where: {
@@ -29,7 +18,7 @@ router.post("/admin", validateToken, async (req, res) => {
   });
  
   //when we add a new student, we first ensure that the student's user account exists in the placement system
-  //i.e., student is a CS or IS student
+  //i.e., student has a CS/IS account
   //user_account consists of unique account_id, student_uid, username and password
   const student_account = await user_account.findUnique({
     where:{
@@ -38,13 +27,13 @@ router.post("/admin", validateToken, async (req, res) => {
    select: {
           account_id: true
     },
-      //student_uid: req.body.universityNumber,
   });
   console.log(student_account)
  
 
   //create placement record here
-if (res !== undefined) {
+//if (res !== undefined) {
+  if (req !== undefined) {
     try {
       const newStudent = await student.create({
         data: {

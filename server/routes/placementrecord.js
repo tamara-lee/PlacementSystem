@@ -26,29 +26,29 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, callback) {
     //callback(null, file.originalname);
-    callback(null, file.originalname);
+    callback(null, file.fieldname + "-" + file.originalname + Date.now());
   },
 });
 const upload = multer({ storage });
 const fs = require("fs");
 
-router.get("/student/acadyear", async (req, res) => {
-  //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
+// router.get("/student/acadyear", async (req, res) => {
+//   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
 
-  const acadyear = await test_acad_year.findMany();
-  res.json(acadyear);
-});
+//   const acadyear = await test_acad_year.findMany();
+//   res.json(acadyear);
+// });
 
-router.post("/student/placementyear", async (req, res) => {
-  /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
-    res.json(placementyear);**/
-  const testPlacmentYear = await test_placement_year.upsert({
-    where: { placement_test_id: 1 },
-    update: { placement_test_year: 2023 },
-    create: { placement_test_id: 2021 },
-  });
-  res.json(testPlacmentYear);
-});
+// router.post("/student/placementyear", async (req, res) => {
+//   /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
+//     res.json(placementyear);**/
+//   const testPlacmentYear = await test_placement_year.upsert({
+//     where: { placement_test_id: 1 },
+//     update: { placement_test_year: 2023 },
+//     create: { placement_test_id: 2021 },
+//   });
+//   res.json(testPlacmentYear);
+// });
 
 router.post(
   "/testpage",
@@ -268,5 +268,7 @@ router.post(
   }**/
   }
 );
+//to hand accessing of pdf files in express
+//https://expressjs.com/en/starter/static-files.html
 
 module.exports = router;
