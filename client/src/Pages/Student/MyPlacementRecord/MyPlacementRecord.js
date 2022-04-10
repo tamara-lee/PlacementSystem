@@ -167,31 +167,108 @@ function MyPlacementRecord({ authorized }) {
       },
     })
       .then((res) => {
-        console.log(res.data);
-        setStudentName(res.data.english_name);
-        setStudentNumber(res.data.student_uid);
-        setStudentCurriculum(res.data.curriculum);
-        setCompanyName(res.data.placement[0].company_name);
-        setJobTitle(res.data.placement[0].job_title);
-        setJobNature(res.data.placement[0].job_nature);
-        setStartDate(res.data.placement[0].start_date);
-        setEndDate(res.data.placement[0].end_date);
+        setStudentName(
+          res.data.english_name == null ? undefined : res.data.english_name
+        );
+        setStudentNumber(
+          res.data.student_uid == null ? undefined : res.data.student_uid
+        );
+        setStudentCurriculum(
+          res.data.curriculum == null ? undefined : res.data.curriculum
+        );
+        setCompanyName(
+          res.data.placement[0].company_name == null
+            ? undefined
+            : res.data.placement[0].company_name
+        );
+        setJobTitle(
+          res.data.placement[0].job_title == null
+            ? undefined
+            : res.data.placement[0].job_title
+        );
+        setJobNature(
+          res.data.placement[0].job_nature == null
+            ? undefined
+            : res.data.placement[0].job_nature
+        );
+        setStartDate(
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date
+        );
+        setEndDate(
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date
+        );
         setPeriod([
-          res.data.placement[0].start_date,
-          res.data.placement[0].end_date,
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date,
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date,
         ]);
-        setDuration(res.data.placement[0].employment_duration);
-        setLocation(res.data.placement[0].working_location);
-        setPaymentType(res.data.placement[0].payment_type);
-        setSalary(res.data.placement[0].salary);
-        setSupervisorName(res.data.placement[0].supervisor_name);
-        setSupervisorPhone(res.data.placement[0].supervisor_telephone);
-        setSupervisorEmail(res.data.placement[0].supervisor_email);
-        setConsentForm(res.data.placement[0].consent_form);
-        setAppointmentLetter(res.data.placement[0].appointment_letter);
-        setFeedbackForm(res.data.placement[0].feedback_form);
-        setFeedbackComment(res.data.placement[0].feedback_comment);
-        setPlacementStatus(res.data.placement_status);
+        setDuration(
+          res.data.placement[0].employment_duration == null
+            ? undefined
+            : res.data.placement[0].employment_duration
+        );
+        setLocation(
+          res.data.placement[0].working_location == null
+            ? undefined
+            : res.data.placement[0].working_location
+        );
+        setPaymentType(
+          res.data.placement[0].payment_type == null
+            ? undefined
+            : res.data.placement[0].payment_type
+        );
+        setSalary(
+          res.data.placement[0].salary == null
+            ? undefined
+            : res.data.placement[0].salary
+        );
+        setSupervisorName(
+          res.data.placement[0].supervisor_name == null
+            ? undefined
+            : res.data.placement[0].supervisor_name
+        );
+        setSupervisorPhone(
+          res.data.placement[0].supervisor_telephone == null
+            ? undefined
+            : res.data.placement[0].supervisor_telephone
+        );
+        setSupervisorEmail(
+          res.data.placement[0].supervisor_email == null
+            ? undefined
+            : res.data.placement[0].supervisor_email
+        );
+        setConsentForm(
+          res.data.placement[0].consent_form == null
+            ? undefined
+            : res.data.placement[0].consent_form
+        );
+        setAppointmentLetter(
+          res.data.placement[0].appointment_letter == null
+            ? undefined
+            : res.data.placement[0].appointment_letter
+        );
+        setFeedbackForm(
+          res.data.placement[0].feedback_form == null
+            ? undefined
+            : res.data.placement[0].feedback_form
+        );
+        setFeedbackComment(
+          res.data.placement[0].feedback_comment == null
+            ? undefined
+            : res.data.placement[0].feedback_comment
+        );
+        setPlacementStatus(
+          res.data.placement_status == null
+            ? undefined
+            : res.data.placement_status
+        );
       })
       .catch((error) => {
         console.log(error.response);
@@ -199,7 +276,6 @@ function MyPlacementRecord({ authorized }) {
   };
 
   const submitForm = () => {
-    // the updating useState triggers re-render
     if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
     } else {
@@ -264,31 +340,108 @@ function MyPlacementRecord({ authorized }) {
       formData,
     })
       .then((res) => {
-        console.log(res.data);
-        setStudentName(res.data.english_name);
-        setStudentNumber(res.data.student_uid);
-        setStudentCurriculum(res.data.curriculum);
-        setCompanyName(res.data.placement[0].company_name);
-        setJobTitle(res.data.placement[0].job_title);
-        setJobNature(res.data.placement[0].job_nature);
-        setStartDate(res.data.placement[0].start_date);
-        setEndDate(res.data.placement[0].end_date);
-        setDuration(res.data.placement[0].employment_duration);
+        setStudentName(
+          res.data.english_name == null ? undefined : res.data.english_name
+        );
+        setStudentNumber(
+          res.data.student_uid == null ? undefined : res.data.student_uid
+        );
+        setStudentCurriculum(
+          res.data.curriculum == null ? undefined : res.data.curriculum
+        );
+        setCompanyName(
+          res.data.placement[0].company_name == null
+            ? undefined
+            : res.data.placement[0].company_name
+        );
+        setJobTitle(
+          res.data.placement[0].job_title == null
+            ? undefined
+            : res.data.placement[0].job_title
+        );
+        setJobNature(
+          res.data.placement[0].job_nature == null
+            ? undefined
+            : res.data.placement[0].job_nature
+        );
+        setStartDate(
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date
+        );
+        setEndDate(
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date
+        );
         setPeriod([
-          res.data.placement[0].start_date,
-          res.data.placement[0].end_date,
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date,
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date,
         ]);
-        setLocation(res.data.placement[0].working_location);
-        setPaymentType(res.data.placement[0].payment_type);
-        setSalary(res.data.placement[0].salary);
-        setSupervisorName(res.data.placement[0].supervisor_name);
-        setSupervisorPhone(res.data.placement[0].supervisor_telephone);
-        setSupervisorEmail(res.data.placement[0].supervisor_email);
-        setConsentForm(res.data.placement[0].consent_form);
-        setAppointmentLetter(res.data.placement[0].appointment_letter);
-        setFeedbackForm(res.data.placement[0].feedback_form);
-        setFeedbackComment(res.data.placement[0].feedback_comment);
-        setPlacementStatus(res.data.placement_status);
+        setDuration(
+          res.data.placement[0].employment_duration == null
+            ? undefined
+            : res.data.placement[0].employment_duration
+        );
+        setLocation(
+          res.data.placement[0].working_location == null
+            ? undefined
+            : res.data.placement[0].working_location
+        );
+        setPaymentType(
+          res.data.placement[0].payment_type == null
+            ? undefined
+            : res.data.placement[0].payment_type
+        );
+        setSalary(
+          res.data.placement[0].salary == null
+            ? undefined
+            : res.data.placement[0].salary
+        );
+        setSupervisorName(
+          res.data.placement[0].supervisor_name == null
+            ? undefined
+            : res.data.placement[0].supervisor_name
+        );
+        setSupervisorPhone(
+          res.data.placement[0].supervisor_telephone == null
+            ? undefined
+            : res.data.placement[0].supervisor_telephone
+        );
+        setSupervisorEmail(
+          res.data.placement[0].supervisor_email == null
+            ? undefined
+            : res.data.placement[0].supervisor_email
+        );
+        setConsentForm(
+          res.data.placement[0].consent_form == null
+            ? undefined
+            : res.data.placement[0].consent_form
+        );
+        setAppointmentLetter(
+          res.data.placement[0].appointment_letter == null
+            ? undefined
+            : res.data.placement[0].appointment_letter
+        );
+        setFeedbackForm(
+          res.data.placement[0].feedback_form == null
+            ? undefined
+            : res.data.placement[0].feedback_form
+        );
+        setFeedbackComment(
+          res.data.placement[0].feedback_comment == null
+            ? undefined
+            : res.data.placement[0].feedback_comment
+        );
+        setPlacementStatus(
+          res.data.placement_status == null
+            ? undefined
+            : res.data.placement_status
+        );
         getForm();
       })
       .catch((error) => {
