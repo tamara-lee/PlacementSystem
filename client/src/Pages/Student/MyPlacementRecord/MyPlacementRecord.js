@@ -340,15 +340,6 @@ function MyPlacementRecord({ authorized }) {
       formData,
     })
       .then((res) => {
-        setStudentName(
-          res.data.english_name == null ? undefined : res.data.english_name
-        );
-        setStudentNumber(
-          res.data.student_uid == null ? undefined : res.data.student_uid
-        );
-        setStudentCurriculum(
-          res.data.curriculum == null ? undefined : res.data.curriculum
-        );
         setCompanyName(
           res.data.placement[0].company_name == null
             ? undefined

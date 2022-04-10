@@ -403,7 +403,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentName"
-                  value={studentName.current}
+                  ref={studentName}
+                  defaultValue={studentName.current}
                   readOnly
                 />
                 <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
@@ -411,7 +412,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentNo"
-                  value={studentNumber.current}
+                  ref={studentNumber}
+                  defaultValue={studentNumber.current}
                   readOnly
                 />
                 <label htmlFor="curriculum">Curriculum</label>
@@ -419,7 +421,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="curriculum"
-                  value={studentCurriculum.current}
+                  ref={studentCurriculum}
+                  defaultValue={studentCurriculum.current}
                   readOnly
                 />
               </div>
@@ -443,7 +446,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="jobTitle"
-                  value={jobTitle.current}
+                  ref={jobTitle}
+                  defaultValue={jobTitle.current}
                   placeholder="Software Engineer Intern"
                   maxLength="50"
                   onChange={(e) => {
@@ -455,7 +459,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="jobNature"
-                  value={jobNature.current}
+                  ref={jobNature}
+                  defaultValue={jobNature.current}
                   placeholder="The scope of the position is ..."
                   onChange={(e) => {
                     jobNature.current = e.target.value;
@@ -467,7 +472,8 @@ function MyPlacementRecord({ authorized }) {
                       inputFormat="dd/MM/yyyy"
                       startText="START DATE"
                       endText="END DATE"
-                      value={period.current}
+                      ref={period}
+                      defaultValue={period.current}
                       onChange={(newPeriod) => {
                         period.current = newPeriod;
                         const duration = moment.duration(
@@ -508,7 +514,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="duration"
-                  value={duration.current}
+                  ref={duration}
+                  defaultValue={duration.current}
                   placeholder="0"
                   maxLength="20"
                   disabled
@@ -518,7 +525,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="location"
-                  value={location.current}
+                  ref={location}
+                  defaultValue={location.current}
                   placeholder="Hong Kong"
                   maxLength="50"
                   onChange={(e) => {
@@ -530,7 +538,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   name="paymentType"
                   id="paymentType"
-                  value={paymentType.current}
+                  ref={paymentType}
+                  defaultValue={paymentType.current}
                   onChange={(e) => {
                     paymentType.current = e.target.value;
                   }}
@@ -544,7 +553,8 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="number"
                   id="salary"
-                  value={salary.current}
+                  ref={salary}
+                  defaultValue={salary.current}
                   placeholder="0.00"
                   onChange={(e) => {
                     salary.current = e.target.value;
