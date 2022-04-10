@@ -67,11 +67,10 @@ router.post(
     },
   ]),
   async (req, res) => {
-    console.log("req");
-    console.log(req.files["consent"]);
-    console.log(req.files["consent"][0]);
-
-    console.log(req.file, req.body);
+    // console.log(req.files["consent"]);
+    // console.log(req.file, req.body);
+    console.log(req);
+    // console.log(req.files);
   }
 );
 /*router.post("/student/info", validateToken, async (req, res) => {
@@ -131,13 +130,9 @@ router.post(
     },
   ]),
   async (req, res) => {
-    console.log("console.log(req.files[consent][0])");
-    console.log(req.body.files);
-   // console.log(req.body.formData.files);
-    const formData = req.body.formData;
-   // console.log(formData.));
-
-
+    console.log(req.body);
+    console.log(req.files);
+    console.log(req.files["consent"][0]);
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
