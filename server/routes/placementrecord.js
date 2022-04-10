@@ -26,29 +26,29 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, callback) {
     //callback(null, file.originalname);
-    callback(null, file.originalname);
+    callback(null, file.fieldname + '-' +  file.originalname + Date.now());
   },
 });
 const upload = multer({ storage });
 const fs = require("fs");
 
-router.get("/student/acadyear", async (req, res) => {
-  //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
+// router.get("/student/acadyear", async (req, res) => {
+//   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
 
-  const acadyear = await test_acad_year.findMany();
-  res.json(acadyear);
-});
+//   const acadyear = await test_acad_year.findMany();
+//   res.json(acadyear);
+// });
 
-router.post("/student/placementyear", async (req, res) => {
-  /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
-    res.json(placementyear);**/
-  const testPlacmentYear = await test_placement_year.upsert({
-    where: { placement_test_id: 1 },
-    update: { placement_test_year: 2023 },
-    create: { placement_test_id: 2021 },
-  });
-  res.json(testPlacmentYear);
-});
+// router.post("/student/placementyear", async (req, res) => {
+//   /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
+//     res.json(placementyear);**/
+//   const testPlacmentYear = await test_placement_year.upsert({
+//     where: { placement_test_id: 1 },
+//     update: { placement_test_year: 2023 },
+//     create: { placement_test_id: 2021 },
+//   });
+//   res.json(testPlacmentYear);
+// });
 
 router.post(
   "/testpage",
@@ -189,66 +189,6 @@ router.post("/student", validateToken, async (req, res) => {
 
   //to hand accessing of pdf files in express
   //https://expressjs.com/en/starter/static-files.html
-
-  /** try{
-    const placmentRecord = await placement.upsert({
-      where: { 
-        student_uid: studentNumber,
-      },
-      update: {
-        //placement_year
-        //appointment_letter
-        //feedback_form:
-        feedback_comment: feedbackComment,
-        company_name: companyName,
-        job_title: jobTitle,
-        job_nature: jobNature,
-        //employment_duration:
-        start_date: startDate,
-        end_date: endDate,
-        working_location: location,
-        salary: salary,
-        payment_type: paymentType,
-        supervisor_name: supervisorName,
-        supervisor_telephone: supervisorPhone,
-        supervisor_email: supervisorEmail,
-        modified_by: username,
-        //last_modified:
-        //consent_form:
-      },
-      create: {
-        username: username,
-        student_uid: studentNumber,
-        //placement_year
-        //appointment_letter
-        //feedback_form:
-        feedback_comment: feedbackComment,
-        company_name: companyName,
-        job_title: jobTitle,
-        job_nature: jobNature,
-        //employment_duration:
-        start_date: startDate,
-        end_date: endDate,
-        working_location: location,
-        salary: salary,
-        payment_type: paymentType,
-        supervisor_name: supervisorName,
-        supervisor_telephone: supervisorPhone,
-        supervisor_email: supervisorEmail,
-        modified_by: username,
-        //last_modified:
-        created_by: studentNumber,
-        //creation_time:
-        //consent_form:
-
-      }
-    });
-
-    res.json(placmentRecord);
-
-  } catch (e){
-    res.status(400).send({ message: "Invalid placement record!" });
-  }**/
 });
 
 module.exports = router;

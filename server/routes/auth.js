@@ -50,28 +50,6 @@ const cors = require("cors");
     } catch (error){
       console.error("emtpy database")
     }
-    //get password stored in db
-    //const systemPassword = user.password;
-   // const studentId = user.student_uid;
-  
-    //compared entered password vs db password
- /**   if (req.body.password != systemPassword) {
-      res.status(400).json({
-        error:
-          "Incorrect Username and Password Combination!\nNote: UID is NOT staff/student number. Examples of UID are 'h1012345' and 'abchan'.",
-      });
-    } else {
-      const accessToken = createTokens(user);
-  
-      res.cookie("access-token-cookie", accessToken, {
-        maxAge: 60 * 60 * 5 * 1000,
-      });
-  
-      res.json({
-        login_status: "Logged In",
-        student_uid: studentId,
-      });
-    }**/
   });
 
   router.get("/logout", validateToken, (req, res) => {
