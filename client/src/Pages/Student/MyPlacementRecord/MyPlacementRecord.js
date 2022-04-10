@@ -59,7 +59,7 @@ function MyPlacementRecord({ authorized }) {
   const [endDate, setEndDate] = useState(null);
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
-  const [paymentType, setPaymentType] = useState("unpaid");
+  const [paymentType, setPaymentType] = useState("");
   const [salary, setSalary] = useState(undefined);
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
@@ -77,9 +77,12 @@ function MyPlacementRecord({ authorized }) {
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
   const [period, setPeriod] = useState([null, null]);
-  const [consentFormName, setConsentFormName] = useState("");
-  const [appointmentLetterName, setAppointmentLetterName] = useState("");
-  const [feedbackFormName, setFeedbackFormName] = useState("");
+  const [consentFormName, setConsentFormName] = useState(false);
+  const [appointmentLetterName, setAppointmentLetterName] = useState(false);
+  const [feedbackFormName, setFeedbackFormName] = useState(false);
+  const [consentFormSelect, setConsentFormSelect] = useState(false);
+  const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
+  const [feedbackFormSelect, setFeedbackFormSelect] = useState(false);
 
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -107,16 +110,19 @@ function MyPlacementRecord({ authorized }) {
   const consentFormHandler = (e) => {
     setConsentForm(e.target.files[0]);
     setConsentFormName(e.target.files[0].name);
+    setConsentFormSelect(true);
   };
 
   const appointmentLetterHandler = (e) => {
     setAppointmentLetter(e.target.files[0]);
     setAppointmentLetterName(e.target.files[0].name);
+    setAppointmentLetterSelect(true);
   };
 
   const feedbackFormHandler = (e) => {
     setFeedbackForm(e.target.files[0]);
     setFeedbackFormName(e.target.files[0].name);
+    setFeedbackFormSelect(true);
   };
 
   // test chat test messages
@@ -228,8 +234,8 @@ function MyPlacementRecord({ authorized }) {
             : res.data.placement[0].working_location
         );
         setPaymentType(
-          res.data.placement[0].payment_type == null
-            ? undefined
+          res.data.placement[0].payment_type == "n"
+            ? "unpaid"
             : res.data.placement[0].payment_type
         );
         setSalary(
@@ -296,58 +302,60 @@ function MyPlacementRecord({ authorized }) {
 
     const formData = new FormData();
 
-    if (appointmentLetter) {
-      formData.append("appointment", appointmentLetter, appointmentLetter.name);
+    if (appointmentLetterSelect) {
+      formData.append("appointment", appointmentLetter, appointmentLetterName);
     }
-    if (consentForm) {
-      formData.append("consent", consentForm, consentForm.name);
+    if (consentFormSelect) {
+      console.log("yes");
+      formData.append("consent", consentForm, consentFormName);
     }
-    if (feedbackForm) {
-      formData.append("feedback", feedbackForm, feedbackForm.name);
+    if (feedbackFormSelect) {
+      formData.append("feedback", feedbackForm, feedbackFormName);
     }
 
-    // formData.append(username, username);
-    // formData.append(studentName, studentName);
-    // formData.append(studentNumber, student_uid);
-    // formData.append(studentCurriculum, studentCurriculum);
-    // formData.append(companyName, companyName);
-    // formData.append(jobTitle, jobTitle);
-    // formData.append(jobNature, jobNature);
-    // formData.append(startDate, startDate);
-    // formData.append(endDate, endDate);
-    // formData.append(duration, duration);
-    // formData.append(location, location);
-    // formData.append(paymentType, paymentType);
-    // formData.append(salary, salary);
-    // formData.append(supervisorName, supervisorName);
-    // formData.append(supervisorPhone, supervisorPhone);
-    // formData.append(supervisorEmail, supervisorEmail);
-    // formData.append(feedbackComment, feedbackComment);
-    // formData.append(placementStatus, placementStatus);
-    // formData.append(supervisorEmail, supervisorEmail);
+    formData.append("username", username);
+    formData.append("studentName", studentName);
+    formData.append("studentNumber", student_uid);
+    formData.append("studentCurriculum", studentCurriculum);
+    formData.append("companyName", companyName);
+    formData.append("jobTitle", jobTitle);
+    formData.append("jobNature", jobNature);
+    formData.append("startDate", startDate);
+    formData.append("endDate", endDate);
+    formData.append("duration", duration);
+    formData.append("location", location);
+    formData.append("paymentType", paymentType);
+    formData.append("salary", salary);
+    formData.append("supervisorName", supervisorName);
+    formData.append("supervisorPhone", supervisorPhone);
+    formData.append("supervisorEmail", supervisorEmail);
+    formData.append("feedbackComment", feedbackComment);
+    formData.append("placementStatus", placementStatus);
 
+    console.log(formData.get("consent"));
     try {
-      Axios.post("http://localhost:3001/placementrecord/student", {
-        username: username,
-        studentName: studentName,
-        studentNumber: student_uid,
-        studentCurriculum: studentCurriculum,
-        companyName: companyName,
-        jobTitle: jobTitle,
-        jobNature: jobNature,
-        startDate: startDate,
-        endDate: endDate,
-        duration: duration,
-        location: location,
-        paymentType: paymentType,
-        salary: salary,
-        supervisorName: supervisorName,
-        supervisorPhone: supervisorPhone,
-        supervisorEmail: supervisorEmail,
-        feedbackComment: feedbackComment,
-        placementStatus: placementStatus,
-        formData,
-      })
+      Axios.post(
+        "http://localhost:3001/placementrecord/student",
+        // username: username,
+        // studentName: studentName,
+        // studentNumber: student_uid,
+        // studentCurriculum: studentCurriculum,
+        // companyName: companyName,
+        // jobTitle: jobTitle,
+        // jobNature: jobNature,
+        // startDate: startDate,
+        // endDate: endDate,
+        // duration: duration,
+        // location: location,
+        // paymentType: paymentType,
+        // salary: salary,
+        // supervisorName: supervisorName,
+        // supervisorPhone: supervisorPhone,
+        // supervisorEmail: supervisorEmail,
+        // feedbackComment: feedbackComment,
+        // placementStatus: placementStatus,
+        formData
+      )
         .then((res) => {
           setOpenSuccess(true);
           setCompanyName(
@@ -394,8 +402,8 @@ function MyPlacementRecord({ authorized }) {
               : res.data.placement[0].working_location
           );
           setPaymentType(
-            res.data.placement[0].payment_type == null
-              ? undefined
+            res.data.placement[0].payment_type == "n"
+              ? "unpaid"
               : res.data.placement[0].payment_type
           );
           setSalary(
@@ -598,7 +606,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   name="paymentType"
                   id="paymentType"
-                  defaultValue={paymentType}
+                  value={paymentType}
                   onChange={(e) => {
                     setPaymentType(e.target.value);
                   }}

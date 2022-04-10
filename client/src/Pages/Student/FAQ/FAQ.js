@@ -11,7 +11,8 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-// import JSONDATA from "../../../mock data/MOCK_DATA.json";
+import JSONDATA from "../../../mock data/MOCK_DATA.json";
+import TextField from "@mui/material/TextField";
 import Axios from "axios";
 
 function TabPanel(props) {
@@ -143,6 +144,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 function FAQ({ authorized }) {
   Axios.defaults.withCredentials = true;
+
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -157,12 +159,15 @@ function FAQ({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
+    // getFAQ();
   }, []);
 
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");
-  const JSONDATA = [{}];
+  // const JSONDATA = [{}];
+
+  // handle search
 
   const username = localStorage.getItem("username");
   const account_id = localStorage.getItem("userId");
@@ -175,21 +180,22 @@ function FAQ({ authorized }) {
     setExpanded(newExpanded ? panel : false);
   };
 
-  Axios.get("http://localhost:3001/faq/student", {
-    username: username,
-    account_id: account_id,
-  })
-    .then((res) => {
-      JSONDATA = res;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  const getFAQ = () => {
+    // Axios.get("http://localhost:3001/faq")
+    //   .then((res) => {
+    //     // JSONDATA = res;
+    //     console.log(res);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
 
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
+  console.log(JSONDATA);
   return (
     <>
       <div>
@@ -224,13 +230,28 @@ function FAQ({ authorized }) {
           <div>
             <div className="faq-header">
               <p>Frequently Asked Questions</p>
-              <input
+              {/* <input
                 type="text"
                 className="search-bar"
                 placeholder="Search..."
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
                 }}
+              /> */}
+              <TextField
+                id="filled-search"
+                label="Search..."
+                type="search"
+                variant="filled"
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "20px",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div>

@@ -59,7 +59,7 @@ function EditPlacementRecord({ authorized }) {
   const [endDate, setEndDate] = useState(null);
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
-  const [paymentType, setPaymentType] = useState("unpaid");
+  const [paymentType, setPaymentType] = useState("");
   const [salary, setSalary] = useState(undefined);
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
@@ -228,8 +228,8 @@ function EditPlacementRecord({ authorized }) {
             : res.data.placement[0].working_location
         );
         setPaymentType(
-          res.data.placement[0].payment_type == null
-            ? undefined
+          res.data.placement[0].payment_type == ""
+            ? "unpaid"
             : res.data.placement[0].payment_type
         );
         setSalary(
@@ -394,8 +394,8 @@ function EditPlacementRecord({ authorized }) {
               : res.data.placement[0].working_location
           );
           setPaymentType(
-            res.data.placement[0].payment_type == null
-              ? undefined
+            res.data.placement[0].payment_type == ""
+              ? "unpaid"
               : res.data.placement[0].payment_type
           );
           setSalary(
@@ -598,7 +598,7 @@ function EditPlacementRecord({ authorized }) {
                   className="input"
                   name="paymentType"
                   id="paymentType"
-                  defaultValue={paymentType}
+                  value={paymentType}
                   onChange={(e) => {
                     setPaymentType(e.target.value);
                   }}

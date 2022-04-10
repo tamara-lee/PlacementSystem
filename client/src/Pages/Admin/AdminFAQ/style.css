@@ -15,9 +15,9 @@ h1 {
 }
 
 .faq-header p {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bolder;
-    margin-left: 2rem;
+    margin-left: -13rem;
     padding-right: 10rem;
     margin-bottom: 0px;
     text-align: left;
@@ -72,12 +72,12 @@ h1 {
     flex-direction: column;
 
     padding-top: 0.5rem;
-    /* padding-bottom: 0.5rem; */
+    padding-bottom: 0px;
     padding-left: 1rem;
     padding-right: 1rem;
     border: 1px solid gray;
 
-    margin-bottom: 1.2rem;
+    margin-bottom: 8px;
 }
 
 .container label {
