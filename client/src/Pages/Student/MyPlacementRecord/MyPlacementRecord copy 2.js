@@ -43,81 +43,90 @@ function MyPlacementRecord({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
-    getForm();
   }, []);
 
   const username = localStorage.getItem("username");
   const student_uid = localStorage.getItem("userUid");
 
-  const [studentName, setStudentName] = useState("");
-  const [studentNumber, setStudentNumber] = useState("");
-  const [studentCurriculum, setStudentCurriculum] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobNature, setJobNature] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [duration, setDuration] = useState("");
-  const [location, setLocation] = useState("");
-  const [paymentType, setPaymentType] = useState("unpaid");
-  const [salary, setSalary] = useState(undefined);
-  const [supervisorName, setSupervisorName] = useState("");
-  const [supervisorPhone, setSupervisorPhone] = useState("");
-  const [supervisorEmail, setSupervisorEmail] = useState("");
-  const [consentForm, setConsentForm] = useState();
-  const [appointmentLetter, setAppointmentLetter] = useState();
-  const [feedbackForm, setFeedbackForm] = useState();
-  const [feedbackComment, setFeedbackComment] = useState("");
-  const [placementStatus, setPlacementStatus] = useState("");
+  const [ren, setRen] = useState(false);
 
-  const [showSupervisorText, setShowSupervisorText] = useState(false);
-  const [showCommentText, setShowCommentText] = useState(false);
-  const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
-  const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
-  const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
+  const testValue = useRef(true);
+  console.log(testValue);
+  console.log(testValue.current);
 
-  const [period, setPeriod] = React.useState([null, null]);
-  const [consentFormName, setConsentFormName] = useState("");
-  const [appointmentLetterName, setAppointmentLetterName] = useState("");
-  const [feedbackFormName, setFeedbackFormName] = useState("");
+  const studentName = useRef("");
+  const studentNumber = useRef("");
+  const studentCurriculum = useRef("");
+  const companyName = useRef("");
+  const jobTitle = useRef("");
+  const jobNature = useRef("");
+  const startDate = useRef(undefined);
+  const endDate = useRef(undefined);
+  const duration = useRef("");
+  const location = useRef("");
+  const paymentType = useRef("unpaid");
+  const salary = useRef(undefined);
+  const supervisorName = useRef("");
+  const supervisorPhone = useRef("");
+  const supervisorEmail = useRef("");
+  const consentForm = useRef();
+  const appointmentLetter = useRef();
+  const feedbackForm = useRef();
+  const feedbackComment = useRef("");
+  const placementStatus = useRef("");
 
-  const [openError, setOpenError] = React.useState(false);
-  const [openConfirmation, setOpenConfirmation] = React.useState(false);
+  const showSupervisorText = useRef(false);
+  const showCommentText = useRef(false);
+  const showEmailErrorMsg = useRef(false);
+  const showTelephoneErrorMsg = useRef(false);
+  const showDurationErrorMsg = useRef(false);
+
+  const period = useRef([undefined, undefined]);
+  const consentFormName = useRef("");
+  const appointmentLetterName = useRef("");
+  const feedbackFormName = useRef("");
+
+  // const openError = useRef(false);
+  // const openConfirmation = useRef(false);
+
+  const [openError, setOpenError] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
 
   // pop-up handlers
   const handleCloseError = () => {
+    // openError.current = false;
     setOpenError(false);
   };
 
   const handleCloseConfirmation = () => {
+    // openConfirmation.current = false;
     setOpenConfirmation(false);
   };
 
   // document handlers
   const consentFormHandler = (e) => {
-    setConsentForm(e.target.files[0]);
-    setConsentFormName(e.target.files[0].name);
+    consentForm.current = e.target.files[0];
+    consentFormName.current = e.target.files[0].name;
   };
 
   const appointmentLetterHandler = (e) => {
-    setAppointmentLetter(e.target.files[0]);
-    setAppointmentLetterName(e.target.files[0].name);
+    appointmentLetter.current = e.target.files[0];
+    appointmentLetterName.current = e.target.files[0].name;
   };
 
   const feedbackFormHandler = (e) => {
-    setFeedbackForm(e.target.files[0]);
-    setFeedbackFormName(e.target.files[0].name);
+    feedbackForm.current = e.target.files[0];
+    feedbackFormName.current = e.target.files[0].name;
   };
 
   // test chat test messages
-  const [msg1, setMsg1] = useState(
+  const msg1 = useRef(
     "Job nature is not detailed enough. Please add more information."
   );
-  const [msg2, setMsg2] = useState(
+  const msg2 = useRef(
     "I have added more information. Is the current version ok?"
   );
-  const [msg3, setMsg3] = useState("Looks good.");
-  const [createTime, setCreateTime] = useState(Date().toLocaleString());
+  const msg3 = useRef("Looks good.");
 
   // error checking handlers
   const checkEmail = (e) => {
@@ -141,7 +150,7 @@ function MyPlacementRecord({ authorized }) {
   // const remarksRef = firestore.collection("remarks"); // get collection of messages here
   // const query = remarksRef.orderBy("createdAt").limit(50);
   // const [remarks] = useCollectionData(query, { idField: "id" });
-  const [remarkState, setRemarkState] = useState("");
+  const remarkState = useRef("");
 
   const sendRemark = async (e) => {
     e.preventDefault();
@@ -158,47 +167,139 @@ function MyPlacementRecord({ authorized }) {
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const getForm = () => {
-    // should change to get request because this request will always be called when re-rendering
-    // cannot be avoided
+  // useEffect(() => {
+  //   setRen(true);
+  // }, []);
+
+  useEffect(() => {
     Axios.get("http://localhost:3001/placementrecord/student", {
       params: {
         studentNumber: student_uid,
       },
     })
       .then((res) => {
-        // console.log(res.data);
-        setStudentName(res.data.english_name);
-        setStudentNumber(res.data.student_uid);
-        setStudentCurriculum(res.data.curriculum);
-        setCompanyName(res.data.placement[0].company_name);
-        setJobTitle(res.data.placement[0].job_title);
-        setJobNature(res.data.placement[0].job_nature);
-        setStartDate(res.data.placement[0].start_date);
-        setEndDate(res.data.placement[0].end_date);
-        setDuration(res.data.placement[0].employment_duration);
-        setLocation(res.data.placement[0].working_location);
-        setPaymentType(res.data.placement[0].payment_type);
-        setSalary(res.data.placement[0].salary);
-        setSupervisorName(res.data.placement[0].supervisor_name);
-        setSupervisorPhone(res.data.placement[0].supervisor_telephone);
-        setSupervisorEmail(res.data.placement[0].supervisor_email);
-        setConsentForm(res.data.placement[0].consent_form);
-        setAppointmentLetter(res.data.placement[0].appointment_letter);
-        setFeedbackForm(res.data.placement[0].feedback_form);
-        setFeedbackComment(res.data.placement[0].feedback_comment);
-        setPlacementStatus(res.data.placement_status);
+        console.log(res.data);
+        studentName.current =
+          studentName.current == null ? undefined : res.data.english_name;
+        studentNumber.current =
+          studentNumber.current == null ? undefined : res.data.student_uid;
+        studentCurriculum.current =
+          studentCurriculum.current == null ? undefined : res.data.curriculum;
+        companyName.current =
+          companyName.current == null
+            ? undefined
+            : res.data.placement[0].company_name;
+        jobTitle.current =
+          jobTitle.current == null
+            ? undefined
+            : res.data.placement[0].job_title;
+        jobNature.current =
+          jobNature.current == null
+            ? undefined
+            : res.data.placement[0].job_nature;
+        startDate.current =
+          startDate.current == null
+            ? undefined
+            : res.data.placement[0].start_date;
+        endDate.current =
+          endDate.current == null ? undefined : res.data.placement[0].end_date;
+        duration.current =
+          duration.current == null
+            ? undefined
+            : res.data.placement[0].employment_duration;
+        location.current =
+          location.current == null
+            ? undefined
+            : res.data.placement[0].working_location;
+        paymentType.current =
+          paymentType.current == null
+            ? undefined
+            : res.data.placement[0].payment_type;
+        salary.current =
+          salary.current == null ? undefined : res.data.placement[0].salary;
+        supervisorName.current =
+          supervisorName.current == null
+            ? undefined
+            : res.data.placement[0].supervisor_name;
+        supervisorPhone.current =
+          supervisorPhone.current == null
+            ? undefined
+            : res.data.placement[0].supervisor_telephone;
+        supervisorEmail.current =
+          supervisorEmail.current == null
+            ? undefined
+            : res.data.placement[0].supervisor_email;
+        consentForm.current =
+          consentForm.current == null
+            ? undefined
+            : res.data.placement[0].consent_form;
+        appointmentLetter.current =
+          appointmentLetter.current == null
+            ? undefined
+            : res.data.placement[0].appointment_letter;
+        feedbackForm.current =
+          feedbackForm.current == null
+            ? undefined
+            : res.data.placement[0].feedback_form;
+        feedbackComment.current =
+          feedbackComment.current == null
+            ? undefined
+            : res.data.placement[0].feedback_comment;
+        placementStatus.current =
+          placementStatus.current == null
+            ? undefined
+            : res.data.placement_status;
+        setRen(true);
       })
       .catch((error) => {
         console.log(error.response);
       });
-  };
+  }, []);
+
+  // const getForm = () => {
+  //   Axios.get("http://localhost:3001/placementrecord/student", {
+  //     params: {
+  //       studentNumber: student_uid,
+  //     },
+  //   })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       studentName.current = res.data.english_name;
+  //       studentNumber.current = res.data.student_uid;
+  //       studentCurriculum.current = res.data.curriculum;
+  //       companyName.current = res.data.placement[0].company_name;
+  //       jobTitle.current = res.data.placement[0].job_title;
+  //       jobNature.current = res.data.placement[0].job_nature;
+  //       startDate.current = res.data.placement[0].start_date;
+  //       endDate.current = res.data.placement[0].end_date;
+  //       duration.current = res.data.placement[0].employment_duration;
+  //       location.current = res.data.placement[0].working_location;
+  //       paymentType.current = res.data.placement[0].payment_type;
+  //       salary.current = res.data.placement[0].salary;
+  //       supervisorName.current = res.data.placement[0].supervisor_name;
+  //       supervisorPhone.current = res.data.placement[0].supervisor_telephone;
+  //       supervisorEmail.current = res.data.placement[0].supervisor_email;
+  //       consentForm.current = res.data.placement[0].consent_form;
+  //       appointmentLetter.current = res.data.placement[0].appointment_letter;
+  //       feedbackForm.current = res.data.placement[0].feedback_form;
+  //       feedbackComment.current = res.data.placement[0].feedback_comment;
+  //       placementStatus.current = res.data.placement_status;
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response);
+  //     });
+  // };
 
   const submitForm = () => {
-    // the updating useState triggers re-render
-    if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
+    if (
+      showEmailErrorMsg.current ||
+      showTelephoneErrorMsg.current ||
+      showDurationErrorMsg.current
+    ) {
+      // openError.current = true;
       setOpenError(true);
     } else {
+      // openConfirmation.current = true;
       setOpenConfirmation(true);
     }
   };
@@ -209,35 +310,44 @@ function MyPlacementRecord({ authorized }) {
     const formData = new FormData();
 
     if (appointmentLetter) {
-      formData.append("appointment", appointmentLetter, appointmentLetter.name);
+      formData.append(
+        "appointment",
+        appointmentLetter.current,
+        appointmentLetterName.current
+      );
     }
     if (consentForm) {
-      formData.append("consent", consentForm, consentForm.name);
+      formData.append("consent", consentForm.current, consentFormName.current);
     }
     if (feedbackForm) {
-      formData.append("feedback", feedbackForm, feedbackForm.name);
+      formData.append(
+        "feedback",
+        feedbackForm.current,
+        feedbackFormName.current
+      );
     }
-    formData.append(username, username);
-    formData.append(studentName, studentName);
-    formData.append(studentNumber, student_uid);
-    formData.append(studentCurriculum, studentCurriculum);
-    formData.append(companyName, companyName);
-    formData.append(jobTitle, jobTitle);
-    formData.append(jobNature, jobNature);
-    formData.append(startDate, startDate);
-    formData.append(endDate, endDate);
-    formData.append(duration, duration);
-    formData.append(location, location);
-    formData.append(paymentType, paymentType);
-    formData.append(salary, salary);
-    formData.append(supervisorName, supervisorName);
-    formData.append(supervisorPhone, supervisorPhone);
-    formData.append(supervisorEmail, supervisorEmail);
-    formData.append(feedbackComment, feedbackComment);
-    formData.append(placementStatus, placementStatus);
-    formData.append(supervisorEmail, supervisorEmail);
+    formData.append(username, username.current);
+    formData.append(studentName, studentName.current);
+    formData.append(studentNumber, student_uid.current);
+    formData.append(studentCurriculum, studentCurriculum.current);
+    formData.append(companyName, companyName.current);
+    formData.append(jobTitle, jobTitle.current);
+    formData.append(jobNature, jobNature.current);
+    formData.append(startDate, startDate.current);
+    formData.append(endDate, endDate.current);
+    formData.append(duration, duration.current);
+    formData.append(location, location.current);
+    formData.append(paymentType, paymentType.current);
+    formData.append(salary, salary.current);
+    formData.append(supervisorName, supervisorName.current);
+    formData.append(supervisorPhone, supervisorPhone.current);
+    formData.append(supervisorEmail, supervisorEmail.current);
+    formData.append(feedbackComment, feedbackComment.current);
+    formData.append(placementStatus, placementStatus.current);
+    formData.append(supervisorEmail, supervisorEmail.current);
 
-    Axios.post("http://localhost:3001/placementrecord/student", {
+    Axios.post(
+      "http://localhost:3001/placementrecord/student",
       // username: username,
       // studentName: studentName,
       // studentNumber: student_uid,
@@ -256,16 +366,23 @@ function MyPlacementRecord({ authorized }) {
       // supervisorEmail: supervisorEmail,
       // feedbackComment: feedbackComment,
       // placementStatus: placementStatus,
-      formData,
-    })
+      formData
+    )
       .then((response) => {
         console.log(response.data);
+        if (ren === true) {
+          setRen(false);
+        } else {
+          setRen(true);
+        }
       })
       .catch((error) => {
         console.log(error.response);
       });
-    getForm();
+    // getForm();
   };
+
+  // getForm();
 
   if (authorized === false) {
     console.log(authorized);
@@ -286,7 +403,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentName"
-                  value={studentName}
+                  value={studentName.current}
                   readOnly
                 />
                 <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
@@ -294,7 +411,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="studentNo"
-                  value={studentNumber}
+                  value={studentNumber.current}
                   readOnly
                 />
                 <label htmlFor="curriculum">Curriculum</label>
@@ -302,7 +419,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="curriculum"
-                  value={studentCurriculum}
+                  value={studentCurriculum.current}
                   readOnly
                 />
               </div>
@@ -313,11 +430,12 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="companyName"
-                  value={companyName}
+                  ref={companyName}
+                  defaultValue={companyName.current}
                   placeholder="Microsoft"
                   maxLength="100"
                   onChange={(e) => {
-                    setCompanyName(e.target.value);
+                    companyName.current = e.target.value;
                   }}
                 />
                 <label htmlFor="jobTitle">JOB TITLE / POSITION</label>
@@ -325,11 +443,11 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="jobTitle"
-                  value={jobTitle}
+                  value={jobTitle.current}
                   placeholder="Software Engineer Intern"
                   maxLength="50"
                   onChange={(e) => {
-                    setJobTitle(e.target.value);
+                    jobTitle.current = e.target.value;
                   }}
                 />
                 <label htmlFor="jobNature">JOB NATURE</label>
@@ -337,10 +455,10 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="jobNature"
-                  value={jobNature}
+                  value={jobNature.current}
                   placeholder="The scope of the position is ..."
                   onChange={(e) => {
-                    setJobNature(e.target.value);
+                    jobNature.current = e.target.value;
                   }}
                 />
                 <div className="col">
@@ -349,9 +467,9 @@ function MyPlacementRecord({ authorized }) {
                       inputFormat="dd/MM/yyyy"
                       startText="START DATE"
                       endText="END DATE"
-                      value={period}
+                      value={period.current}
                       onChange={(newPeriod) => {
-                        setPeriod(newPeriod);
+                        period.current = newPeriod;
                         const duration = moment.duration(
                           moment(newPeriod[1]).diff(
                             moment(newPeriod[0]),
@@ -359,13 +477,13 @@ function MyPlacementRecord({ authorized }) {
                             true
                           )
                         );
-                        setDuration(Math.floor(duration).toString());
-                        setStartDate(newPeriod[0]);
-                        setEndDate(newPeriod[1]);
+                        duration.current = Math.floor(duration).toString();
+                        startDate.current = newPeriod[0];
+                        endDate.current = newPeriod[1];
                         if (duration < 4) {
-                          setShowDurationErrorMsg(true);
+                          showDurationErrorMsg.current = true;
                         } else {
-                          setShowDurationErrorMsg(false);
+                          showDurationErrorMsg.current = false;
                         }
                       }}
                       renderInput={(startProps, endProps) => (
@@ -380,7 +498,7 @@ function MyPlacementRecord({ authorized }) {
                 </div>
                 <label htmlFor="duration" className="duration">
                   DURATION (WEEKS)
-                  {showDurationErrorMsg && (
+                  {showDurationErrorMsg.current && (
                     <span className="error-message">
                       Duration must be a minimum of FOUR weeks!
                     </span>
@@ -390,7 +508,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="duration"
-                  value={duration}
+                  value={duration.current}
                   placeholder="0"
                   maxLength="20"
                   disabled
@@ -400,11 +518,11 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="location"
-                  value={location}
+                  value={location.current}
                   placeholder="Hong Kong"
                   maxLength="50"
                   onChange={(e) => {
-                    setLocation(e.target.value);
+                    location.current = e.target.value;
                   }}
                 />
                 <label htmlFor="paymentType">PAYMENT TYPE</label>
@@ -412,9 +530,9 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   name="paymentType"
                   id="paymentType"
-                  value={paymentType}
+                  value={paymentType.current}
                   onChange={(e) => {
-                    setPaymentType(e.target.value);
+                    paymentType.current = e.target.value;
                   }}
                 >
                   <option value="unpaid">Unpaid</option>
@@ -426,10 +544,10 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="number"
                   id="salary"
-                  value={salary}
+                  value={salary.current}
                   placeholder="0.00"
                   onChange={(e) => {
-                    setSalary(e.target.value);
+                    salary.current = e.target.value;
                   }}
                 />
               </div>
@@ -445,10 +563,10 @@ function MyPlacementRecord({ authorized }) {
                 <p className="container-title">
                   SUPERVISOR INFORMATION
                   <IoIosInformationCircle
-                    onMouseEnter={() => setShowSupervisorText(true)}
-                    onMouseLeave={() => setShowSupervisorText(false)}
+                    onMouseEnter={() => (showSupervisorText.current = true)}
+                    onMouseLeave={() => (showSupervisorText.current = false)}
                   />
-                  {showSupervisorText && (
+                  {showSupervisorText.current && (
                     <span className="supervisor-info">
                       You may complete this section later.
                     </span>
@@ -461,16 +579,16 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="supervisorName"
-                  value={supervisorName}
+                  value={supervisorName.current}
                   placeholder="Mr. Wong Man Yi"
                   maxLength="50"
                   onChange={(e) => {
-                    setSupervisorName(e.target.value);
+                    supervisorName.current = e.target.value;
                   }}
                 />
                 <label htmlFor="supervisorPhone">
                   TELEPHONE
-                  {showTelephoneErrorMsg && (
+                  {showTelephoneErrorMsg.current && (
                     <span className="error-message">
                       Invalid telephone number. Please enter a valid telephone
                       number.
@@ -481,24 +599,24 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="tel"
                   id="supervisorPhone"
-                  value={supervisorPhone}
+                  value={supervisorPhone.current}
                   placeholder="12345678"
                   onChange={(e) => {
                     if (e.target.value == "") {
-                      setSupervisorPhone(e.target.value);
-                      setShowTelephoneErrorMsg(false);
+                      supervisorPhone.current = e.target.value;
+                      showTelephoneErrorMsg.current = false;
                     } else if (checkPhone(e.target.value)) {
-                      setSupervisorPhone(e.target.value);
-                      setShowTelephoneErrorMsg(false);
+                      supervisorPhone.current = e.target.value;
+                      showTelephoneErrorMsg.current = false;
                     } else {
-                      setSupervisorPhone(e.target.value);
-                      setShowTelephoneErrorMsg(true);
+                      supervisorPhone.current = e.target.value;
+                      showTelephoneErrorMsg.current = true;
                     }
                   }}
                 />
                 <label htmlFor="supervisorEmail">
                   EMAIL
-                  {showEmailErrorMsg && (
+                  {showEmailErrorMsg.current && (
                     <span className="error-message">
                       Invalid email. Please enter a valid email.
                     </span>
@@ -508,19 +626,19 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="email"
                   id="supervisorEmail"
-                  value={supervisorEmail}
+                  value={supervisorEmail.current}
                   placeholder="wongmanyi@microsoft.com"
                   pattern="[\w.-]+@[\w.]+"
                   onChange={(e) => {
                     if (e.target.value == "") {
-                      setSupervisorEmail(e.target.value);
-                      setShowEmailErrorMsg(false);
+                      supervisorEmail.current = e.target.value;
+                      showEmailErrorMsg.current = false;
                     } else if (checkEmail(e.target.value)) {
-                      setSupervisorEmail(e.target.value);
-                      setShowEmailErrorMsg(false);
+                      supervisorEmail.current = e.target.value;
+                      showEmailErrorMsg.current = false;
                     } else {
-                      setSupervisorEmail(e.target.value);
-                      setShowEmailErrorMsg(true);
+                      supervisorEmail.current = e.target.value;
+                      showEmailErrorMsg.current = true;
                     }
                   }}
                 />
@@ -532,8 +650,8 @@ function MyPlacementRecord({ authorized }) {
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
                   <span className="file-msg">
-                    {consentFormName != ""
-                      ? consentFormName
+                    {consentFormName.current != ""
+                      ? consentFormName.current
                       : "or drag and drop file here"}
                   </span>
                   <input
@@ -547,8 +665,8 @@ function MyPlacementRecord({ authorized }) {
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
                   <span className="file-msg">
-                    {appointmentLetterName != ""
-                      ? appointmentLetterName
+                    {appointmentLetterName.current != ""
+                      ? appointmentLetterName.current
                       : "or drag and drop file here"}
                   </span>
                   <input
@@ -562,8 +680,8 @@ function MyPlacementRecord({ authorized }) {
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
                   <span className="file-msg">
-                    {feedbackFormName != ""
-                      ? feedbackFormName
+                    {feedbackFormName.current != ""
+                      ? feedbackFormName.current
                       : "or drag and drop file here"}
                   </span>
                   <input
@@ -584,11 +702,11 @@ function MyPlacementRecord({ authorized }) {
                     }}
                   >
                     <IoIosInformationCircle
-                      onMouseEnter={() => setShowCommentText(true)}
-                      onMouseLeave={() => setShowCommentText(false)}
+                      onMouseEnter={() => (showCommentText.current = true)}
+                      onMouseLeave={() => (showCommentText.current = false)}
                     />
                   </IconContext.Provider>
-                  {showCommentText && (
+                  {showCommentText.current && (
                     <span className="error-message">
                       This field will be filled in by the admin if student does
                       not have access to the feedback form.
@@ -599,9 +717,9 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   type="text"
                   id="feedbackComment"
-                  value={feedbackComment}
+                  value={feedbackComment.current}
                   onChange={(e) => {
-                    setFeedbackComment(e.target.value);
+                    feedbackComment.current = e.target.value;
                   }}
                   disabled
                 />
@@ -613,7 +731,7 @@ function MyPlacementRecord({ authorized }) {
                   name="placementStatus"
                   id="placementStatus"
                   onChange={(e) => {
-                    setPlacementStatus(e.target.value);
+                    placementStatus.current = e.target.value;
                   }}
                   disabled
                 >
@@ -637,15 +755,15 @@ function MyPlacementRecord({ authorized }) {
                 </div>
                 <div className="new-remark">
                   <input
-                    value={remarkState}
-                    onChange={(e) => setRemarkState(e.target.value)}
+                    value={remarkState.current}
+                    onChange={(e) => (remarkState.current = e.target.value)}
                     placeholder="Input message here..."
                     maxLength="50"
                   />
 
                   <button
                     type="button"
-                    disabled={!remarkState}
+                    disabled={!remarkState.current}
                     onClick={(e) => {
                       e.preventDefault();
                       sendRemark();

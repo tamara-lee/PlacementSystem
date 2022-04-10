@@ -110,87 +110,104 @@ router.get("/student", validateToken, async (req, res) => {
   }
 });
 
-router.post("/student", validateToken, async (req, res) => {
-  console.log(req.body);
-  const studentName = req.body.studentName;
-  const studentNumber = req.body.studentNumber;
-  const studentCurriculum = req.body.studentCurriculum;
-  const companyName = req.body.companyName;
-  const jobTitle = req.body.jobTitle;
-  const jobNature = req.body.jobNature;
-  const employmentDuration = req.body.duration;
-  const startDate = req.body.startDate;
-  const endDate = req.body.endDate;
-  const location = req.body.location;
-  const paymentType = req.body.paymentType;
-  const salary = req.body.salary;
-  const supervisorName = req.body.supervisorName;
-  const supervisorPhone = req.body.supervisorPhone;
-  const supervisorEmail = req.body.supervisorEmail;
-  //const appointmentLetter
-  //const consentForm
-  //const feedbackForm
-  const feedbackComment = req.body.feedbackComment;
-  const placementStatus = req.body.placementStatus;
-
-  //const username = await placement.findUnique({
-  const user = await user_account.findUnique({
-    where: {
-      username: req.body.username,
+router.post(
+  "/student",
+  upload.fields([
+    {
+      name: "appointment",
+      maxCount: 1,
     },
-  });
+    {
+      name: "consent",
+      maxCount: 1,
+    },
+    {
+      name: "feedback",
+      maxCount: 1,
+    },
+  ]),
+  validateToken,
+  async (req, res) => {
+    console.log(req.body);
+    const studentName = req.body.studentName;
+    const studentNumber = req.body.studentNumber;
+    const studentCurriculum = req.body.studentCurriculum;
+    const companyName = req.body.companyName;
+    const jobTitle = req.body.jobTitle;
+    const jobNature = req.body.jobNature;
+    const employmentDuration = req.body.duration;
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+    const location = req.body.location;
+    const paymentType = req.body.paymentType;
+    const salary = req.body.salary;
+    const supervisorName = req.body.supervisorName;
+    const supervisorPhone = req.body.supervisorPhone;
+    const supervisorEmail = req.body.supervisorEmail;
+    //const appointmentLetter
+    //const consentForm
+    //const feedbackForm
+    const feedbackComment = req.body.feedbackComment;
+    const placementStatus = req.body.placementStatus;
 
-  if (!user) {
-    res
-      .status(400)
-      .json({ error: "User does not exist in the Placement System." });
-  }
+    //const username = await placement.findUnique({
+    const user = await user_account.findUnique({
+      where: {
+        username: req.body.username,
+      },
+    });
 
-  if (res !== undefined) {
-    try {
-      // do parse
-      const placementRecord = await placement.update({
-        where: {
-          username: user.username,
-        },
-        data: {
-          //appointment_letter:
-          //feedback_form:
-          feedback_comment: feedbackComment,
-          company_name: companyName,
-          job_title: jobTitle,
-          job_nature: jobNature,
-          employment_duration: employmentDuration,
-          start_date: startDate,
-          end_date: endDate,
-          working_location: location,
-          salary: salary,
-          payment_type: paymentType,
-          supervisor_name: supervisorName,
-          supervisor_telephone: supervisorPhone,
-          supervisor_email: supervisorEmail,
-          user_account: {
-            connect: { account_id: user.account_id },
-          },
-          modified_by: user.username,
-          //consent_form:
-        },
-      });
-      console.log(placementRecord);
-      res.json(placementRecord);
-    } catch (error) {
-      console.error("Student does not exist in placement system!");
-      console.log(error);
+    if (!user) {
+      res
+        .status(400)
+        .json({ error: "User does not exist in the Placement System." });
     }
-  }
 
-  //to handle pdf upload
-  //https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
+    if (res !== undefined) {
+      try {
+        // do parse
+        const placementRecord = await placement.update({
+          where: {
+            username: user.username,
+          },
+          data: {
+            //appointment_letter:
+            //feedback_form:
+            feedback_comment: feedbackComment,
+            company_name: companyName,
+            job_title: jobTitle,
+            job_nature: jobNature,
+            employment_duration: employmentDuration,
+            start_date: startDate,
+            end_date: endDate,
+            working_location: location,
+            salary: salary,
+            payment_type: paymentType,
+            supervisor_name: supervisorName,
+            supervisor_telephone: supervisorPhone,
+            supervisor_email: supervisorEmail,
+            user_account: {
+              connect: { account_id: user.account_id },
+            },
+            modified_by: user.username,
+            //consent_form:
+          },
+        });
+        console.log(placementRecord);
+        res.json(placementRecord);
+      } catch (error) {
+        console.error("Student does not exist in placement system!");
+        console.log(error);
+      }
+    }
 
-  //to hand accessing of pdf files in express
-  //https://expressjs.com/en/starter/static-files.html
+    //to handle pdf upload
+    //https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
 
-  /** try{
+    //to hand accessing of pdf files in express
+    //https://expressjs.com/en/starter/static-files.html
+
+    /** try{
     const placmentRecord = await placement.upsert({
       where: { 
         student_uid: studentNumber,
@@ -249,6 +266,7 @@ router.post("/student", validateToken, async (req, res) => {
   } catch (e){
     res.status(400).send({ message: "Invalid placement record!" });
   }**/
-});
+  }
+);
 
 module.exports = router;

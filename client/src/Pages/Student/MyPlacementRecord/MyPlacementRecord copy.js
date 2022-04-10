@@ -43,7 +43,6 @@ function MyPlacementRecord({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
-    getForm();
   }, []);
 
   const username = localStorage.getItem("username");
@@ -266,6 +265,8 @@ function MyPlacementRecord({ authorized }) {
       });
     getForm();
   };
+
+  getForm();
 
   if (authorized === false) {
     console.log(authorized);
