@@ -40,7 +40,7 @@ function AddStudent({ authorized }) {
 
   const [name, setName] = useState("");
   const [universityNumber, setUniversityNumber] = useState("");
-  const [curriculum, setCurriculum] = useState("BEng(CompSc)");
+  const [curriculum, setCurriculum] = useState("compsc");
   const [academicYear, setAcademicYear] = useState("");
   const [placementYear, setPlacementYear] = useState("");
   const [courseYear, setCourseYear] = useState("");
@@ -50,6 +50,11 @@ function AddStudent({ authorized }) {
   const [openImportError, setOpenImportError] = useState(false);
   const [openUploadConfirmation, setOpenUploadConfirmation] = useState(false);
   const [openImportConfirmation, setOpenImportConfirmation] = useState(false);
+  const [openImportSuccess, setOpenImportSuccess] = useState(false);
+  const [openImportFail, setOpenImportFail] = useState(false);
+  const [openUploadSuccess, setOpenUploadSuccess] = useState(false);
+  const [openUploadFail, setOpenUploadFail] = useState(false);
+  const [uploadFailMsg, setUploadFailMsg] = useState("Error!");
 
   const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
   const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
@@ -77,6 +82,22 @@ function AddStudent({ authorized }) {
 
   const handleCloseImportConfirmation = () => {
     setOpenImportConfirmation(false);
+  };
+
+  const handleCloseImportSuccess = () => {
+    setOpenImportSuccess(false);
+  };
+
+  const handleCloseImportFail = () => {
+    setOpenImportFail(false);
+  };
+
+  const handleCloseUploadSuccess = () => {
+    setOpenUploadSuccess(false);
+  };
+
+  const handleCloseUploadFail = () => {
+    setOpenUploadFail(false);
   };
 
   const checkUniversityNumber = (e) => {
@@ -143,22 +164,30 @@ function AddStudent({ authorized }) {
     const username = localStorage.getItem("username");
     const account_id = localStorage.getItem("userId");
 
-    Axios.post("http://localhost:3001/addstudents/admin", {
-      username: username,
-      account_id: account_id,
-      name: name,
-      universityNumber: universityNumber,
-      curriculum: curriculum,
-      academicYear: academicYear,
-      placementYear: placementYear,
-      courseYear: parseInt(courseYear),
-    })
-      .then((res) => {
-        console.log(res);
+    try {
+      Axios.post("http://localhost:3001/addstudents/admin", {
+        username: username,
+        account_id: account_id,
+        name: name,
+        universityNumber: universityNumber,
+        curriculum: curriculum,
+        academicYear: academicYear,
+        placementYear: placementYear,
+        courseYear: parseInt(courseYear),
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((res) => {
+          setOpenUploadSuccess(true);
+          // console.log(res);
+        })
+        .catch((error) => {
+          setUploadFailMsg(error.response.data.message);
+          setOpenUploadFail(true);
+          // console.log(error.response.data.message);
+        });
+    } catch (error) {
+      // console.log("try catch: " + error);
+      setOpenUploadFail(true);
+    }
   };
 
   if (authorized === false) {
@@ -328,9 +357,7 @@ function AddStudent({ authorized }) {
                       setCurriculum(e.target.value);
                     }}
                   >
-                    <option value="compsc" selected>
-                      BEng(CompSc)
-                    </option>
+                    <option value="compsc">BEng(CompSc)</option>
                     <option value="is">BBA(IS)</option>
                   </select>
                   <label htmlFor="courseYear">
@@ -419,9 +446,6 @@ function AddStudent({ authorized }) {
                   />
                 </div>
                 <CardActions>
-                  {/* <button className="form-submit" onClick={submitForm}>
-            Save & Submit
-          </button> */}
                   <Button
                     type="submit"
                     style={{
@@ -549,6 +573,72 @@ function AddStudent({ authorized }) {
               <Button onClick={handleCloseUploadConfirmation}>No</Button>
               <Button onClick={confirmHandleUpload} autoFocus>
                 Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openUploadSuccess}
+            onClose={handleCloseUploadSuccess}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Successfully uploaded student record!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button
+                type="button"
+                onClick={handleCloseUploadSuccess}
+                autoFocus
+              >
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openUploadFail}
+            onClose={handleCloseUploadFail}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{uploadFailMsg}</DialogTitle>
+            <DialogActions>
+              <Button type="button" onClick={handleCloseUploadFail} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openImportSuccess}
+            onClose={handleCloseImportSuccess}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Successfully imported file!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button
+                type="button"
+                onClick={handleCloseImportSuccess}
+                autoFocus
+              >
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openImportFail}
+            onClose={handleCloseImportFail}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Error in importing file!"}
+            </DialogTitle>
+            <DialogActions>
+              <Button type="button" onClick={handleCloseImportFail} autoFocus>
+                OK
               </Button>
             </DialogActions>
           </Dialog>

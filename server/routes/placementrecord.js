@@ -25,9 +25,12 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, callback) {
-  //callback(null, file.originalname);
-   callback(null, file.fieldname + "-" +  + Date.now() + "-" + file.originalname);
-  // callback(null, file.fieldname + "-undefined-" + file.originalname);
+    //callback(null, file.originalname);
+    callback(
+      null,
+      file.fieldname + "-" + +Date.now() + "-" + file.originalname
+    );
+    // callback(null, file.fieldname + "-undefined-" + file.originalname);
   },
 });
 var upload = multer({ storage });
@@ -161,37 +164,36 @@ router.post(
   ]),
   validateToken,
   async (req, res) => {
- // upload(req, res, function (err) {
-  //fs.renameSync(req.files.appointment[0].path, req.files.appointment[0].path.replace('undefined', req.body.studentNumber));
-  //fs.renameSync(req.files.appointment[0].filename, req.files.appointment[0].filename.replace('undefined', req.body.studentNumber));
-  
-      // This get the file and replace "undefined" with the req.body field.
- // });
+    // upload(req, res, function (err) {
+    //fs.renameSync(req.files.appointment[0].path, req.files.appointment[0].path.replace('undefined', req.body.studentNumber));
+    //fs.renameSync(req.files.appointment[0].filename, req.files.appointment[0].filename.replace('undefined', req.body.studentNumber));
+
+    // This get the file and replace "undefined" with the req.body field.
+    // });
     console.log(req.body);
-    console.log("___________________________________________-")
+    console.log("___________________________________________-");
     console.log("files");
     console.log(req.files);
-    console.log("___________________________________________-")
+    console.log("___________________________________________-");
     console.log("files.appointment");
-    if (req.files.appointment){
+    if (req.files.appointment) {
       console.log(req.files.appointment[0].path);
     }
-    console.log("___________________________________________-")
+    console.log("___________________________________________-");
 
     console.log("files.feedback");
-    if (req.files.feedback){
+    if (req.files.feedback) {
       console.log(req.files.feedback[0].path);
-  }
-    console.log("___________________________________________-")
+    }
+    console.log("___________________________________________-");
 
     console.log("files.consent");
-    if (req.files.consent){
+    if (req.files.consent) {
       console.log(req.files.consent[0].path);
-  }
-    console.log("___________________________________________-")
+    }
+    console.log("___________________________________________-");
 
-    
-  //  console.log(req.files["consent"][0]);
+    //  console.log(req.files["consent"][0]);
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
@@ -263,14 +265,12 @@ router.post(
         console.log(error);
       }
     }
-   
 
     //to handle pdf upload
     //https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
 
     //to hand accessing of pdf files in express
     //https://expressjs.com/en/starter/static-files.html
-
   }
 );
 //to hand accessing of pdf files in express
