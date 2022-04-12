@@ -48,13 +48,19 @@ function AddStudent({ authorized }) {
   const [openUploadError, setOpenUploadError] = useState(false);
   const [openFieldError, setOpenFieldError] = useState(false);
   const [openImportError, setOpenImportError] = useState(false);
+
   const [openUploadConfirmation, setOpenUploadConfirmation] = useState(false);
   const [openImportConfirmation, setOpenImportConfirmation] = useState(false);
+
   const [openImportSuccess, setOpenImportSuccess] = useState(false);
   const [openImportFail, setOpenImportFail] = useState(false);
   const [openUploadSuccess, setOpenUploadSuccess] = useState(false);
+
   const [openUploadFail, setOpenUploadFail] = useState(false);
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState("Error!");
   const [uploadFailMsg, setUploadFailMsg] = useState("Error!");
+  const [importFailMsg, setImportFailMsg] = useState("Error!");
+  const [importSuccessMsg, setImportSuccessMsg] = useState("Error!");
 
   const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
   const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
@@ -63,6 +69,9 @@ function AddStudent({ authorized }) {
 
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
+
+  const username = localStorage.getItem("username");
+  const account_id = localStorage.getItem("userId");
 
   const handleCloseUploadError = () => {
     setOpenUploadError(false);
@@ -134,7 +143,27 @@ function AddStudent({ authorized }) {
 
   const confirmHandleImport = (e) => {
     handleCloseImportConfirmation();
-    alert(`File to be uploaded is ${fileName}. Add API call to upload to DB`);
+
+    const formData = new FormData();
+
+    formData.append("studentRecordsFile", file, file.name);
+
+    Axios.post("http://localhost:3001/importExcel", {
+      username: username,
+      formData,
+    })
+      .then((res) => {
+        setImportSuccessMsg(res.data.message);
+        setOpenImportSuccess(true);
+        // console.log(res);
+      })
+      .catch((error) => {
+        setImportFailMsg(error.response.data.message);
+        setOpenImportFail(true);
+        // console.log(error.response.data.message);
+      });
+
+    // alert(`File to be uploaded is ${fileName}. Add API call to upload to DB`);
   };
 
   const handleUpload = () => {
@@ -161,33 +190,25 @@ function AddStudent({ authorized }) {
   const confirmHandleUpload = () => {
     handleCloseUploadConfirmation();
 
-    const username = localStorage.getItem("username");
-    const account_id = localStorage.getItem("userId");
-
-    try {
-      Axios.post("http://localhost:3001/addstudents/admin", {
-        username: username,
-        account_id: account_id,
-        name: name,
-        universityNumber: universityNumber,
-        curriculum: curriculum,
-        academicYear: academicYear,
-        placementYear: placementYear,
-        courseYear: parseInt(courseYear),
+    Axios.post("http://localhost:3001/addstudents/admin", {
+      username: username,
+      account_id: account_id,
+      name: name,
+      universityNumber: universityNumber,
+      curriculum: curriculum,
+      academicYear: academicYear,
+      placementYear: placementYear,
+      courseYear: parseInt(courseYear),
+    })
+      .then((res) => {
+        setOpenUploadSuccess(true);
+        // console.log(res);
       })
-        .then((res) => {
-          setOpenUploadSuccess(true);
-          // console.log(res);
-        })
-        .catch((error) => {
-          setUploadFailMsg(error.response.data.message);
-          setOpenUploadFail(true);
-          // console.log(error.response.data.message);
-        });
-    } catch (error) {
-      // console.log("try catch: " + error);
-      setOpenUploadFail(true);
-    }
+      .catch((error) => {
+        setUploadFailMsg(error.response.data.message);
+        setOpenUploadFail(true);
+        // console.log(error.response.data.message);
+      });
   };
 
   if (authorized === false) {
@@ -583,7 +604,7 @@ function AddStudent({ authorized }) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Successfully uploaded student record!"}
+              {uploadSuccessMsg}
             </DialogTitle>
             <DialogActions>
               <Button
@@ -615,7 +636,7 @@ function AddStudent({ authorized }) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Successfully imported file!"}
+              {importSuccessMsg}
             </DialogTitle>
             <DialogActions>
               <Button
@@ -633,9 +654,7 @@ function AddStudent({ authorized }) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Error in importing file!"}
-            </DialogTitle>
+            <DialogTitle id="alert-dialog-title">{importFailMsg}</DialogTitle>
             <DialogActions>
               <Button type="button" onClick={handleCloseImportFail} autoFocus>
                 OK

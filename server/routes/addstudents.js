@@ -62,12 +62,16 @@ router.post("/admin", validateToken, async (req, res) => {
           creation_time: new Date(Date.now()),
         },
       });
-      res.json({ status: "success" });
+      res.json({
+        status: "success",
+        message: "Successfully added student record!",
+      });
     } catch (e) {
       console.log(e);
       res.status(400).json({
         status: "error",
-        message: "Student's user account does not exist in the system!",
+        message:
+          "Failed to upload student record! Student's user account does not exist in the system!",
       });
     }
 
