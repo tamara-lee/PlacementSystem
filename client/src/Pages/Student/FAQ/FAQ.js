@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../../components/NavBar/index";
 import NavigationBar from "../../../components/NavBar/NavBar";
 import "./style.css";
 import { Tab, Tabs, Typography, Box } from "@mui/material";
@@ -11,7 +10,7 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import JSONDATA from "../../../mock data/MOCK_DATA.json";
+import faqList from "../../../mock data/MOCK_DATA.json";
 import TextField from "@mui/material/TextField";
 import Axios from "axios";
 
@@ -159,16 +158,17 @@ function FAQ({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
-    // getFAQ();
+    getFAQ();
   }, []);
 
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");
-  // const JSONDATA = [{}];
+  // const faqList = [{}];
 
   // handle search
 
+  const [faqList, setFaqList] = useState([]);
   const username = localStorage.getItem("username");
   const account_id = localStorage.getItem("userId");
 
@@ -181,21 +181,21 @@ function FAQ({ authorized }) {
   };
 
   const getFAQ = () => {
-    // Axios.get("http://localhost:3001/faq")
-    //   .then((res) => {
-    //     // JSONDATA = res;
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    Axios.get("http://localhost:3001/faq")
+      .then((res) => {
+        setFaqList(res.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
-  console.log(JSONDATA);
+  console.log(faqList);
   return (
     <>
       <div>
@@ -230,14 +230,6 @@ function FAQ({ authorized }) {
           <div>
             <div className="faq-header">
               <p>Frequently Asked Questions</p>
-              {/* <input
-                type="text"
-                className="search-bar"
-                placeholder="Search..."
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                }}
-              /> */}
               <TextField
                 id="filled-search"
                 label="Search..."
@@ -256,109 +248,121 @@ function FAQ({ authorized }) {
             </div>
             <div>
               <TabPanel value={value} index={0}>
-                {JSONDATA.filter((val) => {
-                  if (searchTerm == "") {
-                    return val;
-                  } else if (
-                    val.questions
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                }).map((val, key) => {
-                  //JSONDATA must be sorted in the backend
-                  while (val.cat === 0) {
-                    return (
-                      <Accordion
-                        key={key}
-                        expanded={expanded === val.faq_id}
-                        onChange={handleAccordionChange(val.faq_id)}
-                      >
-                        <AccordionSummary
-                          aria-controls={val.faq_id + "-content"}
-                          id={val.faq_id + "-header"}
+                {faqList
+                  .filter((val) => {
+                    if (searchTerm == "") {
+                      return val;
+                    } else if (
+                      val.questions
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.answers
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((val, key) => {
+                    //faqList must be sorted in the backend
+                    while (val.cat === "0") {
+                      return (
+                        <Accordion
+                          key={key}
+                          expanded={expanded === val.faq_id}
+                          onChange={handleAccordionChange(val.faq_id)}
                         >
-                          <Typography>{val.questions}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography>{val.answers}</Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  }
-                })}
+                          <AccordionSummary
+                            aria-controls={val.faq_id + "-content"}
+                            id={val.faq_id + "-header"}
+                          >
+                            <Typography>{val.questions}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>{val.answers}</Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {JSONDATA.filter((val) => {
-                  if (searchTerm == "") {
-                    return val;
-                  } else if (
-                    val.questions
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                }).map((val, key) => {
-                  //JSONDATA must be sorted in the backend
-                  while (val.cat === 1) {
-                    return (
-                      <Accordion
-                        key={key}
-                        expanded={expanded === val.faq_id}
-                        onChange={handleAccordionChange(val.faq_id)}
-                      >
-                        <AccordionSummary
-                          aria-controls={val.faq_id + "-content"}
-                          id={val.faq_id + "-header"}
+                {faqList
+                  .filter((val) => {
+                    if (searchTerm == "") {
+                      return val;
+                    } else if (
+                      val.questions
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.answers
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((val, key) => {
+                    //faqList must be sorted in the backend
+                    while (val.cat === "1") {
+                      return (
+                        <Accordion
+                          key={key}
+                          expanded={expanded === val.faq_id}
+                          onChange={handleAccordionChange(val.faq_id)}
                         >
-                          <Typography>{val.questions}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography>{val.answers}</Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  }
-                })}
+                          <AccordionSummary
+                            aria-controls={val.faq_id + "-content"}
+                            id={val.faq_id + "-header"}
+                          >
+                            <Typography>{val.questions}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>{val.answers}</Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {JSONDATA.filter((val) => {
-                  if (searchTerm == "") {
-                    return val;
-                  } else if (
-                    val.questions
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                }).map((val, key) => {
-                  //JSONDATA must be sorted in the backend
-                  while (val.cat === 2) {
-                    return (
-                      <Accordion
-                        key={key}
-                        expanded={expanded === val.faq_id}
-                        onChange={handleAccordionChange(val.faq_id)}
-                      >
-                        <AccordionSummary
-                          aria-controls={val.faq_id + "-content"}
-                          id={val.faq_id + "-header"}
+                {faqList
+                  .filter((val) => {
+                    if (searchTerm == "") {
+                      return val;
+                    } else if (
+                      val.questions
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.answers
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((val, key) => {
+                    //faqList must be sorted in the backend
+                    while (val.cat === "2") {
+                      return (
+                        <Accordion
+                          key={key}
+                          expanded={expanded === val.faq_id}
+                          onChange={handleAccordionChange(val.faq_id)}
                         >
-                          <Typography>{val.questions}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography>{val.answers}</Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  }
-                })}
+                          <AccordionSummary
+                            aria-controls={val.faq_id + "-content"}
+                            id={val.faq_id + "-header"}
+                          >
+                            <Typography>{val.questions}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>{val.answers}</Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
               </TabPanel>
             </div>
           </div>
@@ -376,13 +380,20 @@ function FAQ({ authorized }) {
           <div className="mobile-container">
             <div className="faq-header-mobile">
               <p>Frequently Asked Questions</p>
-              <input
-                type="text"
-                className="search-bar-mobile"
-                placeholder="Search..."
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
+              <TextField
+                id="filled-search"
+                label="Search..."
+                type="search"
+                variant="filled"
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "20px",
+                  fontSize: "14px",
+                  marginTop: "auto",
+                  marginBottom: "auto",
                 }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <StyledTabsMobile value={value} onChange={handleTabChange} centered>
@@ -392,109 +403,121 @@ function FAQ({ authorized }) {
             </StyledTabsMobile>
             <div>
               <TabPanel value={value} index={0}>
-                {JSONDATA.filter((val) => {
-                  if (searchTerm == "") {
-                    return val;
-                  } else if (
-                    val.questions
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                }).map((val, key) => {
-                  //JSONDATA must be sorted in the backend
-                  while (val.cat === 0) {
-                    return (
-                      <Accordion
-                        key={key}
-                        expanded={expanded === val.faq_id}
-                        onChange={handleAccordionChange(val.faq_id)}
-                      >
-                        <AccordionSummary
-                          aria-controls={val.faq_id + "-content"}
-                          id={val.faq_id + "-header"}
+                {faqList
+                  .filter((val) => {
+                    if (searchTerm == "") {
+                      return val;
+                    } else if (
+                      val.questions
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.answers
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((val, key) => {
+                    //faqList must be sorted in the backend
+                    while (val.cat === "0") {
+                      return (
+                        <Accordion
+                          key={key}
+                          expanded={expanded === val.faq_id}
+                          onChange={handleAccordionChange(val.faq_id)}
                         >
-                          <Typography>{val.questions}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography>{val.answers}</Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  }
-                })}
+                          <AccordionSummary
+                            aria-controls={val.faq_id + "-content"}
+                            id={val.faq_id + "-header"}
+                          >
+                            <Typography>{val.questions}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>{val.answers}</Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {JSONDATA.filter((val) => {
-                  if (searchTerm == "") {
-                    return val;
-                  } else if (
-                    val.questions
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                }).map((val, key) => {
-                  //JSONDATA must be sorted in the backend
-                  while (val.cat === 1) {
-                    return (
-                      <Accordion
-                        key={key}
-                        expanded={expanded === val.faq_id}
-                        onChange={handleAccordionChange(val.faq_id)}
-                      >
-                        <AccordionSummary
-                          aria-controls={val.faq_id + "-content"}
-                          id={val.faq_id + "-header"}
+                {faqList
+                  .filter((val) => {
+                    if (searchTerm == "") {
+                      return val;
+                    } else if (
+                      val.questions
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.answers
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((val, key) => {
+                    //faqList must be sorted in the backend
+                    while (val.cat === "1") {
+                      return (
+                        <Accordion
+                          key={key}
+                          expanded={expanded === val.faq_id}
+                          onChange={handleAccordionChange(val.faq_id)}
                         >
-                          <Typography>{val.questions}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography>{val.answers}</Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  }
-                })}
+                          <AccordionSummary
+                            aria-controls={val.faq_id + "-content"}
+                            id={val.faq_id + "-header"}
+                          >
+                            <Typography>{val.questions}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>{val.answers}</Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {JSONDATA.filter((val) => {
-                  if (searchTerm == "") {
-                    return val;
-                  } else if (
-                    val.questions
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    val.answers.toLowerCase().includes(searchTerm.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                }).map((val, key) => {
-                  //JSONDATA must be sorted in the backend
-                  while (val.cat === 2) {
-                    return (
-                      <Accordion
-                        key={key}
-                        expanded={expanded === val.faq_id}
-                        onChange={handleAccordionChange(val.faq_id)}
-                      >
-                        <AccordionSummary
-                          aria-controls={val.faq_id + "-content"}
-                          id={val.faq_id + "-header"}
+                {faqList
+                  .filter((val) => {
+                    if (searchTerm == "") {
+                      return val;
+                    } else if (
+                      val.questions
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.answers
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((val, key) => {
+                    //faqList must be sorted in the backend
+                    while (val.cat === "2") {
+                      return (
+                        <Accordion
+                          key={key}
+                          expanded={expanded === val.faq_id}
+                          onChange={handleAccordionChange(val.faq_id)}
                         >
-                          <Typography>{val.questions}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography>{val.answers}</Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  }
-                })}
+                          <AccordionSummary
+                            aria-controls={val.faq_id + "-content"}
+                            id={val.faq_id + "-header"}
+                          >
+                            <Typography>{val.questions}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>{val.answers}</Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
               </TabPanel>
             </div>
           </div>
