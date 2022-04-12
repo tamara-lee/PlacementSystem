@@ -53,6 +53,7 @@
     "sequelize": "^6.11.0",
     "sequelize-cli": "^6.3.0",
     "styled-components": "^5.3.3",
-    "typeface-roboto": "^1.1.13"
+    "typeface-roboto": "^1.1.13",
+    "xlsx": "^0.18.5"
   }
 }

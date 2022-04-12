@@ -34,6 +34,8 @@ const placementRouter = require("./routes/placementrecord");
 const addStudentsRouter = require("./routes/addstudents");
 const editStudentRouter = require("./routes/editstudent");
 const faqRouter = require("./routes/faq");
+const importExcelRouter = require("./routes/importexcel");
+
 
 
 //app.use("/", authRouter);
@@ -42,6 +44,8 @@ app.use("/placementrecord", placementRouter);
 app.use("/addstudents", addStudentsRouter);
 app.use("/faq", faqRouter);
 app.use("/editstudent", editStudentRouter);
+app.use("/importexcel", importExcelRouter);
+
 
 app.get("/home", validateToken, (req, res) => {
   res.json("home");

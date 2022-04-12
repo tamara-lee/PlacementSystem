@@ -108,7 +108,35 @@ router.get("/student", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    res.json(student_info);
+    // const consentPDF = JSON.stringify(    {
+    //   fieldname: student_info.placement[0].consent_form,
+    // });
+
+    // const appointmentPDF = JSON.stringify(    {
+    //   fieldname: student_info.placement[0].appointment_letter,
+    //   // originalname: '中文.pdf',
+    //   // encoding: '7bit',
+    //   // mimetype: 'application/pdf',
+    //   // destination: './upload/appointment',
+    //   // filename: 'appointment-1649750316368-中文.pdf',
+    //   // path: 'upload\\appointment\\appointment-1649750316368-中文.pdf',
+    //   // size: 1197183
+    // });
+
+    // const feedbackPDF = JSON.stringify(    {
+    //   fieldname: student_info.placement[0].feedback_form,
+    // });
+
+
+    // console.log("student_info.placement[0]",student_info.placement[0]),
+   res.json(student_info);
+  //  res.json({
+  //   student_info: student_info,
+  //   consent: consentPDF,
+  //   appointment: appointmentPDF,
+  //   feedback: feedbackPDF,
+  // });
+
   } catch (error) {
     console.error("Student not found!");
     console.log(error);
@@ -179,9 +207,9 @@ router.post(
     const supervisorName = req.body.supervisorName;
     const supervisorPhone = req.body.supervisorPhone;
     const supervisorEmail = req.body.supervisorEmail;
-    //const appointmentLetter
-    //const consentForm
-    //const feedbackForm
+    const appointmentLetter = req.files.appointment[0].path;
+    const consentForm = req.files.consent[0].path;
+    const feedbackForm = req.files.feedback[0].path;
     const feedbackComment = req.body.feedbackComment;
     const placementStatus = req.body.placementStatus;
 
@@ -206,8 +234,8 @@ router.post(
             username: user.username,
           },
           data: {
-            //appointment_letter:
-            //feedback_form:
+            appointment_letter: appointmentLetter,
+            feedback_form: feedbackForm,
             feedback_comment: feedbackComment,
             company_name: companyName,
             job_title: jobTitle,
@@ -225,7 +253,7 @@ router.post(
               connect: { account_id: user.account_id },
             },
             modified_by: user.username,
-            //consent_form:
+            consent_form: consentForm,
           },
         });
         console.log(placementRecord);
