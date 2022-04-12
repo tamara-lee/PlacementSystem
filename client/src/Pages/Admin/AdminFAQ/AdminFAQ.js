@@ -8,13 +8,10 @@ import CardContent from "@mui/material/CardContent";
 import AddIcon from "@mui/icons-material/Add";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import { MdExpandMore } from "react-icons/md";
-import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-// import faqList from "../../../mock data/MOCK_DATA.json";
 import TextField from "@mui/material/TextField";
 import Axios from "axios";
 
@@ -26,8 +23,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-// for edit popover
-import Popover from "@mui/material/Popover";
+// for edit menu
+import { styled, alpha } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import EditIcon from "@mui/icons-material/Edit";
+import Divider from "@mui/material/Divider";
+import DeleteIcon from "@mui/icons-material/Delete";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function TabPanel(props) {
@@ -157,6 +161,49 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
+const StyledMenu = styled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+
 function FAQ({ authorized }) {
   Axios.defaults.withCredentials = true;
 
@@ -190,26 +237,85 @@ function FAQ({ authorized }) {
   const [newCat, setNewCat] = useState("0");
 
   // pop-ups
-  const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [openSuccess, setOpenSuccess] = useState(false); // successfully submit faq
-  const [openFail, setOpenFail] = useState(false); // failed to submit aq
-  const [openError, setOpenError] = useState(false); // empty fields in faq
+  const [openSubmitConfirmation, setOpenSubmitConfirmation] = useState(false);
+  const [openSubmitSuccess, setOpenSubmitSuccess] = useState(false); // successfully submit faq
+  const [openSubmitFail, setOpenSubmitFail] = useState(false); // failed to submit aq
+  const [openSubmitError, setOpenSubmitError] = useState(false); // empty fields in faq
+
+  const [deleteFaqId, setDeleteFaqId] = useState(null);
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [openDeleteSuccess, setOpenDeleteSuccess] = useState(false);
+  const [openDeleteFail, setOpenDeleteFail] = useState(false);
+
+  const [submitSuccessMsg, setSubmitSuccessMsg] = useState("");
+  const [submitFailMsg, setSubmitFailMsg] = useState("");
+
+  const [deleteSuccessMsg, setDeleteSuccessMsg] = useState("");
+  const [deleteFailMsg, setDeleteFailMsg] = useState("");
+
+  // edit faq pop-up
+  const [openEditFaq, setOpenEditFaq] = useState(false);
+  const [openEditConfirmation, setOpenEditConfirmation] = useState(false);
+  const [openEditError, setOpenEditError] = useState(false); // field(s) cannot be empty
+  const [openEditSuccess, setOpenEditSuccess] = useState(false);
+  const [openEditFail, setOpenEditFail] = useState(false);
+
+  const [editSuccessMsg, setEditSuccessMsg] = useState("");
+  const [editFailMsg, setEditFailMsg] = useState("");
+
+  const [editQuestion, setEditQuestion] = useState(null);
+  const [editAnswer, setEditAnswer] = useState(null);
+  const [editCat, setEditCat] = useState(undefined);
+  const [editFaqId, setEditFaqId] = useState(null);
 
   // pop-up handlers
-  const handleCloseConfirmation = () => {
-    setOpenConfirmation(false);
+  const handleCloseSubmitConfirmation = () => {
+    setOpenSubmitConfirmation(false);
   };
 
-  const handleCloseError = () => {
-    setOpenError(false);
+  const handleCloseSubmitError = () => {
+    setOpenSubmitError(false);
   };
 
-  const handleCloseSuccess = () => {
-    setOpenSuccess(false);
+  const handleCloseSubmitSuccess = () => {
+    setOpenSubmitSuccess(false);
   };
 
-  const handleCloseFail = () => {
-    setOpenFail(false);
+  const handleCloseSubmitFail = () => {
+    setOpenSubmitFail(false);
+  };
+
+  const handleCloseDeleteConfirmation = () => {
+    setOpenDeleteConfirmation(false);
+  };
+
+  const handleCloseDeleteSuccess = () => {
+    setOpenDeleteSuccess(false);
+  };
+
+  const handleCloseDeleteFail = () => {
+    setOpenDeleteFail(false);
+  };
+
+  const handleCloseEditFaq = () => {
+    // make sure when closed, the edited fields will be reset
+    setOpenEditFaq(false);
+  };
+
+  const handleCloseEditConfirmation = () => {
+    setOpenEditConfirmation(false);
+  };
+
+  const handleCloseEditError = () => {
+    setOpenEditError(false);
+  };
+
+  const handleCloseEditSuccess = () => {
+    setOpenEditSuccess(false);
+  };
+
+  const handleCloseEditFail = () => {
+    setOpenEditFail(false);
   };
 
   const handleTabChange = (event, newValue) => {
@@ -220,21 +326,136 @@ function FAQ({ authorized }) {
     setExpanded(newExpanded ? panel : false);
   };
 
-  // for popover
-  const [anchorEl, setAnchorEl] = useState(null);
+  const IsolatedMenu = (val) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const openMenu = Boolean(anchorEl);
+    const handleClickMenu = (e, val) => {
+      e.stopPropagation();
+      console.log("clickmenu: " + val);
+      setAnchorEl(e.currentTarget);
+    };
+    const handleCloseMenu = (e, val) => {
+      e.stopPropagation();
+      console.log("close menu: " + val);
+      setAnchorEl(null);
+    };
 
-  const handleClickPopover = (e) => {
-    console.log(e.currentTarget);
-    e.stopPropagation();
-    setAnchorEl(e.currentTarget);
+    const handleDelete = (e, val) => {
+      e.stopPropagation();
+      setAnchorEl(null);
+
+      setDeleteFaqId(val);
+      setOpenDeleteConfirmation(true);
+    };
+
+    const handleEdit = (e, val) => {
+      e.stopPropagation();
+      setAnchorEl(null);
+
+      const editFaq = faqList.filter(function (element) {
+        return element.faq_id === val;
+      })[0];
+
+      setEditFaqId(parseInt(editFaq.faq_id));
+      setEditQuestion(editFaq.questions);
+      setEditAnswer(editFaq.answers);
+      setEditCat(editFaq.cat);
+
+      setOpenEditFaq(true);
+    };
+
+    return (
+      <React.Fragment>
+        <IconButton
+          aria-label={val.faq_id + "more"}
+          id={val.faq_id + "-more-button"}
+          aria-controls={openMenu ? val.faq_id + "-more-menu" : undefined}
+          aria-expanded={openMenu ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={(e) => handleClickMenu(e, val.faq_id)}
+          sx={{
+            height: "1.5rem",
+            marginLeft: "auto",
+            marginRight: "0px",
+          }}
+        >
+          <MoreVertIcon fontSize="small" />
+        </IconButton>
+        <StyledMenu
+          key={val.faq_id}
+          id={val.faq_id + "-more-menu"}
+          MenuListProps={{
+            "aria-labelledby": val.faq_id + "-more-menu-button",
+          }}
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={(e) => handleCloseMenu(e, val.faq_id)}
+        >
+          <MenuItem onClick={(e) => handleEdit(e, val.faq_id)} disableRipple>
+            <EditIcon />
+            Edit
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              handleDelete(e, val.faq_id);
+            }}
+            disableRipple
+          >
+            <DeleteIcon />
+            Delete
+          </MenuItem>
+        </StyledMenu>
+      </React.Fragment>
+    );
   };
 
-  const handleClosePopover = () => {
-    setAnchorEl(null);
+  const confirmHandleDeleteFaq = () => {
+    handleCloseDeleteConfirmation();
+
+    Axios.delete("http://localhost:3001/faq/admin", {
+      data: { faq_id: deleteFaqId },
+    })
+      .then((res) => {
+        setDeleteSuccessMsg(res.data.message);
+        setOpenDeleteSuccess(true);
+        getFAQ();
+      })
+      .catch((error) => {
+        setDeleteFailMsg(error.response.data.message);
+        setOpenDeleteFail(true);
+      });
   };
 
-  const openPopover = Boolean(anchorEl);
-  const popover_id = openPopover ? "simple-popover" : undefined;
+  const handleEditFaq = () => {
+    if (!editQuestion && !editAnswer && !editCat) {
+      setOpenEditError(true);
+    } else {
+      setOpenEditConfirmation(true);
+    }
+  };
+
+  const confirmHandleEditFaq = () => {
+    handleCloseEditConfirmation();
+
+    Axios.put("http://localhost:3001/faq/admin", {
+      username: username,
+      faq_id: editFaqId,
+      questions: editQuestion,
+      answers: editAnswer,
+      cat: editCat,
+    })
+      .then((res) => {
+        console.log("put works");
+        setEditSuccessMsg(res.data.message);
+        setOpenEditFaq(false);
+        setOpenEditSuccess(true);
+        getFAQ();
+      })
+      .catch((error) => {
+        setEditFailMsg(error.response.data.message);
+        setOpenEditFail(true);
+      });
+  };
 
   const getFAQ = () => {
     Axios.get("http://localhost:3001/faq")
@@ -249,36 +470,34 @@ function FAQ({ authorized }) {
 
   const submitFAQ = () => {
     if (newQuestion && newAnswer && newCat) {
-      setOpenConfirmation(true);
+      setOpenSubmitConfirmation(true);
     } else {
-      setOpenError(true);
+      setOpenSubmitError(true);
     }
   };
 
   const confirmSubmitFAQ = () => {
-    handleCloseConfirmation();
+    handleCloseSubmitConfirmation();
 
-    try {
-      Axios.post("http://localhost:3001/faq/admin", {
-        username: username,
-        questions: newQuestion,
-        answers: newAnswer,
-        cat: newCat,
+    Axios.post("http://localhost:3001/faq/admin", {
+      username: username,
+      questions: newQuestion,
+      answers: newAnswer,
+      cat: newCat,
+    })
+      .then((res) => {
+        setSubmitSuccessMsg(res.data.message);
+        setOpenSubmitSuccess(true);
+        setNewQuestion(null);
+        setNewAnswer(null);
+        setNewCat("0");
+        setShow(false);
+        getFAQ();
       })
-        .then((res) => {
-          setOpenSuccess(true);
-          setNewQuestion(null);
-          setNewAnswer(null);
-          setNewCat("0");
-          getFAQ();
-        })
-        .catch((error) => {
-          // console.log(error.response);
-        });
-    } catch (error) {
-      // handle error
-      setOpenFail(true);
-    }
+      .catch((error) => {
+        setSubmitFailMsg(error.response.data.message);
+        setOpenSubmitFail(true);
+      });
   };
 
   if (authorized === false) {
@@ -316,6 +535,7 @@ function FAQ({ authorized }) {
             <StyledTab label="General" {...a11yProps(0)} />
             <StyledTab label="Placement Documents" {...a11yProps(1)} />
             <StyledTab label="Placement Supervisor" {...a11yProps(2)} />
+            {/* information about students; arrangment requirements... */}
           </StyledTabs>
           <div>
             <div className="faq-header">
@@ -378,7 +598,6 @@ function FAQ({ authorized }) {
                         className="input"
                         type="text"
                         id="question"
-                        // value="{supervisorName}"
                         placeholder="Enter question here..."
                         maxLength="200"
                         onChange={(e) => {
@@ -390,7 +609,6 @@ function FAQ({ authorized }) {
                         className="input"
                         type="text"
                         id="answer"
-                        // value="{supervisorName}"
                         placeholder="Enter answer here..."
                         maxLength="200"
                         onChange={(e) => {
@@ -474,30 +692,7 @@ function FAQ({ authorized }) {
                             id={val.faq_id + "-header"}
                           >
                             <Typography>{val.questions}</Typography>
-                            <Button
-                              aria-describedby={popover_id + val.faq_id}
-                              variant="contained"
-                              onClick={(e) => {
-                                // e.stopPropagation();
-                                handleClickPopover();
-                              }}
-                            >
-                              <MoreVertIcon />
-                            </Button>
-                            <Popover
-                              id={popover_id + val.faq_id}
-                              open={openPopover}
-                              anchorEl={anchorEl}
-                              onClose={handleClosePopover}
-                              anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                              }}
-                            >
-                              <Typography sx={{ p: 2 }}>
-                                Edit, Delete
-                              </Typography>
-                            </Popover>
+                            <IsolatedMenu faq_id={val.faq_id} />
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>{val.answers}</Typography>
@@ -537,6 +732,7 @@ function FAQ({ authorized }) {
                             id={val.faq_id + "-header"}
                           >
                             <Typography>{val.questions}</Typography>
+                            <IsolatedMenu faq_id={val.faq_id} />
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>{val.answers}</Typography>
@@ -576,6 +772,7 @@ function FAQ({ authorized }) {
                             id={val.faq_id + "-header"}
                           >
                             <Typography>{val.questions}</Typography>
+                            <IsolatedMenu faq_id={val.faq_id} />
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>{val.answers}</Typography>
@@ -601,30 +798,37 @@ function FAQ({ authorized }) {
           <div className="mobile-container">
             <div className="faq-header-mobile">
               <p>Frequently Asked Questions</p>
-              <input
-                type="text"
-                className="search-bar-mobile"
-                placeholder="Search..."
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
+              <TextField
+                id="filled-search"
+                label="Search..."
+                type="search"
+                variant="filled"
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  fontSize: "14px",
+                  marginTop: "10px",
+                  marginBottom: "auto",
                 }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
-              sx={{
-                width: "auto",
-                color: "black",
-                borderColor: "black",
-                "&:hover": {
-                  color: "#257F2F",
-                  borderColor: "#257F2F",
-                },
-                "&:active": {
-                  color: "#257F2F",
-                  borderColor: "#257F2F",
-                },
+              style={{
+                marginLeft: "20px",
+                marginRight: "20px",
+                width: "170px",
+                height: "2.5rem",
+                backgroundColor: "#f2f2f2",
+                borderStyle: "none",
+                color: "#333333",
+                boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                fontSize: "14px",
+                marginTop: "auto",
+                marginBottom: "auto",
               }}
               onClick={() => setShow(!show)}
             >
@@ -640,34 +844,31 @@ function FAQ({ authorized }) {
                         className="input"
                         type="text"
                         id="question"
-                        // value="{supervisorName}"
                         placeholder="Enter question here..."
                         maxLength="200"
-                        // onChange={(e) => {
-                        //   setSupervisorName(e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          setNewQuestion(e.target.value);
+                        }}
                       />
                       <label htmlFor="answer">ANSWER</label>
                       <textarea
                         className="input"
                         type="text"
                         id="answer"
-                        // value="{supervisorName}"
                         placeholder="Enter answer here..."
                         maxLength="200"
-                        // onChange={(e) => {
-                        //   setSupervisorName(e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          setNewAnswer(e.target.value);
+                        }}
                       />
                       <label htmlFor="category">CATEGORY</label>
                       <select
                         className="input"
                         type="text"
                         id="category"
-                        // value="{supervisorName}"
-                        // onChange={(e) => {
-                        //   setSupervisorName(e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          setNewCat(e.target.value);
+                        }}
                       >
                         <option value="0">General</option>
                         <option value="1">Uploading Documents</option>
@@ -676,7 +877,28 @@ function FAQ({ authorized }) {
                     </div>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" onClick={submitFAQ}>
+                    <Button
+                      type="submit"
+                      style={{
+                        width: "80px",
+                        height: "2rem",
+                        backgroundColor: "#257F2F",
+                        borderStyle: "none",
+                        color: "white",
+                        marginLeft: "10px",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "0.8rem",
+                        "&:hover": {
+                          color: "#257F2F",
+                          borderColor: "#257F2F",
+                        },
+                        "&:active": {
+                          color: "#257F2F",
+                          borderColor: "#257F2F",
+                        },
+                      }}
+                      onClick={submitFAQ}
+                    >
                       Submit
                     </Button>
                   </CardActions>
@@ -707,7 +929,7 @@ function FAQ({ authorized }) {
                   })
                   .map((val, key) => {
                     //faqList must be sorted in the backend
-                    while (val.cat === 0) {
+                    while (val.cat === "0") {
                       return (
                         <Accordion
                           key={key}
@@ -719,6 +941,7 @@ function FAQ({ authorized }) {
                             id={val.faq_id + "-header"}
                           >
                             <Typography>{val.questions}</Typography>
+                            <IsolatedMenu faq_id={val.faq_id} />
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>{val.answers}</Typography>
@@ -746,7 +969,7 @@ function FAQ({ authorized }) {
                   })
                   .map((val, key) => {
                     //faqList must be sorted in the backend
-                    while (val.cat === 1) {
+                    while (val.cat === "1") {
                       return (
                         <Accordion
                           key={key}
@@ -758,6 +981,7 @@ function FAQ({ authorized }) {
                             id={val.faq_id + "-header"}
                           >
                             <Typography>{val.questions}</Typography>
+                            <IsolatedMenu faq_id={val.faq_id} />
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>{val.answers}</Typography>
@@ -785,7 +1009,7 @@ function FAQ({ authorized }) {
                   })
                   .map((val, key) => {
                     //faqList must be sorted in the backend
-                    while (val.cat === 2) {
+                    while (val.cat === "2") {
                       return (
                         <Accordion
                           key={key}
@@ -797,6 +1021,7 @@ function FAQ({ authorized }) {
                             id={val.faq_id + "-header"}
                           >
                             <Typography>{val.questions}</Typography>
+                            <IsolatedMenu faq_id={val.faq_id} />
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>{val.answers}</Typography>
@@ -810,8 +1035,8 @@ function FAQ({ authorized }) {
           </div>
         </Box>
         <Dialog
-          open={openConfirmation}
-          onClose={handleCloseConfirmation}
+          open={openSubmitConfirmation}
+          onClose={handleCloseSubmitConfirmation}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -822,7 +1047,7 @@ function FAQ({ authorized }) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button type="button" onClick={handleCloseConfirmation}>
+            <Button type="button" onClick={handleCloseSubmitConfirmation}>
               No
             </Button>
             <Button type="button" onClick={confirmSubmitFAQ} autoFocus>
@@ -831,8 +1056,8 @@ function FAQ({ authorized }) {
           </DialogActions>
         </Dialog>
         <Dialog
-          open={openError}
-          onClose={handleCloseError}
+          open={openSubmitError}
+          onClose={handleCloseSubmitError}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -845,37 +1070,198 @@ function FAQ({ authorized }) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button type="button" onClick={handleCloseError} autoFocus>
+            <Button type="button" onClick={handleCloseSubmitError} autoFocus>
               OK
             </Button>
           </DialogActions>
         </Dialog>
         <Dialog
-          open={openSuccess}
-          onClose={handleCloseSuccess}
+          open={openSubmitSuccess}
+          onClose={handleCloseSubmitSuccess}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">
-            {"Successfully submitted new FAQ!"}
-          </DialogTitle>
+          <DialogTitle id="alert-dialog-title">{submitSuccessMsg}</DialogTitle>
           <DialogActions>
-            <Button type="button" onClick={handleCloseSuccess} autoFocus>
+            <Button type="button" onClick={handleCloseSubmitSuccess} autoFocus>
               OK
             </Button>
           </DialogActions>
         </Dialog>
         <Dialog
-          open={openFail}
-          onClose={handleCloseFail}
+          open={openSubmitFail}
+          onClose={handleCloseSubmitFail}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{submitFailMsg}</DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseSubmitFail} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openDeleteConfirmation}
+          onClose={handleCloseDeleteConfirmation}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Are you sure?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              This FAQ will be deleted after confirmation.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseDeleteConfirmation}>
+              No
+            </Button>
+            <Button type="button" onClick={confirmHandleDeleteFaq} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openDeleteSuccess}
+          onClose={handleCloseDeleteSuccess}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{deleteSuccessMsg}</DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseDeleteSuccess} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openDeleteFail}
+          onClose={handleCloseDeleteFail}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{deleteFailMsg}</DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseDeleteFail} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openEditFaq}
+          onClose={handleCloseEditFaq}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Edit FAQ</DialogTitle>
+          <DialogContent sx={{ minWidth: "350px" }}>
+            <div className="container">
+              <label htmlFor="question">QUESTION</label>
+              <textarea
+                className="input"
+                type="text"
+                id="question"
+                defaultValue={editQuestion}
+                maxLength="200"
+                onChange={(e) => {
+                  setEditQuestion(e.target.value);
+                }}
+              />
+              <label htmlFor="answer">ANSWER</label>
+              <textarea
+                className="input"
+                type="text"
+                id="answer"
+                defaultValue={editAnswer}
+                maxLength="200"
+                onChange={(e) => {
+                  setEditAnswer(e.target.value);
+                }}
+              />
+              <label htmlFor="category">CATEGORY</label>
+              <select
+                className="input"
+                type="text"
+                id="category"
+                value={editCat}
+                onChange={(e) => {
+                  setEditCat(e.target.value);
+                }}
+              >
+                <option value="0">General</option>
+                <option value="1">Uploading Documents</option>
+                <option value="2">Placement Supervisor</option>
+              </select>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseEditFaq} autoFocus>
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleEditFaq} autoFocus>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openEditConfirmation}
+          onClose={handleCloseEditConfirmation}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Are you sure?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              This FAQ will be updated after submission.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseEditConfirmation}>
+              No
+            </Button>
+            <Button type="button" onClick={confirmHandleEditFaq} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openEditError}
+          onClose={handleCloseEditError}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Failed to submit new FAQ!"}
+            All fields must be completed!
           </DialogTitle>
           <DialogActions>
-            <Button type="button" onClick={handleCloseFail} autoFocus>
+            <Button type="button" onClick={handleCloseEditError} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openEditSuccess}
+          onClose={handleCloseEditSuccess}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{editSuccessMsg}</DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseEditSuccess} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openEditFail}
+          onClose={handleCloseEditFail}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{editFailMsg}</DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseEditFail} autoFocus>
               OK
             </Button>
           </DialogActions>

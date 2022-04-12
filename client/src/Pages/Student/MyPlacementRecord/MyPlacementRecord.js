@@ -313,49 +313,48 @@ function MyPlacementRecord({ authorized }) {
       formData.append("feedback", feedbackForm, feedbackFormName);
     }
 
-    formData.append("username", username);
-    formData.append("studentName", studentName);
-    formData.append("studentNumber", student_uid);
-    formData.append("studentCurriculum", studentCurriculum);
-    formData.append("companyName", companyName);
-    formData.append("jobTitle", jobTitle);
-    formData.append("jobNature", jobNature);
-    formData.append("startDate", startDate);
-    formData.append("endDate", endDate);
-    formData.append("duration", duration);
-    formData.append("location", location);
-    formData.append("paymentType", paymentType);
-    formData.append("salary", salary);
-    formData.append("supervisorName", supervisorName);
-    formData.append("supervisorPhone", supervisorPhone);
-    formData.append("supervisorEmail", supervisorEmail);
-    formData.append("feedbackComment", feedbackComment);
-    formData.append("placementStatus", placementStatus);
+    // formData.append("username", username);
+    // formData.append("studentName", studentName);
+    // formData.append("studentNumber", student_uid);
+    // formData.append("studentCurriculum", studentCurriculum);
+    // formData.append("companyName", companyName);
+    // formData.append("jobTitle", jobTitle);
+    // formData.append("jobNature", jobNature);
+    // formData.append("startDate", startDate);
+    // formData.append("endDate", endDate);
+    // formData.append("duration", duration);
+    // formData.append("location", location);
+    // formData.append("paymentType", paymentType);
+    // formData.append("salary", salary);
+    // formData.append("supervisorName", supervisorName);
+    // formData.append("supervisorPhone", supervisorPhone);
+    // formData.append("supervisorEmail", supervisorEmail);
+    // formData.append("feedbackComment", feedbackComment);
+    // formData.append("placementStatus", placementStatus);
 
     console.log(formData.get("consent"));
     try {
-      Axios.post(
-        "http://localhost:3001/placementrecord/student",
-        // username: username,
-        // studentName: studentName,
-        // studentNumber: student_uid,
-        // studentCurriculum: studentCurriculum,
-        // companyName: companyName,
-        // jobTitle: jobTitle,
-        // jobNature: jobNature,
-        // startDate: startDate,
-        // endDate: endDate,
-        // duration: duration,
-        // location: location,
-        // paymentType: paymentType,
-        // salary: salary,
-        // supervisorName: supervisorName,
-        // supervisorPhone: supervisorPhone,
-        // supervisorEmail: supervisorEmail,
-        // feedbackComment: feedbackComment,
-        // placementStatus: placementStatus,
-        formData
-      )
+      Axios.post("http://localhost:3001/placementrecord/student", {
+        username: username,
+        studentName: studentName,
+        studentNumber: student_uid,
+        studentCurriculum: studentCurriculum,
+        companyName: companyName,
+        jobTitle: jobTitle,
+        jobNature: jobNature,
+        startDate: startDate,
+        endDate: endDate,
+        duration: duration,
+        location: location,
+        paymentType: paymentType,
+        salary: salary,
+        supervisorName: supervisorName,
+        supervisorPhone: supervisorPhone,
+        supervisorEmail: supervisorEmail,
+        feedbackComment: feedbackComment,
+        placementStatus: placementStatus,
+        formData,
+      })
         .then((res) => {
           setOpenSuccess(true);
           setCompanyName(

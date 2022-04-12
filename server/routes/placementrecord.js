@@ -26,7 +26,10 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, callback) {
     //callback(null, file.originalname);
-   callback(null, file.fieldname + "-" +  + Date.now() + "-" + file.originalname);
+    callback(
+      null,
+      file.fieldname + "-" + +Date.now() + "-" + file.originalname
+    );
   },
 });
 const upload = multer({ storage });
@@ -130,9 +133,9 @@ router.post(
     },
   ]),
   async (req, res) => {
-    console.log(req.body);
-    console.log(req.files);
-    console.log(req.files["consent"][0]);
+    // console.log(req.body);
+    // console.log(req.files);
+    // console.log(req.files["consent"][0]);
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
@@ -210,7 +213,6 @@ router.post(
 
     //to hand accessing of pdf files in express
     //https://expressjs.com/en/starter/static-files.html
-
   }
 );
 //to hand accessing of pdf files in express

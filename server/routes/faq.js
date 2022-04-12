@@ -25,9 +25,12 @@ router.post("/admin", validateToken, async (req, res) => {
         cat: req.body.cat,
       },
     });
-    res.json({ status: "success" });
+    res.json({ status: "success", message: "Successfully submitted new FAQ!" });
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json({ status: "success", message: "Failed to submit new FAQ!" });
+    // console.log(error);
   }
 });
 
@@ -42,7 +45,7 @@ router.get("/", validateToken, async (req, res) => {
 });
 
 router.put("/admin", validateToken, async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const modifier = await user_account.findUnique({
     where: {
       username: req.body.username,
@@ -64,10 +67,11 @@ router.put("/admin", validateToken, async (req, res) => {
         cat: req.body.cat,
       },
     });
-    console.log(updatedFAQ);
-    res.json();
+    // console.log(updatedFAQ);
+    res.json({ status: "success", message: "FAQ successfully edited!" });
   } catch (error) {
     console.log(error);
+    res.status(400).json({ status: "error", message: "Error in editing FAQ!" });
   }
 });
 
@@ -79,9 +83,12 @@ router.delete("/admin", validateToken, async (req, res) => {
         faq_id: req.body.faq_id,
       },
     });
-    console.log("delete successful");
+    res.json({ status: "success", message: "FAQ successfully deleted!" });
   } catch (error) {
     console.log(error);
+    res
+      .status(400)
+      .json({ status: "error", message: "Error in deleting FAQ!" });
   }
 });
 

@@ -6,8 +6,6 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const fs = require("fs");
 
-
-
 const cookieParser = require("cookie-parser");
 const { createTokens, validateToken } = require("./JWT");
 //const session = require("express-session");
@@ -18,13 +16,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 //app.use(multer().any());
-var busboy = require('connect-busboy');    
-app.use(busboy());
 
 app.use(
   cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, //allowing the cookie to be enabled
   })
 );
@@ -35,7 +31,6 @@ const placementRouter = require("./routes/placementrecord");
 const addStudentsRouter = require("./routes/addstudents");
 const editStudentRouter = require("./routes/editstudent");
 const faqRouter = require("./routes/faq");
-
 
 //app.use("/", authRouter);
 app.use("/auth", authRouter);
