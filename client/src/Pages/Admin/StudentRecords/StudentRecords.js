@@ -41,6 +41,7 @@ import CardContent from "@mui/material/CardContent";
 
 import studentRecords from "../../../mock data/test_data.json";
 import tableRecords from "../../../mock data/records.json";
+import { ButtonUnstyled } from "@mui/material";
 
 function StudentRecords({ authorized }) {
   const history = useHistory();
@@ -224,25 +225,19 @@ function StudentRecords({ authorized }) {
   const selectAll = (e) => {};
 
   const [selectedUsername, setSelectedUsername] = useState("");
-  const handleStudent = (event) => {
-    // event.preventDefault();
-    console.log("edit student clicked!");
-    console.log(event);
-    // e.preventDefault();
-    // localStorage.setItem("studentSelectedUsername", selectedUsername);
-    // localStorage.setItem("studentSelectedUid", selectedUid);
 
-    // console.log("the selected username is " + selectedUsername);
-    // console.log("the selected uid is " + selectedUid);
-    return history.push("/admin/edit/studentrecord");
-    // history.push("/admin/edit/studentrecord");
+  const handleStudent = (e, id) => {
+    console.log("edit student clicked!");
+    console.log(id);
+
+    return history.push("/admin/edit/studentrecord?student=" + id);
   };
 
-  const handlePlacement = (event) => {
-    event.preventDefault();
+  const handlePlacement = (e, id) => {
     console.log("edit placement clicked!");
-    return history.push("/admin/edit/placementrecord");
-    // history.push("/admin/edit/placementrecord");
+    console.log(id);
+
+    return history.push("/admin/edit/placementrecord?student=" + id);
   };
 
   const handleClickOpen = () => {
@@ -311,6 +306,34 @@ function StudentRecords({ authorized }) {
       )
     );
   }, [acadYear, placementYear, recentlyUpdated, searchTerm]);
+
+  const IsolatedEditStudentButton = (row) => {
+    return (
+      <React.Fragment>
+        <Button
+          type="button"
+          key={row.student_uid}
+          onClick={(e) => handleStudent(e, row.student_uid)}
+        >
+          Edit
+        </Button>
+      </React.Fragment>
+    );
+  };
+
+  const IsolatedEditPlacementButton = (row) => {
+    return (
+      <React.Fragment>
+        <Button
+          type="button"
+          key={row.student_uid}
+          onClick={(e) => handlePlacement(e, row.student_uid)}
+        >
+          Edit
+        </Button>
+      </React.Fragment>
+    );
+  };
 
   if (authorized === false) {
     console.log(authorized);
@@ -528,12 +551,14 @@ function StudentRecords({ authorized }) {
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                        {/* <Button dataItem={row} onClick={handleStudent(row)}>
-                          Edit
-                        </Button> */}
+                        <IsolatedEditStudentButton
+                          student_uid={row.student_uid}
+                        />
                       </TableCell>
                       <TableCell align="center">
-                        <Button onClick={handlePlacement}>Edit</Button>
+                        <IsolatedEditPlacementButton
+                          student_uid={row.student_uid}
+                        />
                       </TableCell>
                       <TableCell align="center">
                         <Button disabled>Test</Button>
