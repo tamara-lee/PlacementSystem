@@ -15,7 +15,8 @@ model student {
   curriculum       String                   @db.VarChar(30)
   placement_status student_placement_status @default(NA)
   modified_by      String                   @db.VarChar(8)
-  last_modified    DateTime                 @default(now()) @db.Timestamp(0)
+  //last_modified    DateTime                 @default(now()) @db.Timestamp(0)
+  last_modified    DateTime                 @updatedAt
   user_account     user_account             @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "student_ibfk_1")
   account_id       Int                       
   placement        placement[]
@@ -59,7 +60,7 @@ model placement {
   supervisor_telephone String?                 @db.VarChar(20)
   supervisor_email     String?                 @db.VarChar(60)
   modified_by          String                  @db.VarChar(8)
-  last_modified        DateTime                @default(now()) @db.Timestamp(0)
+  last_modified        DateTime                @updatedAt
   created_by           String                  @db.VarChar(10)
   creation_time        DateTime                @db.DateTime(0)
   consent_form         String?                 @db.Text
@@ -76,7 +77,7 @@ model faq {
   account_id    Int
   questions     String?      @db.Text
   answers       String?      @db.Text
-  last_modified DateTime     @default(now()) @db.Timestamp(0)
+  last_modified DateTime     @updatedAt
   cat           String?      @db.VarChar(20)
   user_account  user_account @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "faq_ibfk_1")
 
