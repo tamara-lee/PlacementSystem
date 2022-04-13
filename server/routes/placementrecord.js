@@ -37,24 +37,6 @@ var upload = multer({ storage });
 const fs = require("fs");
 const { empty } = require("@prisma/client/runtime");
 
-// router.get("/student/acadyear", async (req, res) => {
-//   //const acadyear = await prisma.$queryRaw`SELECT * FROM test_acad_year`;
-
-//   const acadyear = await test_acad_year.findMany();
-//   res.json(acadyear);
-// });
-
-// router.post("/student/placementyear", async (req, res) => {
-//   /**const placementyear = await prisma.$queryRaw`SELECT * FROM test_placement_year`;
-//     res.json(placementyear);**/
-//   const testPlacmentYear = await test_placement_year.upsert({
-//     where: { placement_test_id: 1 },
-//     update: { placement_test_year: 2023 },
-//     create: { placement_test_id: 2021 },
-//   });
-//   res.json(testPlacmentYear);
-// });
-
 router.post(
   "/testpage",
   upload.fields([
@@ -174,21 +156,28 @@ router.post(
     console.log("files");
     console.log(req.files);
     console.log("___________________________________________-");
+
     console.log("files.appointment");
+    let appoint_letter;
     if (req.files.appointment) {
       console.log(req.files.appointment[0].path);
-    }
+      appoint_letter = req.files.appointment[0].path
+    } 
     console.log("___________________________________________-");
 
     console.log("files.feedback");
+    let feedback_letter;
     if (req.files.feedback) {
       console.log(req.files.feedback[0].path);
+      feedback_letter = req.files.feedback[0].path;
     }
     console.log("___________________________________________-");
 
     console.log("files.consent");
+    let consent_letter;
     if (req.files.consent) {
       console.log(req.files.consent[0].path);
+      consent_letter = req.files.consent[0].path
     }
     console.log("___________________________________________-");
 
@@ -208,9 +197,9 @@ router.post(
     const supervisorName = req.body.supervisorName;
     const supervisorPhone = req.body.supervisorPhone;
     const supervisorEmail = req.body.supervisorEmail;
-    const appointmentLetter = req.files.appointment[0].path;
-    const consentForm = req.files.consent[0].path;
-    const feedbackForm = req.files.feedback[0].path;
+    const appointmentLetter = appoint_letter;    
+    const consentForm = consent_letter;
+    const feedbackForm = feedback_letter;
     const feedbackComment = req.body.feedbackComment;
     const placementStatus = req.body.placementStatus;
 
