@@ -22,10 +22,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+// for remarks
+import remarks from "../../../mock data/mock_remarks.json";
+
 const Container = styled.div`
   justify-content: center;
   margin: 1.2rem 3rem 2rem 3rem;
 `;
+
+const username = localStorage.getItem("username");
+const student_uid = localStorage.getItem("userUid");
+const account_id = localStorage.getItem("userId");
 
 function EditPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
@@ -44,10 +51,8 @@ function EditPlacementRecord({ authorized }) {
         }
       });
     getForm();
+    // getRemarks();
   }, []);
-
-  const username = localStorage.getItem("username");
-  const student_uid = localStorage.getItem("userUid");
 
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
@@ -77,9 +82,18 @@ function EditPlacementRecord({ authorized }) {
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
   const [period, setPeriod] = useState([null, null]);
+
   const [consentFormName, setConsentFormName] = useState("");
   const [appointmentLetterName, setAppointmentLetterName] = useState("");
   const [feedbackFormName, setFeedbackFormName] = useState("");
+
+  const [consentFormSelect, setConsentFormSelect] = useState(false);
+  const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
+  const [feedbackFormSelect, setFeedbackFormSelect] = useState(false);
+
+  const [consentFormPath, setConsentFormPath] = useState("");
+  const [appointmentLetterPath, setAppointmentLetterPath] = useState("");
+  const [feedbackFormPath, setFeedbackFormPath] = useState("");
 
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -105,18 +119,51 @@ function EditPlacementRecord({ authorized }) {
 
   // document handlers
   const consentFormHandler = (e) => {
-    setConsentForm(e.target.files[0]);
-    setConsentFormName(e.target.files[0].name);
+    if (e.target.files.length === 0) {
+      setConsentForm(null);
+      setConsentFormName("");
+      setConsentFormSelect(false);
+    } else {
+      setConsentForm(e.target.files[0]);
+      setConsentFormName(e.target.files[0].name);
+      setConsentFormSelect(true);
+    }
   };
 
   const appointmentLetterHandler = (e) => {
-    setAppointmentLetter(e.target.files[0]);
-    setAppointmentLetterName(e.target.files[0].name);
+    if (e.target.files.length === 0) {
+      setAppointmentLetter(null);
+      setAppointmentLetterName("");
+      setAppointmentLetterSelect(false);
+    } else {
+      setAppointmentLetter(e.target.files[0]);
+      setAppointmentLetterName(e.target.files[0].name);
+      setAppointmentLetterSelect(true);
+    }
   };
 
   const feedbackFormHandler = (e) => {
-    setFeedbackForm(e.target.files[0]);
-    setFeedbackFormName(e.target.files[0].name);
+    if (e.target.files.length === 0) {
+      setFeedbackForm(null);
+      setFeedbackFormName("");
+      setFeedbackFormSelect(false);
+    } else {
+      setFeedbackForm(e.target.files[0]);
+      setFeedbackFormName(e.target.files[0].name);
+      setFeedbackFormSelect(true);
+    }
+  };
+
+  const handleDownloadConsentForm = () => {
+    console.log("download consent form button clicked!");
+  };
+
+  const handleDownloadAppointmentLetter = () => {
+    console.log("download appointment letter button clicked!");
+  };
+
+  const handleDownloadFeedbackForm = () => {
+    console.log("download feedback form button clicked!");
   };
 
   // test chat messages
@@ -147,25 +194,40 @@ function EditPlacementRecord({ authorized }) {
   };
 
   // Remark states
-  const dummy = useRef();
+  // const dummy = useRef();
   // const remarksRef = firestore.collection("remarks"); // get collection of messages here
   // const query = remarksRef.orderBy("createdAt").limit(50);
   // const [remarks] = useCollectionData(query, { idField: "id" });
+  const [remarks, setRemarks] = useState(null);
   const [remarkState, setRemarkState] = useState("");
 
-  const sendRemark = async (e) => {
-    e.preventDefault();
+  const getRemarks = () => {
+    Axios.get("http://localhost:3001/placementrecord/remarks", {
+      username: username,
+    })
+      .then((res) => {
+        // setRemarks(res.body);
+        console.log(res.body);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  };
 
-    // const userId = 1;
+  const sendRemark = async () => {
+    console.log(remarkState);
 
-    // await remarksRef.add({
-    //   text: remarkState,
-    //   createdAt: createTime,
-    //   userId,
-    // });
-
-    // setRemarkState("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    // Axios.post("http://localhost:3001/placementrecord/remarks", {
+    //   username: username,
+    //   remark: remarkState,
+    // })
+    //   .then((res) => {
+    //     console.log(res.data.message);
+    //     getRemarks();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response.data.message);
+    //   });
   };
 
   const getForm = () => {
@@ -252,19 +314,28 @@ function EditPlacementRecord({ authorized }) {
             ? undefined
             : res.data.placement[0].supervisor_email
         );
-        setConsentForm(
+        setConsentFormSelect(
+          res.data.placement[0].consent_form == null ? false : true
+        );
+        setConsentFormPath(
           res.data.placement[0].consent_form == null
-            ? undefined
+            ? ""
             : res.data.placement[0].consent_form
         );
-        setAppointmentLetter(
+        setAppointmentLetterSelect(
+          res.data.placement[0].appointment_letter == null ? false : true
+        );
+        setAppointmentLetterPath(
           res.data.placement[0].appointment_letter == null
-            ? undefined
+            ? ""
             : res.data.placement[0].appointment_letter
         );
-        setFeedbackForm(
+        setFeedbackFormSelect(
+          res.data.placement[0].feedback_form == null ? false : true
+        );
+        setFeedbackFormPath(
           res.data.placement[0].feedback_form == null
-            ? undefined
+            ? ""
             : res.data.placement[0].feedback_form
         );
         setFeedbackComment(
@@ -296,35 +367,34 @@ function EditPlacementRecord({ authorized }) {
 
     const formData = new FormData();
 
-    if (appointmentLetter) {
+    if (appointmentLetterSelect) {
       formData.append("appointment", appointmentLetter, appointmentLetterName);
     }
-    if (consentForm) {
+    if (consentFormSelect) {
       formData.append("consent", consentForm, consentFormName);
     }
-    if (feedbackForm) {
+    if (feedbackFormSelect) {
       formData.append("feedback", feedbackForm, feedbackFormName);
     }
 
-    formData.append(username, username);
-    formData.append(studentName, studentName);
-    formData.append(studentNumber, student_uid);
-    formData.append(studentCurriculum, studentCurriculum);
-    formData.append(companyName, companyName);
-    formData.append(jobTitle, jobTitle);
-    formData.append(jobNature, jobNature);
-    formData.append(startDate, startDate);
-    formData.append(endDate, endDate);
-    formData.append(duration, duration);
-    formData.append(location, location);
-    formData.append(paymentType, paymentType);
-    formData.append(salary, salary);
-    formData.append(supervisorName, supervisorName);
-    formData.append(supervisorPhone, supervisorPhone);
-    formData.append(supervisorEmail, supervisorEmail);
-    formData.append(feedbackComment, feedbackComment);
-    formData.append(placementStatus, placementStatus);
-    formData.append(supervisorEmail, supervisorEmail);
+    formData.append("username", username);
+    formData.append("studentName", studentName);
+    formData.append("studentNumber", student_uid);
+    formData.append("studentCurriculum", studentCurriculum);
+    formData.append("companyName", companyName);
+    formData.append("jobTitle", jobTitle);
+    formData.append("jobNature", jobNature);
+    formData.append("startDate", startDate);
+    formData.append("endDate", endDate);
+    formData.append("duration", duration);
+    formData.append("location", location);
+    formData.append("paymentType", paymentType);
+    formData.append("salary", salary);
+    formData.append("supervisorName", supervisorName);
+    formData.append("supervisorPhone", supervisorPhone);
+    formData.append("supervisorEmail", supervisorEmail);
+    formData.append("feedbackComment", feedbackComment);
+    formData.append("placementStatus", placementStatus);
 
     try {
       Axios.post(
@@ -729,6 +799,26 @@ function EditPlacementRecord({ authorized }) {
                     id="consentForm"
                     onChange={consentFormHandler}
                   />
+                  {consentFormPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadConsentForm}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
                 <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
                 <div className="file-drop-area">
@@ -744,6 +834,26 @@ function EditPlacementRecord({ authorized }) {
                     id="appointmentLetter"
                     onChange={appointmentLetterHandler}
                   />
+                  {appointmentLetterPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadAppointmentLetter}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
@@ -759,6 +869,26 @@ function EditPlacementRecord({ authorized }) {
                     id="feedbackForm"
                     onChange={feedbackFormHandler}
                   />
+                  {feedbackFormPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadFeedbackForm}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
 
                 <label htmlFor="feedbackComment">
@@ -803,6 +933,7 @@ function EditPlacementRecord({ authorized }) {
                     setPlacementStatus(e.target.value);
                   }}
                 >
+                  <option value="NA">N/A</option>
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
                   <option value="waiting">Waiting</option>
@@ -810,16 +941,11 @@ function EditPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">REMARKS</p>
               <div className="container">
-                {/* <main>
+                <div className="remark-container">
                   {remarks &&
                     remarks.map((rmrk) => (
-                      <ChatMessage key={rmrk.id} remark={rmrk} />
+                      <RemarkMessage remarks_id={rmrk.remarks_id} />
                     ))}
-
-                  <span ref={dummy}></span>
-                </main> */}
-                <div className="remark-container">
-                  <RemarkMessage />
                 </div>
                 <div className="new-remark">
                   <input
@@ -925,15 +1051,30 @@ function EditPlacementRecord({ authorized }) {
 }
 
 function RemarkMessage(props) {
+  // console.log(props.remarks_id);
+  // console.log(remarks);
+  // const remarksList = remarks;
+  const remark = remarks.filter(
+    (element) => element.remarks_id === props.remarks_id
+  )[0];
+
+  console.log(remark);
   // const { text, uid, photoURL } = props.message;
-
   // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
+  let messageClass = "sent";
 
-  const messageClass = "sent";
+  if (account_id === remark.account_id) {
+    messageClass = "sent";
+  } else {
+    messageClass = "received";
+  }
+
+  const message = remark.remark;
+
   return (
     <>
       <div className={`message ${messageClass}`}>
-        <p>Sample text!</p>
+        <p>{message}</p>
       </div>
     </>
   );

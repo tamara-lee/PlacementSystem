@@ -230,14 +230,14 @@ function StudentRecords({ authorized }) {
     console.log("edit student clicked!");
     console.log(id);
 
-    return history.push("/admin/edit/studentrecord?student=" + id);
+    return history.push("/admin/edit/studentrecord?studentNumber=" + id);
   };
 
   const handlePlacement = (e, id) => {
     console.log("edit placement clicked!");
     console.log(id);
 
-    return history.push("/admin/edit/placementrecord?student=" + id);
+    return history.push("/admin/edit/placementrecord?studentNumber=" + id);
   };
 
   const handleClickOpen = () => {
@@ -524,7 +524,7 @@ function StudentRecords({ authorized }) {
                     <TableCell align="center">CS ID</TableCell>
                     <TableCell align="center">Curriculum</TableCell>
                     <TableCell align="center">Placement Status</TableCell>
-                    <TableCell align="center">Feedback Form</TableCell>
+                    {/* <TableCell align="center">Feedback Form</TableCell> */}
                     <TableCell align="center">Edit Student Details</TableCell>
                     <TableCell align="center">Edit Placement Record</TableCell>
                     <TableCell align="center">Status</TableCell>
@@ -545,11 +545,11 @@ function StudentRecords({ authorized }) {
                       <TableCell align="center">
                         {row.placement_status}
                       </TableCell>
-                      <TableCell align="center">
+                      {/* <TableCell align="center">
                         <Link href="sample_file.pdf" download>
                           Download
                         </Link>
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="center">
                         <IsolatedEditStudentButton
                           student_uid={row.student_uid}

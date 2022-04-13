@@ -22,32 +22,35 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+// for remarks
+import remarks from "../../../mock data/mock_remarks.json";
+
 const Container = styled.div`
   justify-content: center;
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
+const username = localStorage.getItem("username");
+const student_uid = localStorage.getItem("userUid");
+const account_id = localStorage.getItem("userId");
+
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/auth/login")
-      .then((res) => {})
-      .catch((error) => {
-        console.log(error.response);
-        if (
-          error.response.data.error ===
-          "User is not authenticated!\\nPlease log in."
-        ) {
-          localStorage.setItem("userState", false);
-          alert("You have been logged out. Please refresh and log in again.");
-        }
-      });
+    Axios.get("http://localhost:3001/auth/login").catch((error) => {
+      console.log(error.response);
+      if (
+        error.response.data.error ===
+        "User is not authenticated!\\nPlease log in."
+      ) {
+        localStorage.setItem("userState", false);
+        alert("You have been logged out. Please refresh and log in again.");
+      }
+    });
     getForm();
+    // getRemarks();
   }, []);
-
-  const username = localStorage.getItem("username");
-  const student_uid = localStorage.getItem("userUid");
 
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
@@ -55,12 +58,12 @@ function MyPlacementRecord({ authorized }) {
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobNature, setJobNature] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [salary, setSalary] = useState(undefined);
+  const [salary, setSalary] = useState("");
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
@@ -77,12 +80,18 @@ function MyPlacementRecord({ authorized }) {
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
   const [period, setPeriod] = useState([null, null]);
+
   const [consentFormName, setConsentFormName] = useState(false);
   const [appointmentLetterName, setAppointmentLetterName] = useState(false);
   const [feedbackFormName, setFeedbackFormName] = useState(false);
+
   const [consentFormSelect, setConsentFormSelect] = useState(false);
   const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
   const [feedbackFormSelect, setFeedbackFormSelect] = useState(false);
+
+  const [consentFormPath, setConsentFormPath] = useState("");
+  const [appointmentLetterPath, setAppointmentLetterPath] = useState("");
+  const [feedbackFormPath, setFeedbackFormPath] = useState("");
 
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -108,21 +117,51 @@ function MyPlacementRecord({ authorized }) {
 
   // document handlers
   const consentFormHandler = (e) => {
-    setConsentForm(e.target.files[0]);
-    setConsentFormName(e.target.files[0].name);
-    setConsentFormSelect(true);
+    if (e.target.files.length === 0) {
+      setConsentForm(null);
+      setConsentFormName("");
+      setConsentFormSelect(false);
+    } else {
+      setConsentForm(e.target.files[0]);
+      setConsentFormName(e.target.files[0].name);
+      setConsentFormSelect(true);
+    }
   };
 
   const appointmentLetterHandler = (e) => {
-    setAppointmentLetter(e.target.files[0]);
-    setAppointmentLetterName(e.target.files[0].name);
-    setAppointmentLetterSelect(true);
+    if (e.target.files.length === 0) {
+      setAppointmentLetter(null);
+      setAppointmentLetterName("");
+      setAppointmentLetterSelect(false);
+    } else {
+      setAppointmentLetter(e.target.files[0]);
+      setAppointmentLetterName(e.target.files[0].name);
+      setAppointmentLetterSelect(true);
+    }
   };
 
   const feedbackFormHandler = (e) => {
-    setFeedbackForm(e.target.files[0]);
-    setFeedbackFormName(e.target.files[0].name);
-    setFeedbackFormSelect(true);
+    if (e.target.files.length === 0) {
+      setFeedbackForm(null);
+      setFeedbackFormName("");
+      setFeedbackFormSelect(false);
+    } else {
+      setFeedbackForm(e.target.files[0]);
+      setFeedbackFormName(e.target.files[0].name);
+      setFeedbackFormSelect(true);
+    }
+  };
+
+  const handleDownloadConsentForm = () => {
+    console.log("download consent form button clicked!");
+  };
+
+  const handleDownloadAppointmentLetter = () => {
+    console.log("download appointment letter button clicked!");
+  };
+
+  const handleDownloadFeedbackForm = () => {
+    console.log("download feedback form button clicked!");
   };
 
   // test chat test messages
@@ -153,25 +192,40 @@ function MyPlacementRecord({ authorized }) {
   };
 
   // Remark states
-  const dummy = useRef();
+  // const dummy = useRef();
   // const remarksRef = firestore.collection("remarks"); // get collection of messages here
   // const query = remarksRef.orderBy("createdAt").limit(50);
   // const [remarks] = useCollectionData(query, { idField: "id" });
+  // const [remarks, setRemarks] = useState(null);
   const [remarkState, setRemarkState] = useState("");
 
-  const sendRemark = async (e) => {
-    e.preventDefault();
+  const getRemarks = () => {
+    Axios.get("http://localhost:3001/placementrecord/remarks", {
+      username: username,
+    })
+      .then((res) => {
+        // setRemarks(res.body);
+        console.log(res.body);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  };
 
-    // const userId = 1;
+  const sendRemark = async () => {
+    console.log(remarkState);
 
-    // await remarksRef.add({
-    //   text: remarkState,
-    //   createdAt: createTime,
-    //   userId,
-    // });
-
-    // setRemarkState("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    // Axios.post("http://localhost:3001/placementrecord/remarks", {
+    //   username: username,
+    //   remark: remarkState,
+    // })
+    //   .then((res) => {
+    //     console.log(res.data.message);
+    //     getRemarks();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response.data.message);
+    //   });
   };
 
   const getForm = () => {
@@ -182,100 +236,109 @@ function MyPlacementRecord({ authorized }) {
     })
       .then((res) => {
         setStudentName(
-          res.data.english_name == null ? undefined : res.data.english_name
+          res.data.english_name == null ? "" : res.data.english_name
         );
         setStudentNumber(
-          res.data.student_uid == null ? undefined : res.data.student_uid
+          res.data.student_uid == null ? "" : res.data.student_uid
         );
         setStudentCurriculum(
-          res.data.curriculum == null ? undefined : res.data.curriculum
+          res.data.curriculum == null ? "" : res.data.curriculum
         );
         setCompanyName(
           res.data.placement[0].company_name == null
-            ? undefined
+            ? ""
             : res.data.placement[0].company_name
         );
         setJobTitle(
           res.data.placement[0].job_title == null
-            ? undefined
+            ? ""
             : res.data.placement[0].job_title
         );
         setJobNature(
           res.data.placement[0].job_nature == null
-            ? undefined
+            ? ""
             : res.data.placement[0].job_nature
         );
         setStartDate(
           res.data.placement[0].start_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].start_date
         );
         setEndDate(
           res.data.placement[0].end_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].end_date
         );
         setPeriod([
           res.data.placement[0].start_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].start_date,
           res.data.placement[0].end_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].end_date,
         ]);
         setDuration(
           res.data.placement[0].employment_duration == null
-            ? undefined
+            ? ""
             : res.data.placement[0].employment_duration
         );
         setLocation(
           res.data.placement[0].working_location == null
-            ? undefined
+            ? ""
             : res.data.placement[0].working_location
         );
         setPaymentType(
-          res.data.placement[0].payment_type == "n"
+          res.data.placement[0].payment_type == ""
             ? "unpaid"
             : res.data.placement[0].payment_type
         );
         setSalary(
           res.data.placement[0].salary == null
-            ? undefined
+            ? ""
             : res.data.placement[0].salary
         );
         setSupervisorName(
           res.data.placement[0].supervisor_name == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_name
         );
         setSupervisorPhone(
           res.data.placement[0].supervisor_telephone == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_telephone
         );
         setSupervisorEmail(
           res.data.placement[0].supervisor_email == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_email
         );
-        setConsentForm(
+        setConsentFormSelect(
+          res.data.placement[0].consent_form == null ? false : true
+        );
+        setConsentFormPath(
           res.data.placement[0].consent_form == null
-            ? undefined
+            ? ""
             : res.data.placement[0].consent_form
         );
-        setAppointmentLetter(
+        setAppointmentLetterSelect(
+          res.data.placement[0].appointment_letter == null ? false : true
+        );
+        setAppointmentLetterPath(
           res.data.placement[0].appointment_letter == null
-            ? undefined
+            ? ""
             : res.data.placement[0].appointment_letter
         );
-        setFeedbackForm(
+        setFeedbackFormSelect(
+          res.data.placement[0].feedback_form == null ? false : true
+        );
+        setFeedbackFormPath(
           res.data.placement[0].feedback_form == null
-            ? undefined
+            ? ""
             : res.data.placement[0].feedback_form
         );
         setFeedbackComment(
           res.data.placement[0].feedback_comment == null
-            ? undefined
+            ? ""
             : res.data.placement[0].feedback_comment
         );
         setPlacementStatus(
@@ -740,6 +803,26 @@ function MyPlacementRecord({ authorized }) {
                     id="consentForm"
                     onChange={consentFormHandler}
                   />
+                  {consentFormPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadConsentForm}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
                 <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
                 <div className="file-drop-area">
@@ -755,6 +838,26 @@ function MyPlacementRecord({ authorized }) {
                     id="appointmentLetter"
                     onChange={appointmentLetterHandler}
                   />
+                  {appointmentLetterPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadAppointmentLetter}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
@@ -770,6 +873,26 @@ function MyPlacementRecord({ authorized }) {
                     id="feedbackForm"
                     onChange={feedbackFormHandler}
                   />
+                  {feedbackFormPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadFeedbackForm}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
 
                 <label htmlFor="feedbackComment">
@@ -816,6 +939,7 @@ function MyPlacementRecord({ authorized }) {
                   }}
                   disabled
                 >
+                  <option value="NA">N/A</option>
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
                   <option value="waiting">Waiting</option>
@@ -823,16 +947,11 @@ function MyPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">REMARKS</p>
               <div className="container">
-                {/* <main>
+                <div className="remark-container">
                   {remarks &&
                     remarks.map((rmrk) => (
-                      <ChatMessage key={rmrk.id} remark={rmrk} />
+                      <RemarkMessage remarks_id={rmrk.remarks_id} />
                     ))}
-
-                  <span ref={dummy}></span>
-                </main> */}
-                <div className="remark-container">
-                  <RemarkMessage />
                 </div>
                 <div className="new-remark">
                   <input
@@ -841,7 +960,6 @@ function MyPlacementRecord({ authorized }) {
                     placeholder="Input message here..."
                     maxLength="50"
                   />
-
                   <button
                     type="button"
                     disabled={!remarkState}
@@ -938,14 +1056,30 @@ function MyPlacementRecord({ authorized }) {
 }
 
 function RemarkMessage(props) {
+  // console.log(props.remarks_id);
+  // console.log(remarks);
+  // const remarksList = remarks;
+  const remark = remarks.filter(
+    (element) => element.remarks_id === props.remarks_id
+  )[0];
+
+  // console.log(remark);
   // const { text, uid, photoURL } = props.message;
   // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
+  let messageClass = "sent";
 
-  const messageClass = "sent";
+  if (account_id === remark.account_id) {
+    messageClass = "sent";
+  } else {
+    messageClass = "received";
+  }
+
+  const message = remark.remark;
+
   return (
     <>
       <div className={`message ${messageClass}`}>
-        <p>Sample text!</p>
+        <p>{message}</p>
       </div>
     </>
   );
