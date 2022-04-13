@@ -24,7 +24,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // for remarks
 import remarks from "../../../mock data/mock_remarks.json";
-import { FormatColorResetRounded } from "@mui/icons-material";
 
 const Container = styled.div`
   justify-content: center;
@@ -39,18 +38,16 @@ function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/auth/login")
-      .then((res) => {})
-      .catch((error) => {
-        console.log(error.response);
-        if (
-          error.response.data.error ===
-          "User is not authenticated!\\nPlease log in."
-        ) {
-          localStorage.setItem("userState", false);
-          alert("You have been logged out. Please refresh and log in again.");
-        }
-      });
+    Axios.get("http://localhost:3001/auth/login").catch((error) => {
+      console.log(error.response);
+      if (
+        error.response.data.error ===
+        "User is not authenticated!\\nPlease log in."
+      ) {
+        localStorage.setItem("userState", false);
+        alert("You have been logged out. Please refresh and log in again.");
+      }
+    });
     getForm();
     // getRemarks();
   }, []);
@@ -147,7 +144,7 @@ function MyPlacementRecord({ authorized }) {
     if (e.target.files.length === 0) {
       setFeedbackForm(null);
       setFeedbackFormName("");
-      setFeedbackFormSelect(FormatColorResetRounded);
+      setFeedbackFormSelect(false);
     } else {
       setFeedbackForm(e.target.files[0]);
       setFeedbackFormName(e.target.files[0].name);
@@ -953,8 +950,7 @@ function MyPlacementRecord({ authorized }) {
                   {remarks &&
                     remarks.map((rmrk) => (
                       <RemarkMessage remarks_id={rmrk.remarks_id} />
-                    ))}{" "}
-                  {/* <span ref={dummy}></span> */}
+                    ))}
                 </div>
                 <div className="new-remark">
                   <input
