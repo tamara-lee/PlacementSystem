@@ -58,12 +58,12 @@ function MyPlacementRecord({ authorized }) {
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobNature, setJobNature] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [salary, setSalary] = useState(undefined);
+  const [salary, setSalary] = useState("");
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
@@ -196,7 +196,7 @@ function MyPlacementRecord({ authorized }) {
   // const remarksRef = firestore.collection("remarks"); // get collection of messages here
   // const query = remarksRef.orderBy("createdAt").limit(50);
   // const [remarks] = useCollectionData(query, { idField: "id" });
-  const [remarks, setRemarks] = useState(null);
+  // const [remarks, setRemarks] = useState(null);
   const [remarkState, setRemarkState] = useState("");
 
   const getRemarks = () => {
@@ -236,55 +236,55 @@ function MyPlacementRecord({ authorized }) {
     })
       .then((res) => {
         setStudentName(
-          res.data.english_name == null ? undefined : res.data.english_name
+          res.data.english_name == null ? "" : res.data.english_name
         );
         setStudentNumber(
-          res.data.student_uid == null ? undefined : res.data.student_uid
+          res.data.student_uid == null ? "" : res.data.student_uid
         );
         setStudentCurriculum(
-          res.data.curriculum == null ? undefined : res.data.curriculum
+          res.data.curriculum == null ? "" : res.data.curriculum
         );
         setCompanyName(
           res.data.placement[0].company_name == null
-            ? undefined
+            ? ""
             : res.data.placement[0].company_name
         );
         setJobTitle(
           res.data.placement[0].job_title == null
-            ? undefined
+            ? ""
             : res.data.placement[0].job_title
         );
         setJobNature(
           res.data.placement[0].job_nature == null
-            ? undefined
+            ? ""
             : res.data.placement[0].job_nature
         );
         setStartDate(
           res.data.placement[0].start_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].start_date
         );
         setEndDate(
           res.data.placement[0].end_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].end_date
         );
         setPeriod([
           res.data.placement[0].start_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].start_date,
           res.data.placement[0].end_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].end_date,
         ]);
         setDuration(
           res.data.placement[0].employment_duration == null
-            ? undefined
+            ? ""
             : res.data.placement[0].employment_duration
         );
         setLocation(
           res.data.placement[0].working_location == null
-            ? undefined
+            ? ""
             : res.data.placement[0].working_location
         );
         setPaymentType(
@@ -294,22 +294,22 @@ function MyPlacementRecord({ authorized }) {
         );
         setSalary(
           res.data.placement[0].salary == null
-            ? undefined
+            ? ""
             : res.data.placement[0].salary
         );
         setSupervisorName(
           res.data.placement[0].supervisor_name == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_name
         );
         setSupervisorPhone(
           res.data.placement[0].supervisor_telephone == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_telephone
         );
         setSupervisorEmail(
           res.data.placement[0].supervisor_email == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_email
         );
         setConsentFormSelect(
@@ -338,7 +338,7 @@ function MyPlacementRecord({ authorized }) {
         );
         setFeedbackComment(
           res.data.placement[0].feedback_comment == null
-            ? undefined
+            ? ""
             : res.data.placement[0].feedback_comment
         );
         setPlacementStatus(
@@ -939,6 +939,7 @@ function MyPlacementRecord({ authorized }) {
                   }}
                   disabled
                 >
+                  <option value="NA">N/A</option>
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
                   <option value="waiting">Waiting</option>
@@ -1062,7 +1063,7 @@ function RemarkMessage(props) {
     (element) => element.remarks_id === props.remarks_id
   )[0];
 
-  console.log(remark);
+  // console.log(remark);
   // const { text, uid, photoURL } = props.message;
   // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
   let messageClass = "sent";

@@ -111,7 +111,7 @@ router.get("/student", validateToken, async (req, res) => {
     // console.log("student_info.placement[0]",student_info.placement[0]),
     res.json(student_info);
     // res.sendFile(placement.appointment_letter)
-    
+
     //  res.json({
     //   student_info: student_info,
     //   consent: consentPDF,
@@ -158,8 +158,8 @@ router.post(
     let appoint_letter;
     if (req.files.appointment) {
       console.log(req.files.appointment[0].path);
-      appoint_letter = req.files.appointment[0].path
-    } 
+      appoint_letter = req.files.appointment[0].path;
+    }
     console.log("___________________________________________-");
 
     console.log("files.feedback");
@@ -174,7 +174,7 @@ router.post(
     let consent_letter;
     if (req.files.consent) {
       console.log(req.files.consent[0].path);
-      consent_letter = req.files.consent[0].path
+      consent_letter = req.files.consent[0].path;
     }
     console.log("___________________________________________-");
 
@@ -182,19 +182,25 @@ router.post(
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
-    const companyName = req.body.companyName;
-    const jobTitle = req.body.jobTitle;
-    const jobNature = req.body.jobNature;
-    const employmentDuration = req.body.duration;
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
-    const location = req.body.location;
-    const paymentType = req.body.paymentType;
-    const salary = req.body.salary;
-    const supervisorName = req.body.supervisorName;
-    const supervisorPhone = req.body.supervisorPhone;
-    const supervisorEmail = req.body.supervisorEmail;
-    const appointmentLetter = appoint_letter;    
+    const companyName =
+      req.body.companyName == "" ? null : req.body.companyName;
+    const jobTitle = req.body.jobTitle == "" ? null : req.body.jobTitle;
+    const jobNature = req.body.jobNature == "" ? null : req.body.jobNature;
+    const employmentDuration =
+      req.body.duration == "" ? null : req.body.duration;
+    const startDate = req.body.startDate == "" ? null : req.body.startDate;
+    const endDate = req.body.endDate == "" ? null : req.body.endDate;
+    const location = req.body.location == "" ? null : req.body.location;
+    const paymentType =
+      req.body.paymentType == "null" ? "unpaid" : req.body.paymentType;
+    const salary = req.body.salary == "" ? null : req.body.salary;
+    const supervisorName =
+      req.body.supervisorName == "" ? null : req.body.supervisorName;
+    const supervisorPhone =
+      req.body.supervisorPhone == "" ? null : req.body.supervisorPhone;
+    const supervisorEmail =
+      req.body.supervisorEmail == "" ? null : req.body.supervisorEmail;
+    const appointmentLetter = appoint_letter;
     const consentForm = consent_letter;
     const feedbackForm = feedback_letter;
     const feedbackComment = req.body.feedbackComment;

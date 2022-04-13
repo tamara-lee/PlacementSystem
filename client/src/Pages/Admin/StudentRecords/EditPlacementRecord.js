@@ -30,6 +30,10 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
+const username = localStorage.getItem("username");
+const student_uid = localStorage.getItem("userUid");
+const account_id = localStorage.getItem("userId");
+
 function EditPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
 
@@ -49,9 +53,6 @@ function EditPlacementRecord({ authorized }) {
     getForm();
     // getRemarks();
   }, []);
-
-  const username = localStorage.getItem("username");
-  const student_uid = localStorage.getItem("userUid");
 
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
@@ -932,6 +933,7 @@ function EditPlacementRecord({ authorized }) {
                     setPlacementStatus(e.target.value);
                   }}
                 >
+                  <option value="NA">N/A</option>
                   <option value="approved">Approved</option>
                   <option value="incomplete">Incomplete</option>
                   <option value="waiting">Waiting</option>
