@@ -117,8 +117,7 @@ router.get("/student", validateToken, async (req, res) => {
 
     // const appointmentPDF = JSON.stringify(    {
     //   fieldname: student_info.placement[0].appointment_letter,
-    //   // originalname: '中文.pdf',
-    //   // encoding: '7bit',
+    //  
     //   // mimetype: 'application/pdf',
     //   // destination: './upload/appointment',
     //   // filename: 'appointment-1649750316368-中文.pdf',
