@@ -26,14 +26,11 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, callback) {
     //callback(null, file.originalname);
-    callback(
-      null,
-      file.fieldname + "-" + +Date.now() + "-" + file.originalname
-    );
+    callback(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
     // callback(null, file.fieldname + "-undefined-" + file.originalname);
   },
 });
-var upload = multer({ storage });
+var upload = multer({ storage: storage });
 const fs = require("fs");
 const { empty } = require("@prisma/client/runtime");
 
@@ -117,7 +114,7 @@ router.get("/student", validateToken, async (req, res) => {
 
     // const appointmentPDF = JSON.stringify(    {
     //   fieldname: student_info.placement[0].appointment_letter,
-    //  
+    //
     //   // mimetype: 'application/pdf',
     //   // destination: './upload/appointment',
     //   // filename: 'appointment-1649750316368-中文.pdf',
@@ -129,16 +126,14 @@ router.get("/student", validateToken, async (req, res) => {
     //   fieldname: student_info.placement[0].feedback_form,
     // });
 
-
     // console.log("student_info.placement[0]",student_info.placement[0]),
-   res.json(student_info);
-  //  res.json({
-  //   student_info: student_info,
-  //   consent: consentPDF,
-  //   appointment: appointmentPDF,
-  //   feedback: feedbackPDF,
-  // });
-
+    res.json(student_info);
+    //  res.json({
+    //   student_info: student_info,
+    //   consent: consentPDF,
+    //   appointment: appointmentPDF,
+    //   feedback: feedbackPDF,
+    // });
   } catch (error) {
     console.error("Student not found!");
     console.log(error);
@@ -169,7 +164,7 @@ router.post(
 
     // This get the file and replace "undefined" with the req.body field.
     // });
-    console.log(req.body);
+    console.log(req);
     console.log("___________________________________________-");
     console.log("files");
     console.log(req.files);

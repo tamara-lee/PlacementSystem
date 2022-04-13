@@ -146,14 +146,12 @@ function AddStudent({ authorized }) {
 
     const formData = new FormData();
 
-    formData.append("studentRecordsFile", file, file.name);
+    formData.append("studentRecordsFile", file, fileName);
+    formData.append("username", username);
 
     // console.log(formData.get("studentRecordsFile"));
 
-    Axios.post("http://localhost:3001/importexcel", {
-      username: username,
-      formData,
-    })
+    Axios.post("http://localhost:3001/importexcel", formData)
       .then((res) => {
         setImportSuccessMsg(res.data.message);
         setOpenImportSuccess(true);
@@ -248,6 +246,7 @@ function AddStudent({ authorized }) {
               </span>
               <input
                 type="file"
+                name="studentRecordsFile"
                 id="studentRecordsFile"
                 onChange={function (e) {
                   setFile(e.target.files[0]);
