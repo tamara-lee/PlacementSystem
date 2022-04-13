@@ -110,6 +110,8 @@ router.get("/student", validateToken, async (req, res) => {
 
     // console.log("student_info.placement[0]",student_info.placement[0]),
     res.json(student_info);
+    // res.sendFile(placement.appointment_letter)
+    
     //  res.json({
     //   student_info: student_info,
     //   consent: consentPDF,

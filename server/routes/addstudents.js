@@ -26,6 +26,7 @@ router.post("/admin", validateToken, async (req, res) => {
     },
     select: {
       account_id: true,
+      // username: true,
     },
   });
   // console.log(student_account)
@@ -37,7 +38,9 @@ router.post("/admin", validateToken, async (req, res) => {
       const newStudent = await student.create({
         data: {
           user_account: {
-            connect: { account_id: student_account.account_id },
+           connect: { account_id: student_account.account_id },
+            // connect: { username: student_account.username },
+
           },
           student_uid: req.body.universityNumber,
           english_name: req.body.name,
@@ -47,14 +50,17 @@ router.post("/admin", validateToken, async (req, res) => {
           modified_by: modifier.username,
         },
       });
-      //  console.log(newStudent);
+      console.log("newStudent",newStudent);
       const newPlacementRecord = await placement.create({
         data: {
           user_account: {
-            connect: { account_id: student_account.account_id },
+           connect: { account_id: student_account.account_id },
+          //  connect: { username: student_account.username },
+
           },
           student: {
             connect: { student_uid: req.body.universityNumber },
+            
           },
           placement_year: req.body.placementYear,
           created_by: modifier.username,
@@ -62,12 +68,13 @@ router.post("/admin", validateToken, async (req, res) => {
           creation_time: new Date(Date.now()),
         },
       });
+      console.log("newPlacementRecord",newPlacementRecord);
       res.json({
         status: "success",
         message: "Successfully added student record!",
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       res.status(400).json({
         status: "error",
         message:
