@@ -89,8 +89,6 @@ model remarks {
   account_id   Int
   placement_id Int
   remark       String?      @db.Text
-  answers      String?      @db.Text
-  cat          String?      @db.VarChar(20)
   sent_on      DateTime     @db.DateTime(0)
   sent_to      String       @db.VarChar(10)
   user_account user_account @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "remarks_ibfk_1")
