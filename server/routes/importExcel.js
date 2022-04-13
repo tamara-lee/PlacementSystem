@@ -7,7 +7,9 @@ const xlsx = require("xlsx");
 const { user_account } = new PrismaClient();
 const { student } = new PrismaClient();
 const { placement } = new PrismaClient();
+const multer = require("multer");
 
+<<<<<<< HEAD
 router.post("/", validateToken, async (req, res) => {
   console.log("req.body", req.body);
 
@@ -17,6 +19,42 @@ router.post("/", validateToken, async (req, res) => {
       username: req.body.username,
     },
   });
+=======
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    if (file.fieldname === "studentRecordsFile") {
+      callback(null, "./public");
+    } 
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.originalname);
+  },
+});
+var upload = multer({ storage });
+const fs = require("fs");
+const { empty } = require("@prisma/client/runtime");
+
+
+router.post("/", upload.single("studentRecordsFile"),validateToken, async (req, res) => {
+
+    console.log("req.body",req.body.formData.studentRecordsFile)
+    console.log("req.file",req.file)
+
+
+    //to get name of modifier (user who is importing the student record(s))
+    const modifier = await user_account.findUnique({
+        where: {
+          username: req.body.username,
+        },
+      });
+
+    const wb = xlsx.readFile("template2.xlsx");
+  //  const wb = xlsx.readFile();
+
+
+    const first_sheet = wb.SheetNames[0];
+   // console.log("firstSheet", firstSheet)
+>>>>>>> 34a3c51120dc4ff9efc56197eb55f65b242801f7
 
   const wb = xlsx.readFile("template2.xlsx");
 
