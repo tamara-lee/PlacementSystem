@@ -148,7 +148,9 @@ function AddStudent({ authorized }) {
 
     formData.append("studentRecordsFile", file, file.name);
 
-    Axios.post("http://localhost:3001/importExcel", {
+    // console.log(formData.get("studentRecordsFile"));
+
+    Axios.post("http://localhost:3001/importexcel", {
       username: username,
       formData,
     })
