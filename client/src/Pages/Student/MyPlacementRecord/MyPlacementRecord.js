@@ -24,6 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // for remarks
 import remarks from "../../../mock data/mock_remarks.json";
+import { FormatColorResetRounded } from "@mui/icons-material";
 
 const Container = styled.div`
   justify-content: center;
@@ -82,12 +83,18 @@ function MyPlacementRecord({ authorized }) {
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
   const [period, setPeriod] = useState([null, null]);
+
   const [consentFormName, setConsentFormName] = useState(false);
   const [appointmentLetterName, setAppointmentLetterName] = useState(false);
   const [feedbackFormName, setFeedbackFormName] = useState(false);
+
   const [consentFormSelect, setConsentFormSelect] = useState(false);
   const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
   const [feedbackFormSelect, setFeedbackFormSelect] = useState(false);
+
+  const [consentFormPath, setConsentFormPath] = useState("");
+  const [appointmentLetterPath, setAppointmentLetterPath] = useState("");
+  const [feedbackFormPath, setFeedbackFormPath] = useState("");
 
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -113,21 +120,51 @@ function MyPlacementRecord({ authorized }) {
 
   // document handlers
   const consentFormHandler = (e) => {
-    setConsentForm(e.target.files[0]);
-    setConsentFormName(e.target.files[0].name);
-    setConsentFormSelect(true);
+    if (e.target.files.length === 0) {
+      setConsentForm(null);
+      setConsentFormName("");
+      setConsentFormSelect(false);
+    } else {
+      setConsentForm(e.target.files[0]);
+      setConsentFormName(e.target.files[0].name);
+      setConsentFormSelect(true);
+    }
   };
 
   const appointmentLetterHandler = (e) => {
-    setAppointmentLetter(e.target.files[0]);
-    setAppointmentLetterName(e.target.files[0].name);
-    setAppointmentLetterSelect(true);
+    if (e.target.files.length === 0) {
+      setAppointmentLetter(null);
+      setAppointmentLetterName("");
+      setAppointmentLetterSelect(false);
+    } else {
+      setAppointmentLetter(e.target.files[0]);
+      setAppointmentLetterName(e.target.files[0].name);
+      setAppointmentLetterSelect(true);
+    }
   };
 
   const feedbackFormHandler = (e) => {
-    setFeedbackForm(e.target.files[0]);
-    setFeedbackFormName(e.target.files[0].name);
-    setFeedbackFormSelect(true);
+    if (e.target.files.length === 0) {
+      setFeedbackForm(null);
+      setFeedbackFormName("");
+      setFeedbackFormSelect(FormatColorResetRounded);
+    } else {
+      setFeedbackForm(e.target.files[0]);
+      setFeedbackFormName(e.target.files[0].name);
+      setFeedbackFormSelect(true);
+    }
+  };
+
+  const handleDownloadConsentForm = () => {
+    console.log("download consent form button clicked!");
+  };
+
+  const handleDownloadAppointmentLetter = () => {
+    console.log("download appointment letter button clicked!");
+  };
+
+  const handleDownloadFeedbackForm = () => {
+    console.log("download feedback form button clicked!");
   };
 
   // test chat test messages
@@ -254,7 +291,7 @@ function MyPlacementRecord({ authorized }) {
             : res.data.placement[0].working_location
         );
         setPaymentType(
-          res.data.placement[0].payment_type == "n"
+          res.data.placement[0].payment_type == ""
             ? "unpaid"
             : res.data.placement[0].payment_type
         );
@@ -278,19 +315,28 @@ function MyPlacementRecord({ authorized }) {
             ? undefined
             : res.data.placement[0].supervisor_email
         );
-        setConsentForm(
+        setConsentFormSelect(
+          res.data.placement[0].consent_form == null ? false : true
+        );
+        setConsentFormPath(
           res.data.placement[0].consent_form == null
-            ? undefined
+            ? ""
             : res.data.placement[0].consent_form
         );
-        setAppointmentLetter(
+        setAppointmentLetterSelect(
+          res.data.placement[0].appointment_letter == null ? false : true
+        );
+        setAppointmentLetterPath(
           res.data.placement[0].appointment_letter == null
-            ? undefined
+            ? ""
             : res.data.placement[0].appointment_letter
         );
-        setFeedbackForm(
+        setFeedbackFormSelect(
+          res.data.placement[0].feedback_form == null ? false : true
+        );
+        setFeedbackFormPath(
           res.data.placement[0].feedback_form == null
-            ? undefined
+            ? ""
             : res.data.placement[0].feedback_form
         );
         setFeedbackComment(
@@ -760,6 +806,26 @@ function MyPlacementRecord({ authorized }) {
                     id="consentForm"
                     onChange={consentFormHandler}
                   />
+                  {consentFormPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadConsentForm}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
                 <label htmlFor="appointmentLetter">APPOINTMENT LETTER</label>
                 <div className="file-drop-area">
@@ -775,6 +841,26 @@ function MyPlacementRecord({ authorized }) {
                     id="appointmentLetter"
                     onChange={appointmentLetterHandler}
                   />
+                  {appointmentLetterPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadAppointmentLetter}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
@@ -790,6 +876,26 @@ function MyPlacementRecord({ authorized }) {
                     id="feedbackForm"
                     onChange={feedbackFormHandler}
                   />
+                  {feedbackFormPath != "" ? (
+                    <Button
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                        width: "100px",
+                        height: "2rem",
+                        backgroundColor: "#f2f2f2",
+                        borderStyle: "none",
+                        color: "#333333",
+                        boxShadow: "1px 1px 1px rgba(34, 48, 15, 0.4)",
+                        fontSize: "14px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                      onClick={handleDownloadFeedbackForm}
+                    >
+                      Download
+                    </Button>
+                  ) : null}
                 </div>
 
                 <label htmlFor="feedbackComment">
