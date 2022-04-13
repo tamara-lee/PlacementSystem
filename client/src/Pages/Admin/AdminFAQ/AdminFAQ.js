@@ -445,7 +445,6 @@ function FAQ({ authorized }) {
       cat: editCat,
     })
       .then((res) => {
-        console.log("put works");
         setEditSuccessMsg(res.data.message);
         setOpenEditFaq(false);
         setOpenEditSuccess(true);

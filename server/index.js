@@ -33,15 +33,13 @@ const editStudentRouter = require("./routes/editstudent");
 const faqRouter = require("./routes/faq");
 const importExcelRouter = require("./routes/importExcel");
 
-
 //app.use("/", authRouter);
 app.use("/auth", authRouter);
 app.use("/placementrecord", placementRouter);
 app.use("/addstudents", addStudentsRouter);
 app.use("/faq", faqRouter);
 app.use("/editstudent", editStudentRouter);
-app.use("/importExcel", importExcelRouter);
-
+app.use("/importexcel", importExcelRouter);
 
 app.get("/home", validateToken, (req, res) => {
   res.json("home");

@@ -22,10 +22,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+// for remarks
+import remarks from "../../../mock data/mock_remarks.json";
+
 const Container = styled.div`
   justify-content: center;
   margin: 1.2rem 3rem 2rem 3rem;
 `;
+
+const username = localStorage.getItem("username");
+const student_uid = localStorage.getItem("userUid");
+const account_id = localStorage.getItem("userId");
 
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
@@ -44,10 +51,8 @@ function MyPlacementRecord({ authorized }) {
         }
       });
     getForm();
+    // getRemarks();
   }, []);
-
-  const username = localStorage.getItem("username");
-  const student_uid = localStorage.getItem("userUid");
 
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
@@ -153,25 +158,40 @@ function MyPlacementRecord({ authorized }) {
   };
 
   // Remark states
-  const dummy = useRef();
+  // const dummy = useRef();
   // const remarksRef = firestore.collection("remarks"); // get collection of messages here
   // const query = remarksRef.orderBy("createdAt").limit(50);
   // const [remarks] = useCollectionData(query, { idField: "id" });
+  const [remarks, setRemarks] = useState(null);
   const [remarkState, setRemarkState] = useState("");
 
-  const sendRemark = async (e) => {
-    e.preventDefault();
+  const getRemarks = () => {
+    Axios.get("http://localhost:3001/placementrecord/remarks", {
+      username: username,
+    })
+      .then((res) => {
+        // setRemarks(res.body);
+        console.log(res.body);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  };
 
-    // const userId = 1;
+  const sendRemark = async () => {
+    console.log(remarkState);
 
-    // await remarksRef.add({
-    //   text: remarkState,
-    //   createdAt: createTime,
-    //   userId,
-    // });
-
-    // setRemarkState("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    // Axios.post("http://localhost:3001/placementrecord/remarks", {
+    //   username: username,
+    //   remark: remarkState,
+    // })
+    //   .then((res) => {
+    //     console.log(res.data.message);
+    //     getRemarks();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response.data.message);
+    //   });
   };
 
   const getForm = () => {
@@ -823,16 +843,12 @@ function MyPlacementRecord({ authorized }) {
               </div>
               <p className="container-title">REMARKS</p>
               <div className="container">
-                {/* <main>
+                <div className="remark-container">
                   {remarks &&
                     remarks.map((rmrk) => (
-                      <ChatMessage key={rmrk.id} remark={rmrk} />
-                    ))}
-
-                  <span ref={dummy}></span>
-                </main> */}
-                <div className="remark-container">
-                  <RemarkMessage />
+                      <RemarkMessage remarks_id={rmrk.remarks_id} />
+                    ))}{" "}
+                  {/* <span ref={dummy}></span> */}
                 </div>
                 <div className="new-remark">
                   <input
@@ -841,7 +857,6 @@ function MyPlacementRecord({ authorized }) {
                     placeholder="Input message here..."
                     maxLength="50"
                   />
-
                   <button
                     type="button"
                     disabled={!remarkState}
@@ -938,14 +953,30 @@ function MyPlacementRecord({ authorized }) {
 }
 
 function RemarkMessage(props) {
+  // console.log(props.remarks_id);
+  // console.log(remarks);
+  // const remarksList = remarks;
+  const remark = remarks.filter(
+    (element) => element.remarks_id === props.remarks_id
+  )[0];
+
+  console.log(remark);
   // const { text, uid, photoURL } = props.message;
   // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
+  let messageClass = "sent";
 
-  const messageClass = "sent";
+  if (account_id === remark.account_id) {
+    messageClass = "sent";
+  } else {
+    messageClass = "received";
+  }
+
+  const message = remark.remark;
+
   return (
     <>
       <div className={`message ${messageClass}`}>
-        <p>Sample text!</p>
+        <p>{message}</p>
       </div>
     </>
   );

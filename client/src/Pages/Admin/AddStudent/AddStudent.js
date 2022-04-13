@@ -201,6 +201,7 @@ function AddStudent({ authorized }) {
       courseYear: parseInt(courseYear),
     })
       .then((res) => {
+        setUploadSuccessMsg(res.data.message);
         setOpenUploadSuccess(true);
         // console.log(res);
       })
@@ -379,8 +380,8 @@ function AddStudent({ authorized }) {
                       setCurriculum(e.target.value);
                     }}
                   >
-                    <option value="compsc">BEng(CompSc)</option>
-                    <option value="is">BBA(IS)</option>
+                    <option value="BEng(CompSc)">BEng(CompSc)</option>
+                    <option value="BBA(IS)">BBA(IS)</option>
                   </select>
                   <label htmlFor="courseYear">
                     Course Year
