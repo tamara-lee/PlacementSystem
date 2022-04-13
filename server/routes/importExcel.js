@@ -63,35 +63,98 @@ router.post("/", upload.single("studentRecordsFile"),validateToken, async (req, 
           console.log("student_data",student_data);
           console.log("student_data[0]",student_data[0])
 
-          for (let R = range.s.r; R <= range.e.r; ++R) {
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-            //  console.log(student_data[R][C])
-             console.log("R",R);
-             console.log("C",C);
-             console.log("_____________________")
+          // for (let R = range.s.r; R <= range.e.r; ++R) {
+          //   for (let C = range.s.c; C <= range.e.c; ++C) {
+          //   //  console.log(student_data[R][C])
+          //    console.log("R",R);
+          //    console.log("C",C);
+          //    console.log("_____________________")
 
-             const cell_address = {c:C, r:R};
-             /* if an A1-style address is needed, encode the address */
-             const cell_ref = xlsx.utils.encode_cell(cell_address);
-             console.log(cell_ref)
+          //    const cell_address = {c:C, r:R};
+          //    /* if an A1-style address is needed, encode the address */
+          //    const cell_ref = xlsx.utils.encode_cell(cell_address);
+          //    console.log(cell_ref)
 
 
-              // console.log(R);
-              // console.log(C);
-            }
-          }
+          //     // console.log(R);
+          //     // console.log(C);
+          //   }
+          // }
+         student_data.forEach(function(data){
+           console.log("data",data)
+           console.log(data["Student Name"]);
+           const student_name = String(data["Student Name"]);
+           const university_number = String(data["University Number"]);
+           const curriculum = String(data["Curriculum"]);
+           const academic_year = String(data["Academic Year"]);
+           const course_year = Number(data["Course Year"]);
+           const placement_year = String(data["Placement Year"]);
+           const student_account = await user_account.findUnique({
+            where:{
+                student_uid: university_number
+            },
+            select: {
+                account_id: true
+            },
+          });
+          console.log("student_account", student_account);
+      
+              try {
+                console.log("hi")
+                const newStudent = await student.create({
+                  data: {
+                    user_account : {
+                      connect : {account_id: student_account.account_id,},
+                    },
+                    student_uid: university_number,
+                    english_name: student_name,
+                    acad_year: academic_year,
+                    course_year: course_year,
+                    curriculum: curriculum,
+                    modified_by: modifier.username,
+                  
+                  },
+                });
+               console.log("newStudent",newStudent);
+              } catch (e) {
+                console.log(e);
+              } 
+              try {
+                const newPlacementRecord =  await placement.create({ 
+                  data:{
+                    user_account : {
+                      connect : {account_id: student_account.account_id,},
+                    },
+                    student : {
+                      connect : {student_uid: university_number},
+          
+                    },
+                    placement_year: placement_year,
+                    created_by: modifier.username,
+                    modified_by: modifier.username,
+                    creation_time: new Date(Date.now()),
+                  }
+          
+                });
+                console.log("newPlacementRecord",newPlacementRecord);
+          
+              } catch (error) {
+                console.log(error);
+              }
+         }
+        );
       
       
         //   for (let i = 0; i< student_data.length;  i++){
         //      // for (let j = 0; j <= )
         //    //   console.log("test");
-        //       console.log(student_data[i]["Student Name"]);
-        //       const student_name = String(student_data[i]["Student Name"]);
-        //       const university_number = String(student_data[i]["University Number"]);
-        //       const curriculum = String(student_data[i]["Curriculum"]);
-        //       const academic_year = String(student_data[i]["Academic Year"]);
-        //       const course_year = Number(student_data[i]["Course Year"]);
-        //       const placement_year = String(student_data[i]["Placement Year"]);
+              // console.log(student_data[i]["Student Name"]);
+              // const student_name = String(student_data[i]["Student Name"]);
+              // const university_number = String(student_data[i]["University Number"]);
+              // const curriculum = String(student_data[i]["Curriculum"]);
+              // const academic_year = String(student_data[i]["Academic Year"]);
+              // const course_year = Number(student_data[i]["Course Year"]);
+              // const placement_year = String(student_data[i]["Placement Year"]);
       
         //       console.log("student_name:",student_name);
         //       console.log("university_number:",university_number);
@@ -101,59 +164,59 @@ router.post("/", upload.single("studentRecordsFile"),validateToken, async (req, 
         //       //when we add a new student, we first ensure that the student's user account exists in the placement system
         //       //i.e., student has a CS/IS account
         //       //user_account consists of unique account_id, student_uid, username and password
-        //   const student_account = await user_account.findUnique({
-        //     where:{
-        //         student_uid: university_number
-        //     },
-        //     select: {
-        //         account_id: true
-        //     },
-        //   });
-        //   console.log("student_account", student_account);
+          // const student_account = await user_account.findUnique({
+          //   where:{
+          //       student_uid: university_number
+          //   },
+          //   select: {
+          //       account_id: true
+          //   },
+          // });
+          // console.log("student_account", student_account);
       
-        //       try {
-        //         console.log("hi")
-        //         const newStudent = await student.create({
-        //           data: {
-        //             user_account : {
-        //               connect : {account_id: student_account.account_id,},
-        //             },
-        //             student_uid: university_number,
-        //             english_name: student_name,
-        //             acad_year: academic_year,
-        //             course_year: course_year,
-        //             curriculum: curriculum,
-        //             modified_by: modifier.username,
+          //     try {
+          //       console.log("hi")
+          //       const newStudent = await student.create({
+          //         data: {
+          //           user_account : {
+          //             connect : {account_id: student_account.account_id,},
+          //           },
+          //           student_uid: university_number,
+          //           english_name: student_name,
+          //           acad_year: academic_year,
+          //           course_year: course_year,
+          //           curriculum: curriculum,
+          //           modified_by: modifier.username,
                   
-        //           },
-        //         });
-        //        console.log("newStudent",newStudent);
-        //       } catch (e) {
-        //         console.log(e);
-        //       } 
-        //       try {
-        //         const newPlacementRecord =  await placement.create({ 
-        //           data:{
-        //             user_account : {
-        //               connect : {account_id: student_account.account_id,},
-        //             },
-        //             student : {
-        //               connect : {student_uid: university_number},
+          //         },
+          //       });
+          //      console.log("newStudent",newStudent);
+          //     } catch (e) {
+          //       console.log(e);
+          //     } 
+          //     try {
+          //       const newPlacementRecord =  await placement.create({ 
+          //         data:{
+          //           user_account : {
+          //             connect : {account_id: student_account.account_id,},
+          //           },
+          //           student : {
+          //             connect : {student_uid: university_number},
           
-        //             },
-        //             placement_year: placement_year,
-        //             created_by: modifier.username,
-        //             modified_by: modifier.username,
-        //             creation_time: new Date(Date.now()),
-        //           }
+          //           },
+          //           placement_year: placement_year,
+          //           created_by: modifier.username,
+          //           modified_by: modifier.username,
+          //           creation_time: new Date(Date.now()),
+          //         }
           
-        //         });
-        //         console.log("newPlacementRecord",newPlacementRecord);
+          //       });
+          //       console.log("newPlacementRecord",newPlacementRecord);
           
-        //       } catch (error) {
-        //         console.log(error);
-        //       }
-        //   }
+          //     } catch (error) {
+          //       console.log(error);
+          //     }
+          // }
 
     }
 

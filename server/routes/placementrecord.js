@@ -178,6 +178,13 @@ router.post(
     }
     console.log("___________________________________________-");
 
+    // let salary_paid = null;
+    // if (req.body.salary != "") {
+    //   console.log(req.body.salary);
+    //   consent_letter = salary_paid;
+    // }
+    console.log("___________________________________________-");
+
     //  console.log(req.files["consent"][0]);
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
@@ -186,11 +193,13 @@ router.post(
     const jobTitle = req.body.jobTitle;
     const jobNature = req.body.jobNature;
     const employmentDuration = req.body.duration;
+    // const startDate = req.body.startDate;
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
     const location = req.body.location;
     const paymentType = req.body.paymentType;
-    const salary = req.body.salary;
+   // const salary = req.body.salary;
+    const salary = req.body.salary_paid;
     const supervisorName = req.body.supervisorName;
     const supervisorPhone = req.body.supervisorPhone;
     const supervisorEmail = req.body.supervisorEmail;
@@ -221,6 +230,10 @@ router.post(
             username: user.username,
           },
           data: {
+            student: {
+              connect: { student_uid: studentNumber },
+              
+            },
             appointment_letter: appointmentLetter,
             feedback_form: feedbackForm,
             feedback_comment: feedbackComment,
@@ -241,6 +254,7 @@ router.post(
             },
             modified_by: user.username,
             consent_form: consentForm,
+            placement_status: placementStatus,
           },
         });
         console.log(placementRecord);
