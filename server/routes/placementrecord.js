@@ -375,11 +375,11 @@ router.get("/chatbox", validateToken, async (req, res) => {
       },
     });
     console.log(student_info.placement[0].placement_id);
-  } catch (error) {
-    console.log(error);
-  }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 
-  try {
+  // try {
     const chatRecords = await remarks.findMany({
       where:{
         placement_id: student_info.placement[0].placement_id
