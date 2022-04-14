@@ -279,7 +279,7 @@ router.post(
 );
 //to hand accessing of pdf files in express
 //https://expressjs.com/en/starter/static-files.html
-router.post("/appointment_pdf",validateToken, async (req,res)=> {
+router.post("/appointment_pdf", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
       where: {
@@ -288,20 +288,17 @@ router.post("/appointment_pdf",validateToken, async (req,res)=> {
       include: {
         placement: true,
       },
-    });  
-    console.log("appointment_pdf")
+    });
+    console.log("appointment_pdf");
     res.sendFile(student_info.placement[0].appointment_letter);
-
   } catch (error) {
-      console.error("Error in obtaining pdf!");
-      console.log(error);
-      res.json({ status: "error", message: "pdf not found!" });
-    }
-  
-
+    console.error("Error in obtaining pdf!");
+    console.log(error);
+    res.json({ status: "error", message: "pdf not found!" });
+  }
 });
 router.post("/chatbox", validateToken, async (req, res) => {
-  console.log("req.body",req.body)
+  console.log("req.body", req.body);
   try {
     const sender_account = await user_account.findUnique({
       where: {
@@ -312,57 +309,52 @@ router.post("/chatbox", validateToken, async (req, res) => {
         username: true,
       },
     });
-    console.log("sender_account",sender_account);
+    console.log("sender_account", sender_account);
 
-  // } catch (error){
-  //   console.log(error)
+    // } catch (error){
+    //   console.log(error)
 
-  // }
- 
-  // try {
+    // }
+
+    // try {
     const student_info = await student.findUnique({
       where: {
         // student_uid: req.query.studentNumber,
         student_uid: req.body.student_uid,
-
       },
       include: {
         placement: true,
       },
     });
     console.log(student_info.placement[0].placement_id);
-  // } catch (error){
-  //   console.log(error)
-  // }
-  // try {
+    // } catch (error){
+    //   console.log(error)
+    // }
+    // try {
     const newRemark = await remarks.create({
       data: {
         user_account: {
           connect: { account_id: sender_account.account_id },
         },
         placement: {
-          connect: { placement_id: student_info.placement[0].placement_id}
-
+          connect: { placement_id: student_info.placement[0].placement_id },
         },
         remark: req.body.remark,
         sent_on: new Date(Date.now()),
-        sent_to: req.body.sent_to
+        sent_to: req.body.sent_to,
       },
     });
     console.log(newRemark);
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
-  
 
-//if req.body.account_id matches admin_account's account_id, 
+//if req.body.account_id matches admin_account's account_id,
 //then store admin_account's account_id in account_id field && sent_to: student_account's uid or username
 //else store student_account's account_id in account_field && sent_to: admin_account's uid or username
 
 // either way store student's placement_id in placement_id field
-
 
 router.get("/chatbox", validateToken, async (req, res) => {
   try {
@@ -381,15 +373,13 @@ router.get("/chatbox", validateToken, async (req, res) => {
 
   try {
     const chatRecords = await remarks.findMany({
-      where:{
-        placement_id: student_info.placement[0].placement_id
-
-      }
+      where: {
+        placement_id: student_info.placement[0].placement_id,
+      },
     });
     res.json(chatRecords);
   } catch (error) {
     console.log(error);
   }
-
 });
 module.exports = router;
