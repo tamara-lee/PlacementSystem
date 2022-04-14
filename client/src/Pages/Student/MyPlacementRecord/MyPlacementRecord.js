@@ -33,6 +33,7 @@ const Container = styled.div`
 const username = localStorage.getItem("username");
 const student_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
+const admin_id = "0000000000";
 
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
@@ -215,17 +216,19 @@ function MyPlacementRecord({ authorized }) {
   const sendRemark = async () => {
     console.log(remarkState);
 
-    // Axios.post("http://localhost:3001/placementrecord/remarks", {
-    //   username: username,
-    //   remark: remarkState,
-    // })
-    //   .then((res) => {
-    //     console.log(res.data.message);
-    //     getRemarks();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response.data.message);
-    //   });
+    Axios.post("http://localhost:3001/placementrecord/chatbox", {
+      student_uid: student_uid,
+      sent_by: student_uid, // person sending (student)
+      sent_to: admin_id, // person receiving (admin)
+      remark: remarkState,
+    })
+      .then((res) => {
+        console.log(res.data.message);
+        getRemarks();
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
   };
 
   const getForm = () => {

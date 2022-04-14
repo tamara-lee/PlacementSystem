@@ -31,7 +31,7 @@ const Container = styled.div`
 `;
 
 const username = localStorage.getItem("username");
-const student_uid = localStorage.getItem("userUid");
+const user_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
 
 function EditPlacementRecord({ authorized }) {
@@ -217,17 +217,19 @@ function EditPlacementRecord({ authorized }) {
   const sendRemark = async () => {
     console.log(remarkState);
 
-    // Axios.post("http://localhost:3001/placementrecord/remarks", {
-    //   username: username,
-    //   remark: remarkState,
-    // })
-    //   .then((res) => {
-    //     console.log(res.data.message);
-    //     getRemarks();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response.data.message);
-    //   });
+    Axios.post("http://localhost:3001/placementrecord/chatbox", {
+      student_uid: studentNumber,
+      sent_by: user_uid, // person sending (admin)
+      sent_to: studentNumber, // person receiving (student)
+      remark: remarkState,
+    })
+      .then((res) => {
+        console.log(res.data.message);
+        getRemarks();
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
   };
 
   const getForm = () => {
@@ -379,7 +381,7 @@ function EditPlacementRecord({ authorized }) {
 
     formData.append("username", username);
     formData.append("studentName", studentName);
-    formData.append("studentNumber", student_uid);
+    formData.append("studentNumber", studentNumber);
     formData.append("studentCurriculum", studentCurriculum);
     formData.append("companyName", companyName);
     formData.append("jobTitle", jobTitle);
