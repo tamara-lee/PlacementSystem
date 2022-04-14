@@ -4,6 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
+const { remarks } = new PrismaClient();
 const { test_acad_year } = new PrismaClient();
 const { test_placement_year } = new PrismaClient();
 const prisma = new PrismaClient();
@@ -25,6 +26,7 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, callback) {
+    //callback(null, file.originalname);
     callback(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
     // callback(null, file.fieldname + "-undefined-" + file.originalname);
   },
@@ -56,25 +58,60 @@ router.post(
     // console.log(req.files);
   }
 );
+/*router.post("/student/info", validateToken, async (req, res) => {
+ // console.log(req.body);
 
-router.post("/appointment_pdf", validateToken, async (req, res) => {
+  //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
+  const studentNumber = req.body.studentNumber;
+
   try {
     const student_info = await student.findUnique({
       where: {
-        student_uid: req.body.studentNumber,
+        student_uid: studentNumber,
       },
       include: {
         placement: true,
       },
     });
-    console.log(student_info.placement[0].appointment_letter);
-    res.sendFile(student_info.placement[0].appointment_letter);
-    console.log(student_info.placement[0].feedback_form);
-    console.log(student_info.placement[0].consent_form);
+    res.json(student_info);
+	}
+	catch (error) {
+    console.error("Student not found!")
+		console.log(error);
+	}
+});*/
 
-   
-  //  res.json(student_info);
-  //  res.sendFile(placement.appointment_letter)
+router.get("/student", validateToken, async (req, res) => {
+  try {
+    const student_info = await student.findUnique({
+      where: {
+        student_uid: req.query.studentNumber,
+      },
+      include: {
+        placement: true,
+      },
+    });
+    // const consentPDF = JSON.stringify(    {
+    //   fieldname: student_info.placement[0].consent_form,
+    // });
+
+    // const appointmentPDF = JSON.stringify(    {
+    //   fieldname: student_info.placement[0].appointment_letter,
+    //
+    //   // mimetype: 'application/pdf',
+    //   // destination: './upload/appointment',
+    //   // filename: 'appointment-1649750316368-中文.pdf',
+    //   // path: 'upload\\appointment\\appointment-1649750316368-中文.pdf',
+    //   // size: 1197183
+    // });
+
+    // const feedbackPDF = JSON.stringify(    {
+    //   fieldname: student_info.placement[0].feedback_form,
+    // });
+
+    // console.log("student_info.placement[0]",student_info.placement[0]),
+    res.json(student_info);
+    // res.sendFile(placement.appointment_letter)
 
     //  res.json({
     //   student_info: student_info,
@@ -83,7 +120,7 @@ router.post("/appointment_pdf", validateToken, async (req, res) => {
     //   feedback: feedbackPDF,
     // });
   } catch (error) {
-    console.error("Error in obtaining data!");
+    console.error("Student not found!");
     console.log(error);
     res.json({ status: "error", message: "Student not found!" });
   }
@@ -113,11 +150,11 @@ router.post(
 
     // This get the file and replace "undefined" with the req.body field.
     // });
-    // console.log(req);
-    // console.log("___________________________________________-");
-    // console.log("files");
-    // console.log(req.files);
-    // console.log("___________________________________________-");
+    console.log(req);
+    console.log("___________________________________________-");
+    console.log("files");
+    console.log(req.files);
+    console.log("___________________________________________-");
 
     console.log("files.appointment");
     let appoint_letter;
@@ -143,6 +180,14 @@ router.post(
     }
     console.log("___________________________________________-");
 
+    // let salary_paid = null;
+    // if (req.body.salary != "") {
+    //   console.log(req.body.salary);
+    //   consent_letter = salary_paid;
+    // }
+    console.log("___________________________________________-");
+
+    //  console.log(req.files["consent"][0]);
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
@@ -232,8 +277,31 @@ router.post(
     //https://expressjs.com/en/starter/static-files.html
   }
 );
+//to hand accessing of pdf files in express
+//https://expressjs.com/en/starter/static-files.html
+router.post("/appointment_pdf",validateToken, async (req,res)=> {
+  try {
+    const student_info = await student.findUnique({
+      where: {
+        student_uid: req.query.studentNumber,
+      },
+      include: {
+        placement: true,
+      },
+    });  
+    console.log("appointment_pdf")
+    res.sendFile(student_info.placement[0].appointment_letter);
 
+  } catch (error) {
+      console.error("Error in obtaining pdf!");
+      console.log(error);
+      res.json({ status: "error", message: "pdf not found!" });
+    }
+  
+
+});
 router.post("/chatbox", validateToken, async (req, res) => {
+  console.log("req.body",req.body)
   try {
     const sender_account = await user_account.findUnique({
       where: {
@@ -244,44 +312,14 @@ router.post("/chatbox", validateToken, async (req, res) => {
         username: true,
       },
     });
+    console.log("sender_account",sender_account);
 
-  } catch (error){
-    console.log(error)
-
-  }
-  // try {
-  //   const admin_account = await user_account.findUnique({
-  //     where: {
-  //       student_uid: "0000000000",
-  //     },
-  //     // where: {
-  //     //   username: 'admin'
-  //     // },
-  //     select: {
-  //       account_id: true,
-  //       username: true,
-  
-  //     },
-  //   });
   // } catch (error){
+  //   console.log(error)
 
   // }
- // try {
-   
-  // const placement_record = await user_account.findUnique({
-  //   where: {
-  //     student_uid: req.body.universityNumber,
-  //   },
-  //   select: {
-  //     account_id: true,
-  //     placement: {
-  //       select: {
-  //         placement_id: true,
-  //       },
-  //     },
-  //   },
-  // });
-  try {
+ 
+  // try {
     const student_info = await student.findUnique({
       where: {
         // student_uid: req.query.studentNumber,
@@ -293,11 +331,11 @@ router.post("/chatbox", validateToken, async (req, res) => {
       },
     });
     console.log(student_info.placement[0].placement_id);
-  } catch (error){
-    console.log(error)
-  }
-  try {
-    const newRemark = await remark.create({
+  // } catch (error){
+  //   console.log(error)
+  // }
+  // try {
+    const newRemark = await remarks.create({
       data: {
         user_account: {
           connect: { account_id: sender_account.account_id },
@@ -311,10 +349,12 @@ router.post("/chatbox", validateToken, async (req, res) => {
         sent_to: req.body.sent_to
       },
     });
+    console.log(newRemark);
 
   } catch (error) {
     console.log(error)
   }
+});
   
 
 //if req.body.account_id matches admin_account's account_id, 
@@ -323,7 +363,6 @@ router.post("/chatbox", validateToken, async (req, res) => {
 
 // either way store student's placement_id in placement_id field
 
-});
 
 router.get("/chatbox", validateToken, async (req, res) => {
   try {
