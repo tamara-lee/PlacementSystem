@@ -202,16 +202,16 @@ function EditPlacementRecord({ authorized }) {
   const [remarkState, setRemarkState] = useState("");
 
   const getRemarks = () => {
-    Axios.get("http://localhost:3001/placementrecord/chatbox", {
-      username: username,
-    })
-      .then((res) => {
-        // setRemarks(res.body);
-        console.log(res.body);
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-      });
+    // Axios.get("http://localhost:3001/placementrecord/chatbox", {
+    //   username: username,
+    // })
+    //   .then((res) => {
+    //     // setRemarks(res.body);
+    //     console.log(res.body);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response.data.message);
+    //   });
   };
 
   const sendRemark = async () => {
