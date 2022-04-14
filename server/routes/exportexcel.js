@@ -84,13 +84,13 @@ router.post("/", validateToken, async (req, res) => {
             }
 
         });
-        console.log("export_record",export_record[0].placement)
+        console.log("export_record",export_record[0])
         console.log("export_record.length",export_record.length)
 
-        const export_record_flatten = flatten({
-            placement
-        });
-        console.log(export_record_flatten);
+        // const export_record_flatten = flatten({
+        //     placement
+        // });
+        // console.log(export_record_flatten);
 
         // for (i = 0; i < export_record.length; i++){
         //      export_record_flatten = flatten({
