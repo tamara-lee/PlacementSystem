@@ -30,6 +30,11 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
+// get query value from url
+let search = window.location.search;
+let params = new URLSearchParams(search);
+const student_uid = params.get("studentNumber");
+
 const username = localStorage.getItem("username");
 const user_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
@@ -218,7 +223,7 @@ function EditPlacementRecord({ authorized }) {
     console.log(remarkState);
 
     Axios.post("http://localhost:3001/placementrecord/chatbox", {
-      student_uid: studentNumber,
+      student_uid: student_uid,
       sent_by: user_uid, // person sending (admin)
       sent_to: studentNumber, // person receiving (student)
       remark: remarkState,
@@ -352,7 +357,7 @@ function EditPlacementRecord({ authorized }) {
         );
       })
       .catch((error) => {
-        console.log(error.response);
+        console.log(error);
       });
   };
 

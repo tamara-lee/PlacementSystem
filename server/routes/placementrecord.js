@@ -85,6 +85,7 @@ router.post("/appointment_pdf", validateToken, async (req, res) => {
   } catch (error) {
     console.error("Error in obtaining data!");
     console.log(error);
+    res.json({ status: "error", message: "Student not found!" });
   }
 });
 
@@ -192,7 +193,6 @@ router.post(
           data: {
             student: {
               connect: { student_uid: studentNumber },
-              
             },
             appointment_letter: appointmentLetter,
             feedback_form: feedbackForm,
