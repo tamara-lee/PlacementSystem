@@ -121,6 +121,7 @@ router.get("/student", validateToken, async (req, res) => {
   } catch (error) {
     console.error("Student not found!");
     console.log(error);
+    res.json({ status: "error", message: "Student not found!" });
   }
 });
 
@@ -236,7 +237,6 @@ router.post(
           data: {
             student: {
               connect: { student_uid: studentNumber },
-              
             },
             appointment_letter: appointmentLetter,
             feedback_form: feedbackForm,

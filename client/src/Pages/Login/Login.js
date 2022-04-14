@@ -29,6 +29,7 @@ function Login() {
           localStorage.setItem("userUid", response.data.student_uid);
           localStorage.setItem("username", response.data.account_username);
           localStorage.setItem("userId", response.data.account_id);
+          localStorage.setItem("admin_id", "0000000000");
 
           return history.push("/student/mainpage");
         }

@@ -33,7 +33,7 @@ const Container = styled.div`
 const username = localStorage.getItem("username");
 const student_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
-const admin_id = "0000000000";
+const admin_id = localStorage.getItem("admin_uid");
 
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
