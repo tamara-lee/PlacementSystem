@@ -66,6 +66,34 @@ function StudentRecords({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
+    setFieldsExport([
+      {
+        placement_id: 0,
+        placement_year: 0,
+        acad_year: 0,
+        username: 0,
+        student_uid: 0,
+        english_name: 0,
+        curriculum: 0,
+        job_title: 0,
+        company_name: 0,
+        job_nature: 0,
+        start_date: 0,
+        end_date: 0,
+        employment_duration: 0,
+        working_location: 0,
+        payment_type: 0,
+        salary: 0,
+        supervisor_name: 0,
+        supervisor_telephone: 0,
+        supervisor_email: 0,
+        consent_form: 0,
+        appointment_letter: 0,
+        feedback_form: 0,
+        feedback_comment: 0,
+        placement_status: 0,
+      },
+    ]);
     // getRecords();
   }, []);
 
@@ -81,9 +109,15 @@ function StudentRecords({ authorized }) {
   const [sortRecentlyUpdated, setSortRecentlyUpdated] = useState([]);
   const [show, setShow] = useState(false);
 
-  const getRecords = () => {
-    Axios.post("http://localhost:3001/studentrecords", {
-      admin_uid: admin_id,
+  const [fieldsExport, setFieldsExport] = useState();
+  const [academicYearExport, setAcademicYearExport] = useState();
+
+  const handleExport = () => {
+    // console.log(academicYearExport);
+    // console.log(fieldsExport[0]);
+    Axios.post("http://localhost:3001/exportexcel", {
+      academic_year: academicYearExport,
+      export_fields: fieldsExport[0],
     })
       .then((res) => {
         console.log(res);
@@ -135,6 +169,39 @@ function StudentRecords({ authorized }) {
     },
   ];
 
+  const [checked_placement_id, set_checked_placement_id] = useState(false);
+  const [checked_placement_year, set_checked_placement_year] = useState(false);
+  const [checked_acad_year, set_checked_acad_year] = useState(false);
+  const [checked_username, set_checked_username] = useState(false);
+  const [checked_student_uid, set_checked_student_uid] = useState(false);
+  const [checked_english_name, set_checked_english_name] = useState(false);
+  const [checked_curriculum, set_checked_curriculum] = useState(false);
+  const [checked_job_title, set_checked_job_title] = useState(false);
+  const [checked_company_name, set_checked_company_name] = useState(false);
+  const [checked_job_nature, set_checked_job_nature] = useState(false);
+  const [checked_start_date, set_checked_start_date] = useState(false);
+  const [checked_end_date, set_checked_end_date] = useState(false);
+  const [checked_employment_duration, set_checked_employment_duration] =
+    useState(false);
+  const [checked_working_location, set_checked_working_location] =
+    useState(false);
+  const [checked_payment_type, set_checked_payment_type] = useState(false);
+  const [checked_salary, set_checked_salary] = useState(false);
+  const [checked_supervisor_name, set_checked_supervisor_name] =
+    useState(false);
+  const [checked_supervisor_telephone, set_checked_supervisor_telephone] =
+    useState(false);
+  const [checked_supervisor_email, set_checked_supervisor_email] =
+    useState(false);
+  const [checked_consent_form, set_checked_consent_form] = useState(false);
+  const [checked_appointment_letter, set_checked_appointment_letter] =
+    useState(false);
+  const [checked_feedback_form, set_checked_feedback_form] = useState(false);
+  const [checked_feedback_comment, set_checked_feedback_comment] =
+    useState(false);
+  const [checked_placement_status, set_checked_placement_status] =
+    useState(false);
+
   function createData(
     student_uid,
     english_name,
@@ -177,11 +244,6 @@ function StudentRecords({ authorized }) {
       )
     ),
   ];
-
-  // ADD API
-  // Axios.get("http://localhost:3001/{}}").then((response) => {
-  //   console.log(response);
-  // });
 
   function sortAlphabetically() {
     // records = tableRecords;
@@ -259,7 +321,10 @@ function StudentRecords({ authorized }) {
     // alert("Recently Updated button clicked");
   };
 
-  const selectAll = (e) => {};
+  // const selectAll = () => {
+  //   // e.target.checked;
+  //   console.log("select all checked!");
+  // };
 
   const [selectedUsername, setSelectedUsername] = useState("");
 
@@ -496,22 +561,460 @@ function StudentRecords({ authorized }) {
                     information will be exported in an Excel file.
                   </DialogContentText>
                   <FormGroup>
+                    <InputLabel variant="standard" id="academicYearExport">
+                      <Typography
+                        style={{
+                          fontSize: "15px",
+                          color: "black",
+                          marginTop: "10px",
+                        }}
+                      >
+                        Academic Year
+                      </Typography>
+                    </InputLabel>
+                    <Select
+                      labelId="academicYearExport"
+                      id="select"
+                      style={{
+                        minWidth: "100px",
+                        maxHeight: "30px",
+                        marginTop: "5px",
+                        marginBottom: "10px",
+                      }}
+                      value={academicYearExport}
+                      onChange={(e) => {
+                        setAcademicYearExport(e.target.value);
+                        console.log(e.target.value);
+                      }}
+                    >
+                      {Object.keys(acadYears).map((element) => (
+                        <MenuItem value={acadYears[element]}>
+                          {acadYears[element]}
+                        </MenuItem>
+                      ))}
+                    </Select>
                     <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      checked={selectAll}
+                      control={<Checkbox />}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          set_checked_placement_id(true);
+                          set_checked_placement_year(true);
+                          set_checked_acad_year(true);
+                          set_checked_username(true);
+                          set_checked_student_uid(true);
+                          set_checked_english_name(true);
+                          set_checked_curriculum(true);
+                          set_checked_job_title(true);
+                          set_checked_company_name(true);
+                          set_checked_job_nature(true);
+                          set_checked_start_date(true);
+                          set_checked_end_date(true);
+                          set_checked_employment_duration(true);
+                          set_checked_working_location(true);
+                          set_checked_payment_type(true);
+                          set_checked_salary(true);
+                          set_checked_supervisor_name(true);
+                          set_checked_supervisor_telephone(true);
+                          set_checked_supervisor_email(true);
+                          set_checked_consent_form(true);
+                          set_checked_appointment_letter(true);
+                          set_checked_feedback_form(true);
+                          set_checked_feedback_comment(true);
+                          set_checked_placement_status(true);
+                          Object.keys(fieldsExport[0]).map(
+                            (element) => (fieldsExport[0][element] = 1)
+                          );
+                        } else {
+                          set_checked_placement_id(false);
+                          set_checked_placement_year(false);
+                          set_checked_acad_year(false);
+                          set_checked_username(false);
+                          set_checked_student_uid(false);
+                          set_checked_english_name(false);
+                          set_checked_curriculum(false);
+                          set_checked_job_title(false);
+                          set_checked_company_name(false);
+                          set_checked_job_nature(false);
+                          set_checked_start_date(false);
+                          set_checked_end_date(false);
+                          set_checked_employment_duration(false);
+                          set_checked_working_location(false);
+                          set_checked_payment_type(false);
+                          set_checked_salary(false);
+                          set_checked_supervisor_name(false);
+                          set_checked_supervisor_telephone(false);
+                          set_checked_supervisor_email(false);
+                          set_checked_consent_form(false);
+                          set_checked_appointment_letter(false);
+                          set_checked_feedback_form(false);
+                          set_checked_feedback_comment(false);
+                          set_checked_placement_status(false);
+                          Object.keys(fieldsExport[0]).map(
+                            (element) => (fieldsExport[0][element] = 0)
+                          );
+                        }
+                      }}
                       label="All"
                     />
-                    {Object.keys(fields[0]).map((element) => (
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Placement ID"
+                      checked={checked_placement_id}
+                      onChange={() => {
+                        if (checked_placement_id) {
+                          set_checked_placement_id(false);
+                          fieldsExport[0].placement_id = 0;
+                        } else {
+                          set_checked_placement_id(true);
+                          fieldsExport[0].placement_id = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Placement Year"
+                      checked={checked_placement_year}
+                      onChange={() => {
+                        if (checked_placement_year) {
+                          set_checked_placement_year(false);
+                          fieldsExport[0].placement_year = 0;
+                        } else {
+                          set_checked_placement_year(true);
+                          fieldsExport[0].placement_yeard = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Academic Year"
+                      checked={checked_acad_year}
+                      onChange={() => {
+                        if (checked_acad_year) {
+                          set_checked_acad_year(false);
+                          fieldsExport[0].acad_year = 0;
+                        } else {
+                          set_checked_acad_year(true);
+                          fieldsExport[0].acad_year = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Username"
+                      checked={checked_username}
+                      onChange={() => {
+                        if (checked_username) {
+                          set_checked_username(false);
+                          fieldsExport[0].username = 0;
+                        } else {
+                          set_checked_username(true);
+                          fieldsExport[0].username = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Student UID"
+                      checked={checked_student_uid}
+                      onChange={() => {
+                        if (checked_student_uid) {
+                          set_checked_student_uid(false);
+                          fieldsExport[0].student_uid = 0;
+                        } else {
+                          set_checked_student_uid(true);
+                          fieldsExport[0].student_uid = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Student Name"
+                      checked={checked_english_name}
+                      onChange={() => {
+                        if (checked_english_name) {
+                          set_checked_english_name(false);
+                          fieldsExport[0].english_name = 0;
+                        } else {
+                          set_checked_english_name(true);
+                          fieldsExport[0].english_name = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Curriculum"
+                      checked={checked_curriculum}
+                      onChange={() => {
+                        if (checked_curriculum) {
+                          set_checked_curriculum(false);
+                          fieldsExport[0].curriculum = 0;
+                        } else {
+                          set_checked_curriculum(true);
+                          fieldsExport[0].curriculum = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Job Title"
+                      checked={checked_job_title}
+                      onChange={() => {
+                        if (checked_job_title) {
+                          set_checked_job_title(false);
+                          fieldsExport[0].job_title = 0;
+                        } else {
+                          set_checked_job_title(true);
+                          fieldsExport[0].job_title = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Company Name"
+                      checked={checked_company_name}
+                      onChange={() => {
+                        if (checked_company_name) {
+                          set_checked_company_name(false);
+                          fieldsExport[0].company_name = 0;
+                        } else {
+                          set_checked_company_name(true);
+                          fieldsExport[0].company_name = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Job Nature"
+                      checked={checked_job_nature}
+                      onChange={() => {
+                        if (checked_job_nature) {
+                          set_checked_job_nature(false);
+                          fieldsExport[0].job_nature = 0;
+                        } else {
+                          set_checked_job_nature(true);
+                          fieldsExport[0].job_nature = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Start Date"
+                      checked={checked_start_date}
+                      onChange={() => {
+                        if (checked_start_date) {
+                          set_checked_start_date(false);
+                          fieldsExport[0].start_date = 0;
+                        } else {
+                          set_checked_start_date(true);
+                          fieldsExport[0].start_date = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="End Date"
+                      checked={checked_end_date}
+                      onChange={() => {
+                        if (checked_end_date) {
+                          set_checked_end_date(false);
+                          fieldsExport[0].end_date = 0;
+                        } else {
+                          set_checked_end_date(true);
+                          fieldsExport[0].end_date = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Employment Duration"
+                      checked={checked_employment_duration}
+                      onChange={() => {
+                        if (checked_employment_duration) {
+                          set_checked_employment_duration(false);
+                          fieldsExport[0].employment_duration = 0;
+                        } else {
+                          set_checked_employment_duration(true);
+                          fieldsExport[0].employment_duration = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Working Location"
+                      checked={checked_working_location}
+                      onChange={() => {
+                        if (checked_working_location) {
+                          set_checked_working_location(false);
+                          fieldsExport[0].working_location = 0;
+                        } else {
+                          set_checked_working_location(true);
+                          fieldsExport[0].working_location = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Payment Type"
+                      checked={checked_payment_type}
+                      onChange={() => {
+                        if (checked_payment_type) {
+                          set_checked_payment_type(false);
+                          fieldsExport[0].payment_type = 0;
+                        } else {
+                          set_checked_payment_type(true);
+                          fieldsExport[0].payment_type = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Salary"
+                      checked={checked_salary}
+                      onChange={() => {
+                        if (checked_salary) {
+                          set_checked_salary(false);
+                          fieldsExport[0].salary = 0;
+                        } else {
+                          set_checked_salary(true);
+                          fieldsExport[0].salary = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Supervisor Name"
+                      checked={checked_supervisor_name}
+                      onChange={() => {
+                        if (checked_supervisor_name) {
+                          set_checked_supervisor_name(false);
+                          fieldsExport[0].supervisor_name = 0;
+                        } else {
+                          set_checked_supervisor_name(true);
+                          fieldsExport[0].supervisor_name = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Supervisor Telephone"
+                      checked={checked_supervisor_telephone}
+                      onChange={() => {
+                        if (checked_supervisor_telephone) {
+                          set_checked_supervisor_telephone(false);
+                          fieldsExport[0].supervisor_telephone = 0;
+                        } else {
+                          set_checked_supervisor_telephone(true);
+                          fieldsExport[0].supervisor_telephone = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Supervisor Email"
+                      checked={checked_supervisor_email}
+                      onChange={() => {
+                        if (checked_supervisor_email) {
+                          set_checked_supervisor_email(false);
+                          fieldsExport[0].supervisor_email = 0;
+                        } else {
+                          set_checked_supervisor_email(true);
+                          fieldsExport[0].supervisor_email = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Consent Form (Uploaded: Yes/No)"
+                      checked={checked_consent_form}
+                      onChange={() => {
+                        if (checked_consent_form) {
+                          set_checked_consent_form(false);
+                          fieldsExport[0].consent_form = 0;
+                        } else {
+                          set_checked_consent_form(true);
+                          fieldsExport[0].consent_form = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Appointment Letter (Uploaded: Yes/No)"
+                      checked={checked_appointment_letter}
+                      onChange={() => {
+                        if (checked_appointment_letter) {
+                          set_checked_appointment_letter(false);
+                          fieldsExport[0].appointment_letter = 0;
+                        } else {
+                          set_checked_appointment_letter(true);
+                          fieldsExport[0].appointment_letter = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Feedback Form (Uploaded: Yes/No)"
+                      checked={checked_appointment_letter}
+                      onChange={() => {
+                        if (checked_appointment_letter) {
+                          set_checked_appointment_letter(false);
+                          fieldsExport[0].appointment_letter = 0;
+                        } else {
+                          set_checked_appointment_letter(true);
+                          fieldsExport[0].appointment_letter = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Feedback Comment"
+                      checked={checked_feedback_comment}
+                      onChange={() => {
+                        if (checked_feedback_comment) {
+                          set_checked_feedback_comment(false);
+                          fieldsExport[0].feedback_comment = 0;
+                        } else {
+                          set_checked_feedback_comment(true);
+                          fieldsExport[0].feedback_comment = 1;
+                        }
+                      }}
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Placement Status"
+                      checked={checked_placement_status}
+                      onChange={() => {
+                        if (checked_placement_status) {
+                          set_checked_placement_status(false);
+                          fieldsExport[0].placement_status = 0;
+                        } else {
+                          set_checked_placement_status(true);
+                          fieldsExport[0].placement_status = 1;
+                        }
+                      }}
+                    />
+                    {/* {Object.keys(fields[0]).map((element) => (
+                      // console.log("checked_" + element);
                       <FormControlLabel
                         control={<Checkbox />}
                         label={fields[0][element]}
+                        checked={checked_placement_id}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            // const str = element;
+                            fieldsExport[0][element] = 1;
+                            console.log(fieldsExport);
+                          } else {
+                            fieldsExport[0][element] = 0;
+                            console.log(fieldsExport);
+                          }
+                        }}
                       />
-                    ))}
+                    ))} */}
                   </FormGroup>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={handleClose}>Export</Button>
+                  <Button onClick={handleExport}>Export</Button>
                 </DialogActions>
               </Dialog>
               <Button
@@ -582,11 +1085,6 @@ function StudentRecords({ authorized }) {
                       <TableCell align="center">
                         {row.placement_status}
                       </TableCell>
-                      {/* <TableCell align="center">
-                        <Link href="sample_file.pdf" download>
-                          Download
-                        </Link>
-                      </TableCell> */}
                       <TableCell align="center">
                         <IsolatedEditStudentButton
                           student_uid={row.student_uid}
@@ -755,7 +1253,7 @@ function StudentRecords({ authorized }) {
                           <FormGroup>
                             <FormControlLabel
                               control={<Checkbox defaultChecked />}
-                              checked={selectAll}
+                              // checked={selectAll}
                               label="All"
                             />
                             {Object.keys(fields[0]).map((element) => (

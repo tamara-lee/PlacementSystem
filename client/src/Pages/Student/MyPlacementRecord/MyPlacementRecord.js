@@ -22,9 +22,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-// for remarks
-import remarks from "../../../mock data/mock_remarks.json";
-
 const Container = styled.div`
   justify-content: center;
   margin: 1.2rem 3rem 2rem 3rem;
@@ -53,7 +50,7 @@ function MyPlacementRecord({ authorized }) {
       }
     });
     getForm();
-    // getRemarks();
+    getRemarks();
   }, []);
 
   const [studentName, setStudentName] = useState("");
@@ -195,12 +192,8 @@ function MyPlacementRecord({ authorized }) {
     }
   };
 
-  // Remark states
-  // const dummy = useRef();
-  // const remarksRef = firestore.collection("remarks"); // get collection of messages here
-  // const query = remarksRef.orderBy("createdAt").limit(50);
-  // const [remarks] = useCollectionData(query, { idField: "id" });
-  // const [remarks, setRemarks] = useState(null);
+  // for remarks chatbox
+  const [remarks, setRemarks] = useState(null);
   const [remarkState, setRemarkState] = useState("");
 
   const getRemarks = () => {
@@ -210,17 +203,14 @@ function MyPlacementRecord({ authorized }) {
       },
     })
       .then((res) => {
-        // setRemarks(res.body);
-        console.log(res.body);
+        setRemarks(res.data);
       })
       .catch((error) => {
         console.log(error.response.data.message);
       });
   };
 
-  const sendRemark = async () => {
-    console.log(remarkState);
-
+  const sendRemark = () => {
     Axios.post("http://localhost:3001/placementrecord/chatbox", {
       student_uid: student_uid,
       sent_by: student_uid, // person sending (student)
@@ -228,7 +218,7 @@ function MyPlacementRecord({ authorized }) {
       remark: remarkState,
     })
       .then((res) => {
-        console.log(res.data.message);
+        setRemarkState("");
         getRemarks();
       })
       .catch((error) => {
@@ -957,13 +947,11 @@ function MyPlacementRecord({ authorized }) {
               <div className="container">
                 <div className="remark-container">
                   {remarks &&
-                    remarks.map((rmrk) => (
-                      <RemarkMessage remarks_id={rmrk.remarks_id} />
-                    ))}
+                    remarks.map((rmrk) => <RemarkMessage remark={rmrk} />)}
                 </div>
                 <div className="new-remark">
                   <input
-                    defaultValue={remarkState}
+                    value={remarkState}
                     onChange={(e) => setRemarkState(e.target.value)}
                     placeholder="Input message here..."
                     maxLength="50"
@@ -1064,25 +1052,15 @@ function MyPlacementRecord({ authorized }) {
 }
 
 function RemarkMessage(props) {
-  // console.log(props.remarks_id);
-  // console.log(remarks);
-  // const remarksList = remarks;
-  const remark = remarks.filter(
-    (element) => element.remarks_id === props.remarks_id
-  )[0];
-
-  // console.log(remark);
-  // const { text, uid, photoURL } = props.message;
-  // const messageClass = uid === localStorage.getItem("userId") ? "sent" : "received";
   let messageClass = "sent";
 
-  if (account_id === remark.account_id) {
-    messageClass = "sent";
-  } else {
+  if (account_id === props.remark.sent_to) {
     messageClass = "received";
+  } else {
+    messageClass = "sent";
   }
 
-  const message = remark.remark;
+  const message = props.remark.remark;
 
   return (
     <>
@@ -1092,5 +1070,4 @@ function RemarkMessage(props) {
     </>
   );
 }
-
 export default MyPlacementRecord;

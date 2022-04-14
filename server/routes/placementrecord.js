@@ -345,8 +345,10 @@ router.post("/chatbox", validateToken, async (req, res) => {
       },
     });
     console.log(newRemark);
+    res.json({ status: "success", message: "Successfully sent message!" });
   } catch (error) {
     console.log(error);
+    res.json({ status: "success", message: "Failed to send message!" });
   }
 });
 
@@ -367,11 +369,11 @@ router.get("/chatbox", validateToken, async (req, res) => {
       },
     });
     console.log(student_info.placement[0].placement_id);
-  // } catch (error) {
-  //   console.log(error);
-  // }
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
-  // try {
+    // try {
     const chatRecords = await remarks.findMany({
       where: {
         placement_id: student_info.placement[0].placement_id,
@@ -380,6 +382,7 @@ router.get("/chatbox", validateToken, async (req, res) => {
     res.json(chatRecords);
   } catch (error) {
     console.log(error);
+    res.json({ status: "success", message: "Failed to retrieve messages!" });
   }
 });
 module.exports = router;
