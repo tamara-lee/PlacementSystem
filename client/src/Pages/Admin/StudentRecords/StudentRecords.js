@@ -229,6 +229,7 @@ function StudentRecords({ authorized }) {
   //     console.log(response);
   //   }
   // );
+
   const acadYears = [
     ...new Set(
       Object.keys(studentRecords).map(
@@ -581,6 +582,7 @@ function StudentRecords({ authorized }) {
                         marginTop: "5px",
                         marginBottom: "10px",
                       }}
+                      defaultValue={acadYears[0]}
                       value={academicYearExport}
                       onChange={(e) => {
                         setAcademicYearExport(e.target.value);
