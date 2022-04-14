@@ -202,7 +202,7 @@ function EditPlacementRecord({ authorized }) {
   const [remarkState, setRemarkState] = useState("");
 
   const getRemarks = () => {
-    Axios.get("http://localhost:3001/placementrecord/remarks", {
+    Axios.get("http://localhost:3001/placementrecord/chatbox", {
       username: username,
     })
       .then((res) => {
