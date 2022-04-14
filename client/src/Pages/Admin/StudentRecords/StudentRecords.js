@@ -43,8 +43,31 @@ import studentRecords from "../../../mock data/test_data.json";
 import tableRecords from "../../../mock data/records.json";
 import { ButtonUnstyled } from "@mui/material";
 
+const username = localStorage.getItem("username");
+const student_uid = localStorage.getItem("userUid");
+const account_id = localStorage.getItem("userId");
+const admin_id = localStorage.getItem("admin_uid");
+
 function StudentRecords({ authorized }) {
   const history = useHistory();
+
+  Axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    Axios.get("http://localhost:3001/auth/login")
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error.response);
+        if (
+          error.response.data.error ===
+          "User is not authenticated!\nPlease log in."
+        ) {
+          localStorage.setItem("userState", false);
+          alert("You have been logged out. Please refresh and log in again.");
+        }
+      });
+    // getRecords();
+  }, []);
 
   // let records = tableRecords;
 
@@ -57,6 +80,19 @@ function StudentRecords({ authorized }) {
   const [filteredRecords, setFilteredRecords] = useState(tableRecords);
   const [sortRecentlyUpdated, setSortRecentlyUpdated] = useState([]);
   const [show, setShow] = useState(false);
+
+  const getRecords = () => {
+    Axios.post("http://localhost:3001/studentrecords", {
+      admin_uid: admin_id,
+    })
+      .then((res) => {
+        console.log(res);
+        // setRecords(res);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  };
 
   const [rows, setRows] = useState(
     Object.keys(records).map((element) =>
@@ -120,6 +156,7 @@ function StudentRecords({ authorized }) {
   //     console.log(response);
   //   }
   // );
+
   // Axios.get("http://localhost:3001/placementrecord/student/placementyear", {}).then(
   //   (response) => {
   //     console.log(response);
