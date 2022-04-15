@@ -94,7 +94,9 @@ function StudentRecords({ authorized }) {
         placement_status: 0,
       },
     ]);
-    // getRecords();
+    getAcadYears();
+    getPlacementYears();
+    getRecords();
   }, []);
 
   // let records = tableRecords;
@@ -126,6 +128,12 @@ function StudentRecords({ authorized }) {
       .catch((error) => {
         console.log(error.response.data.message);
       });
+  };
+
+  const getRecords = () => {
+    Axios.get("http://localhost:3001/mainpage/").then((res) => {
+      console.log(res);
+    });
   };
 
   const [rows, setRows] = useState(
@@ -218,33 +226,35 @@ function StudentRecords({ authorized }) {
     };
   }
 
-  // Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
-  //   (response) => {
-  //     console.log(response);
-  //   }
-  // );
+  const [acadYears, setAcadYears] = useState([]);
+  const [placementYears, setPlacementYears] = useState([]);
+  const getAcadYears = () => {
+    Axios.get("http://localhost:3001/mainpage/acadyears").then((res) => {
+      setAcadYears(
+        [
+          ...new Set(
+            Object.keys(res.data).map(
+              (element) => res.data[element]["acad_year"]
+            )
+          ),
+        ].sort()
+      );
+    });
+  };
 
-  // Axios.get("http://localhost:3001/placementrecord/student/placementyear", {}).then(
-  //   (response) => {
-  //     console.log(response);
-  //   }
-  // );
-
-  const acadYears = [
-    ...new Set(
-      Object.keys(studentRecords).map(
-        (element) => studentRecords[element]["acad_year"]
-      )
-    ),
-  ];
-
-  const placementYears = [
-    ...new Set(
-      Object.keys(studentRecords).map(
-        (element) => studentRecords[element]["placement_year"]
-      )
-    ),
-  ];
+  const getPlacementYears = () => {
+    Axios.get("http://localhost:3001/mainpage/placementyears").then((res) => {
+      setPlacementYears(
+        [
+          ...new Set(
+            Object.keys(res.data).map(
+              (element) => res.data[element]["placement_year"]
+            )
+          ),
+        ].sort()
+      );
+    });
+  };
 
   function sortAlphabetically() {
     // records = tableRecords;
@@ -265,8 +275,6 @@ function StudentRecords({ authorized }) {
     });
   }
 
-  acadYears.sort();
-  placementYears.sort();
   sortAlphabetically();
 
   const handleAcadYear = (e) => {
