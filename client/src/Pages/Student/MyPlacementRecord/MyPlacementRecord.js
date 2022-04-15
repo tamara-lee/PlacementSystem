@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { IoIosInformationCircle } from "react-icons/io";
 import moment from "moment";
+import fileDownload from "react-file-download";
 
 // for date picker
 import TextField from "@mui/material/TextField";
@@ -52,6 +53,9 @@ function MyPlacementRecord({ authorized }) {
     getForm();
     getRemarks();
   }, []);
+
+  const getName = (path) =>
+    path.includes("-") && path.substr(path.lastIndexOf("-") + 1).split("\n")[0];
 
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
@@ -154,15 +158,24 @@ function MyPlacementRecord({ authorized }) {
   };
 
   const handleDownloadConsentForm = () => {
-    console.log("download consent form button clicked!");
+    window.open(
+      "http://localhost:3001/placementrecord/consent_pdf/?studentNumber=" +
+        student_uid
+    );
   };
 
   const handleDownloadAppointmentLetter = () => {
-    console.log("download appointment letter button clicked!");
+    window.open(
+      "http://localhost:3001/placementrecord/appointment_pdf/?studentNumber=" +
+        student_uid
+    );
   };
 
   const handleDownloadFeedbackForm = () => {
-    console.log("download feedback form button clicked!");
+    window.open(
+      "http://localhost:3001/placementrecord/feedback_pdf/?studentNumber=" +
+        student_uid
+    );
   };
 
   // test chat test messages
@@ -316,15 +329,15 @@ function MyPlacementRecord({ authorized }) {
         setConsentFormPath(
           res.data.placement[0].consent_form == null
             ? ""
-            : res.data.placement[0].consent_form
+            : getName(res.data.placement[0].consent_form)
         );
         setAppointmentLetterSelect(
           res.data.placement[0].appointment_letter == null ? false : true
         );
-        setAppointmentLetterPath(
+        setAppointmentLetterName(
           res.data.placement[0].appointment_letter == null
             ? ""
-            : res.data.placement[0].appointment_letter
+            : getName(res.data.placement[0].appointment_letter)
         );
         setFeedbackFormSelect(
           res.data.placement[0].feedback_form == null ? false : true
@@ -332,7 +345,7 @@ function MyPlacementRecord({ authorized }) {
         setFeedbackFormPath(
           res.data.placement[0].feedback_form == null
             ? ""
-            : res.data.placement[0].feedback_form
+            : getName(res.data.placement[0].feedback_form)
         );
         setFeedbackComment(
           res.data.placement[0].feedback_comment == null
@@ -363,13 +376,13 @@ function MyPlacementRecord({ authorized }) {
 
     const formData = new FormData();
 
-    if (appointmentLetterSelect) {
+    if (appointmentLetterSelect && appointmentLetter instanceof Blob) {
       formData.append("appointment", appointmentLetter, appointmentLetterName);
     }
-    if (consentFormSelect) {
+    if (consentFormSelect && consentForm instanceof Blob) {
       formData.append("consent", consentForm, consentFormName);
     }
-    if (feedbackFormSelect) {
+    if (feedbackFormSelect && feedbackForm instanceof Blob) {
       formData.append("feedback", feedbackForm, feedbackFormName);
     }
 
@@ -801,7 +814,7 @@ function MyPlacementRecord({ authorized }) {
                     id="consentForm"
                     onChange={consentFormHandler}
                   />
-                  {consentFormPath != "" ? (
+                  {consentFormName != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -836,7 +849,7 @@ function MyPlacementRecord({ authorized }) {
                     id="appointmentLetter"
                     onChange={appointmentLetterHandler}
                   />
-                  {appointmentLetterPath != "" ? (
+                  {appointmentLetterName != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -857,6 +870,7 @@ function MyPlacementRecord({ authorized }) {
                     </Button>
                   ) : null}
                 </div>
+                {console.log(getName(appointmentLetterPath))}
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
@@ -871,7 +885,7 @@ function MyPlacementRecord({ authorized }) {
                     id="feedbackForm"
                     onChange={feedbackFormHandler}
                   />
-                  {feedbackFormPath != "" ? (
+                  {feedbackFormName != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
