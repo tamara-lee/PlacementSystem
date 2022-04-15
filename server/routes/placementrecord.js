@@ -238,6 +238,14 @@ router.post(
           data: {
             student: {
               connect: { student_uid: studentNumber },
+              update: {
+                // where: {
+                //   student_uid: studentNumber,
+                // },
+                // data: {
+                  placement_status: placementStatus,
+                // },
+              },
             },
             appointment_letter: appointmentLetter,
             feedback_form: feedbackForm,
@@ -259,7 +267,17 @@ router.post(
             },
             modified_by: user.username,
             consent_form: consentForm,
-            placement_status: placementStatus,
+          //  placement_status: placementStatus,
+            // student: {
+            //   update: {
+            //     where: {
+            //       student_uid: studentNumber,
+            //     },
+            //     data: {
+            //       placement_status: placementStatus,
+            //     },
+            //   },
+            // },
           },
         });
         console.log(placementRecord);
@@ -290,7 +308,7 @@ router.post("/appointment_pdf", validateToken, async (req, res) => {
       },
     });
     console.log("appointment_pdf");
-    res.sendFile(student_info.placement[0].appointment_letter);
+    res.sendFile("server"+student_info.placement[0].appointment_letter);
   } catch (error) {
     console.error("Error in obtaining pdf!");
     console.log(error);
@@ -348,7 +366,7 @@ router.post("/chatbox", validateToken, async (req, res) => {
     res.json({ status: "success", message: "Successfully sent message!" });
   } catch (error) {
     console.log(error);
-    res.json({ status: "success", message: "Failed to send message!" });
+    res.json({ status: "failed", message: "Failed to send message!" });
   }
 });
 
