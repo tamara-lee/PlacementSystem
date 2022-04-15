@@ -97,34 +97,47 @@ router.post("/", validateToken, async (req, res) => {
         },
       },
     });
-    console.log("export_record", export_record);
-
-    const export_record_flatten = flatten({
-      placement,
-    });
-    // console.log("export_record_flatten", export_record_flatten[0].placement);
+    // console.log("export_record", export_record[0].placement);
     // console.log("export_record.length", export_record.length);
-    // console.log("Object.keys(export_record_flatten).length",Object.keys(export_record_flatten).length)
 
-    function countKeys(t) {
-        switch (t?.constructor) {
-          case Object:                                     // 1
-            return Object
-              .values(t)
-              .reduce((r, v) => r + 1 + countKeys(v), 0)
-          case Array:                                      // 2
-            return t
-              .reduce((r, v) => r + countKeys(v), 0)
-          default:                                         // 3
-            return 0
-        }
-      }
-      
-    // console.log("countKeys(export_record)",countKeys(export_record))
-    // let key_number = (countKeys(export_record)/export_record.length)-1;
-    // console.log("key_number",key_number)
+    // const export_record_flatten = flatten({
+    //   placement,
+    // });
+    // console.log(export_record_flatten);
 
     result = [];
+    filtered = [];
+    // export_record[0].forEach((element) => {
+    //   console.log(element);
+    // });
+
+    console.log(flatten(export_record[0]));
+
+    let totalResult = [];
+
+    function formatter(obj) {
+      let tempResult = {};
+      function format(obj, position) {
+        for (let key in obj) {
+          let val = obj[key];
+          let newKey = position ? position + "." + key : key;
+          // console.log("val type", typeof val);
+          if (val && typeof val === "object") {
+            format(val, newKey);
+          } else {
+            tempResult[newKey] = val;
+          }
+        }
+      }
+      format(obj);
+      return tempResult;
+    }
+
+    for (let i = 0; i < export_record.length; i++) {
+      totalResult.push(formatter(export_record[i]));
+    }
+
+    console.log(totalResult);
 
     // const export_record_total = export_record.length;
     // const export_report_keys_total = Object.keys(export_record_flatten).length;
@@ -143,21 +156,7 @@ router.post("/", validateToken, async (req, res) => {
 
     export_record.forEach((element) => {
       element.placement.forEach((placement) => {
-        //   let 
-        //   console.log("element.length",element.length)
-        //   console.log("element.placement.length",element.placement)
-
-        //   let count = 0;
-        //   for (let key in placement){
-        //       if ([placement.hasOwnProperty(key)){
-        //           count++
-        //       }
-        //   }
-        //   console.log("count",count)
-        //   if (placement.placement_id){
-
-        //   }
-
+        console.log(element.placement.length);
 
         result.push({
           placement_id: placement.placement_id,
@@ -191,22 +190,21 @@ router.post("/", validateToken, async (req, res) => {
 
     console.log(result);
 
-    const convertJsonToExcel=()=>{
-        const workSheet = xlsx.utils.json_to_sheet(result);
-        const workBook = xlsx.utils.book_new();
+    const convertJsonToExcel = () => {
+      const workSheet = xlsx.utils.json_to_sheet(result);
+      const workBook = xlsx.utils.book_new();
 
-        xlsx.utils.book_append_sheet(workBook,workSheet,"result")
+      xlsx.utils.book_append_sheet(workBook, workSheet, "result");
 
-        //generate buffer
-        xlsx.write(workBook,{bookType:'xlsx',type:'buffer'})
+      //generate buffer
+      xlsx.write(workBook, { bookType: "xlsx", type: "buffer" });
 
-        //binary string
-        xlsx.write(workBook,{bookType:"xlsx",type:"binary"})
+      //binary string
+      xlsx.write(workBook, { bookType: "xlsx", type: "binary" });
 
-        xlsx.writeFile(workBook,"internship_records.xlsx")
-
-    }
-    convertJsonToExcel()
+      xlsx.writeFile(workBook, "internship_records.xlsx");
+    };
+    convertJsonToExcel();
 
     // for (i = 0; i < export_record.length; i++){
     //      export_record_flatten = flatten({
