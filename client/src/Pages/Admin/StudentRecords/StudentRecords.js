@@ -635,7 +635,7 @@ function StudentRecords({ authorized }) {
                         marginTop: "5px",
                         marginBottom: "10px",
                       }}
-                      defaultValue={acadYears[0]}
+                      // defaultValue={acadYears[0]}
                       value={academicYearExport}
                       onChange={(e) => {
                         setAcademicYearExport(e.target.value);
