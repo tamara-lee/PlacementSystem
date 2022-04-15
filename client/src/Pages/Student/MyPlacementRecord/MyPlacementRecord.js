@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { IoIosInformationCircle } from "react-icons/io";
 import moment from "moment";
+// import fileDownload from "react-file-download";
 
 // for date picker
 import TextField from "@mui/material/TextField";
@@ -176,6 +177,8 @@ function MyPlacementRecord({ authorized }) {
         student_uid
     );
   };
+
+  
 
   // test chat test messages
   const [msg1, setMsg1] = useState(

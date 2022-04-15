@@ -4,14 +4,13 @@ const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
-const { remarks } = new PrismaClient();
 const prisma = new PrismaClient();
 const router = require("express").Router();
 const flatten = require("flat");
 const xlsx = require("xlsx");
 
 router.post("/", validateToken, async (req, res) => {
-  console.log("req.body", req.body);
+  console.log("request_body", req.body);
   console.log(
     "req.body.export_fields.placement_id",
     req.body.export_fields.placement_id
@@ -23,7 +22,7 @@ router.post("/", validateToken, async (req, res) => {
   //     consent_form, appointment_letter, feedback_form, feedback_comment, placement_status
   // } = req.body
 
-  const academic_year = req.body.export_fields.academic_year;
+  const academic_year = req.body.academic_year;
 
   const placement_id = req.body.export_fields.placement_id == 1 ? true : false;
   const placement_year =
@@ -120,7 +119,9 @@ router.post("/", validateToken, async (req, res) => {
       function format(obj, position) {
         for (let key in obj) {
           let val = obj[key];
-          let newKey = position ? position + "." + key : key;
+        //   let newKey = position ? position + "." + key : key;
+          let newKey = key;
+
           // console.log("val type", typeof val);
           if (val && typeof val === "object") {
             format(val, newKey);
@@ -139,43 +140,43 @@ router.post("/", validateToken, async (req, res) => {
 
     console.log(totalResult);
 
-    export_record.forEach((element) => {
-      element.placement.forEach((placement) => {
-        console.log(element.placement.length);
+    // export_record.forEach((element) => {
+    //   element.placement.forEach((placement) => {
+    //     console.log(element.placement.length);
 
-        result.push({
-          placement_id: placement.placement_id,
-          placement_year: placement.placement_year,
-          acad_year: element.acad_year,
-          username: placement.username,
-          student_uid: placement.student_uid,
-          english_name: element.english_name,
-          curriculum: element.curriculum,
-          job_title: placement.job_title,
-          company_name: placement.company_name,
-          job_nature: placement.job_nature,
-          start_date: placement.start_date,
-          end_date: placement.end_date,
-          employment_duration: placement.employment_duration,
-          working_location: placement.working_location,
-          payment_type: placement.payment_type,
-          salary: placement.salary,
-          supervisor_name: placement.supervisor_name,
-          supervisor_telephone: placement.supervisor_telephone,
-          supervisor_email: placement.supervisor_email,
-          consent_form: placement.consent_form,
-          appointment_letter: placement.appointment_letter,
-          feedback_form: placement.feedback_form,
-          feedback_comment: placement.feedback_comment,
-          placement_status: element.placement_status,
-        });
-      });
-    });
+    //     result.push({
+    //       placement_id: placement.placement_id,
+    //       placement_year: placement.placement_year,
+    //       acad_year: element.acad_year,
+    //       username: placement.username,
+    //       student_uid: placement.student_uid,
+    //       english_name: element.english_name,
+    //       curriculum: element.curriculum,
+    //       job_title: placement.job_title,
+    //       company_name: placement.company_name,
+    //       job_nature: placement.job_nature,
+    //       start_date: placement.start_date,
+    //       end_date: placement.end_date,
+    //       employment_duration: placement.employment_duration,
+    //       working_location: placement.working_location,
+    //       payment_type: placement.payment_type,
+    //       salary: placement.salary,
+    //       supervisor_name: placement.supervisor_name,
+    //       supervisor_telephone: placement.supervisor_telephone,
+    //       supervisor_email: placement.supervisor_email,
+    //       consent_form: placement.consent_form,
+    //       appointment_letter: placement.appointment_letter,
+    //       feedback_form: placement.feedback_form,
+    //       feedback_comment: placement.feedback_comment,
+    //       placement_status: element.placement_status,
+    //     });
+    //   });
+    // });
 
-    console.log(result);
+    // console.log(result);
 
     const convertJsonToExcel = () => {
-      const workSheet = xlsx.utils.json_to_sheet(result);
+      const workSheet = xlsx.utils.json_to_sheet(totalResult);
       const workBook = xlsx.utils.book_new();
 
       xlsx.utils.book_append_sheet(workBook, workSheet, "result");
@@ -189,62 +190,18 @@ router.post("/", validateToken, async (req, res) => {
       xlsx.writeFile(workBook, "internship_records.xlsx");
     };
     convertJsonToExcel();
-
-    // for (i = 0; i < export_record.length; i++){
-    //      export_record_flatten = flatten({
-
-    //         export_record[i].placement
-    //     });
-    //     console.log(export_record_flatten);
-    // }
   } catch (error) {
     console.log(error);
   }
-  // try {
-  //     const export_record = await student.findMany({
-  //         where: {
-  //             acad_year: academic_year,
-  //         },
-  //         include: {
-  //             select: {
-  //                 acad_year: acad_year,
-  //                 curriculum: curriculum,
-  //                 placement_status: placement_status,
-  //                 english_name: english_name,
-  //             },
-  //             placement: {
-  //                 select: {
-  //                     placement_id: placement_id,
-  //                     username: username,
-  //                     student_uid: student_uid,
-  //                     placement_year: placement_year,
-  //                     appointment_letter: appointment_letter,
-  //                     feedback_form: feedback_form,
-  //                     feedback_comment: feedback_comment,
-  //                     company_name: company_name,
-  //                     job_title: job_title,
-  //                     job_nature: job_nature,
-  //                     employment_duration: employment_duration,
-  //                     start_date: start_date,
-  //                     end_date: end_date,
-  //                     working_location: working_location,
-  //                     salary: salary,
-  //                     payment_type: payment_type,
-  //                     supervisor_name: supervisor_name,
-  //                     supervisor_telephone: supervisor_telephone,
-  //                     supervisor_email: supervisor_email,
-  //                     consent_form: consent_form
-  //                 }
-  //             },
-  //         }
-
-  //     });
-  //     console.log("export_record",export_record.placement[0])
-
-  // } catch (error) {
-  //     console.log(error)
-
-  // }
 });
+
+router.get("/", validateToken, async (req, res) => {
+    try {
+      res.download("internship_records.xlsx");
+    } catch (error) {
+      console.log(error);
+      res.json({ status: "error", message: "excel not found!" });
+    }
+  });
 
 module.exports = router;
