@@ -239,12 +239,7 @@ router.post(
             student: {
               connect: { student_uid: studentNumber },
               update: {
-                // where: {
-                //   student_uid: studentNumber,
-                // },
-                // data: {
-                  placement_status: placementStatus,
-                // },
+                placement_status: placementStatus,
               },
             },
             appointment_letter: appointmentLetter,
@@ -267,17 +262,6 @@ router.post(
             },
             modified_by: user.username,
             consent_form: consentForm,
-          //  placement_status: placementStatus,
-            // student: {
-            //   update: {
-            //     where: {
-            //       student_uid: studentNumber,
-            //     },
-            //     data: {
-            //       placement_status: placementStatus,
-            //     },
-            //   },
-            // },
           },
         });
         console.log(placementRecord);
@@ -297,7 +281,7 @@ router.post(
 );
 //to hand accessing of pdf files in express
 //https://expressjs.com/en/starter/static-files.html
-router.post("/appointment_pdf", validateToken, async (req, res) => {
+router.get("/appointment_pdf", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
       where: {
@@ -307,14 +291,50 @@ router.post("/appointment_pdf", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    console.log("appointment_pdf");
-    res.sendFile("server"+student_info.placement[0].appointment_letter);
+
+    res.download(student_info.placement[0].appointment_letter);
   } catch (error) {
-    console.error("Error in obtaining pdf!");
     console.log(error);
-    res.json({ status: "error", message: "pdf not found!" });
+    res.json({ status: "error", message: "Pdf not found!" });
   }
 });
+
+router.get("/consent_pdf", validateToken, async (req, res) => {
+  try {
+    const student_info = await student.findUnique({
+      where: {
+        student_uid: req.query.studentNumber,
+      },
+      include: {
+        placement: true,
+      },
+    });
+
+    res.download(student_info.placement[0].consent_form);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", message: "Pdf not found!" });
+  }
+});
+
+router.get("/feedback_pdf", validateToken, async (req, res) => {
+  try {
+    const student_info = await student.findUnique({
+      where: {
+        student_uid: req.query.studentNumber,
+      },
+      include: {
+        placement: true,
+      },
+    });
+
+    res.download(student_info.placement[0].feedback_form);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", message: "Pdf not found!" });
+  }
+});
+
 router.post("/chatbox", validateToken, async (req, res) => {
   console.log("req.body", req.body);
   try {

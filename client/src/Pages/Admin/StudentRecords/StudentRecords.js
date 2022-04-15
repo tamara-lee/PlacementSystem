@@ -8,9 +8,8 @@ import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import NativeSelect from "@mui/material/NativeSelect"; //use for mobile
 import MenuItem from "@mui/material/MenuItem";
-import TestData from "../../../mock data/test_data.json";
+import moment from "moment";
 
 // for the table
 import Table from "@mui/material/Table";
@@ -20,7 +19,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import Axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -38,10 +36,6 @@ import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-
-import studentRecords from "../../../mock data/test_data.json";
-import tableRecords from "../../../mock data/records.json";
-import { ButtonUnstyled } from "@mui/material";
 
 const username = localStorage.getItem("username");
 const student_uid = localStorage.getItem("userUid");
@@ -94,18 +88,20 @@ function StudentRecords({ authorized }) {
         placement_status: 0,
       },
     ]);
-    // getRecords();
+    getAcadYears();
+    getPlacementYears();
+    getRecords();
+    sortAlphabetically();
   }, []);
-
-  // let records = tableRecords;
 
   const [open, setOpen] = React.useState(false);
   const [acadYear, setAcadYear] = useState("");
   const [placementYear, setPlacementYear] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [recentlyUpdated, setRecentlyUpdated] = useState(false);
-  const [records, setRecords] = useState(tableRecords);
-  const [filteredRecords, setFilteredRecords] = useState(tableRecords);
+  // const [records, setRecords] = useState(tableRecords);
+  const [records, setRecords] = useState([]);
+  const [filteredRecords, setFilteredRecords] = useState([]);
   const [sortRecentlyUpdated, setSortRecentlyUpdated] = useState([]);
   const [show, setShow] = useState(false);
 
@@ -113,19 +109,27 @@ function StudentRecords({ authorized }) {
   const [academicYearExport, setAcademicYearExport] = useState();
 
   const handleExport = () => {
-    // console.log(academicYearExport);
-    // console.log(fieldsExport[0]);
     Axios.post("http://localhost:3001/exportexcel", {
       academic_year: academicYearExport,
       export_fields: fieldsExport[0],
     })
       .then((res) => {
         console.log(res);
-        // setRecords(res);
       })
       .catch((error) => {
         console.log(error.response.data.message);
       });
+  };
+
+  const getRecords = () => {
+    Axios.get("http://localhost:3001/mainpage/").then((res) => {
+      console.log(res.data);
+      // res.data.forEach((element) => {
+      //   console.log(element.placement[0].placement_year);
+      // });
+      setRecords(res.data);
+      setFilteredRecords(res.data);
+    });
   };
 
   const [rows, setRows] = useState(
@@ -133,9 +137,10 @@ function StudentRecords({ authorized }) {
       createData(
         records[element]["student_uid"],
         records[element]["english_name"],
-        records[element]["username"],
+        records[element]["user_account"]["username"],
         records[element]["curriculum"],
-        records[element]["placement_status"]
+        records[element]["placement_status"],
+        records[element]["last_modified"]
       )
     )
   );
@@ -207,7 +212,8 @@ function StudentRecords({ authorized }) {
     english_name,
     username,
     curriculum,
-    placement_status
+    placement_status,
+    last_modified
   ) {
     return {
       student_uid,
@@ -215,47 +221,42 @@ function StudentRecords({ authorized }) {
       username,
       curriculum,
       placement_status,
+      last_modified,
     };
   }
 
-  // Axios.get("http://localhost:3001/placementrecord/student/acadyear", {}).then(
-  //   (response) => {
-  //     console.log(response);
-  //   }
-  // );
+  const [acadYears, setAcadYears] = useState([]);
+  const [placementYears, setPlacementYears] = useState([]);
 
-  // Axios.get("http://localhost:3001/placementrecord/student/placementyear", {}).then(
-  //   (response) => {
-  //     console.log(response);
-  //   }
-  // );
+  const getAcadYears = () => {
+    Axios.get("http://localhost:3001/mainpage/acadyears").then((res) => {
+      setAcadYears(
+        [
+          ...new Set(
+            Object.keys(res.data).map(
+              (element) => res.data[element]["acad_year"]
+            )
+          ),
+        ].sort()
+      );
+    });
+  };
 
-  const acadYears = [
-    ...new Set(
-      Object.keys(studentRecords).map(
-        (element) => studentRecords[element]["acad_year"]
-      )
-    ),
-  ];
-
-  const placementYears = [
-    ...new Set(
-      Object.keys(studentRecords).map(
-        (element) => studentRecords[element]["placement_year"]
-      )
-    ),
-  ];
+  const getPlacementYears = () => {
+    Axios.get("http://localhost:3001/mainpage/placementyears").then((res) => {
+      setPlacementYears(
+        [
+          ...new Set(
+            Object.keys(res.data).map(
+              (element) => res.data[element]["placement_year"]
+            )
+          ),
+        ].sort()
+      );
+    });
+  };
 
   function sortAlphabetically() {
-    // records = tableRecords;
-    // records.sort(function (a, b) {
-    //   return a.english_name < b.english_name
-    //     ? -1
-    //     : a.english_name > b.english_name
-    //     ? 1
-    //     : 0;
-    // });
-    // setRecords(tableRecords);
     filteredRecords.sort(function (a, b) {
       return a.english_name < b.english_name
         ? -1
@@ -264,10 +265,6 @@ function StudentRecords({ authorized }) {
         : 0;
     });
   }
-
-  acadYears.sort();
-  placementYears.sort();
-  sortAlphabetically();
 
   const handleAcadYear = (e) => {
     setAcadYear(e.target.value);
@@ -282,7 +279,7 @@ function StudentRecords({ authorized }) {
         records.filter(function (data) {
           return (
             data.acad_year == e.target.value &&
-            data.placement_year == placementYear
+            data.placement[0].placement_year == placementYear
           );
         })
       );
@@ -291,17 +288,22 @@ function StudentRecords({ authorized }) {
 
   const handlePlacementYear = (e) => {
     setPlacementYear(e.target.value);
+    // records.forEach((data) => {
+    //   console.log(data.placement[0].placement_year);
+    //   console.log("target", e.target.value);
+    // });
     if (acadYear == "") {
       setFilteredRecords(
         records.filter(function (data) {
-          return data.placement_year == e.target.value;
+          return data.placement[0].placement_year == e.target.value;
         })
       );
     } else {
       setFilteredRecords(
         records.filter(function (data) {
           return (
-            data.placement_year == e.target.value && data.acad_year == acadYear
+            data.placement[0].placement_year == e.target.value &&
+            data.acad_year == acadYear
           );
         })
       );
@@ -311,14 +313,15 @@ function StudentRecords({ authorized }) {
   // useEffect(() => {
   //   console.log("Do something after counter has changed", placementYear);
   // }, [placementYear]);
-  const handleRecentlyUpdated = (e) => {
-    // records.sort(function (a, b) {
-    //   return a.last_modified < b.last_modified
-    //     ? -1
-    //     : a.last_modified > b.last_modified
-    //     ? 1
-    //     : 0;
-    // });
+  const handleRecentlyUpdated = () => {
+    filteredRecords.sort(function (a, b) {
+      return a.last_modified < b.last_modified
+        ? -1
+        : a.last_modified > b.last_modified
+        ? 1
+        : 0;
+    });
+    console.log(filteredRecords);
     // alert("Recently Updated button clicked");
   };
 
@@ -359,7 +362,7 @@ function StudentRecords({ authorized }) {
         return (
           String(data.student_uid).includes(e.target.value) ||
           String(data.english_name).includes(e.target.value) ||
-          String(data.username).includes(e.target.value)
+          String(data.user_account.username).includes(e.target.value)
         );
       })
     );
@@ -374,37 +377,21 @@ function StudentRecords({ authorized }) {
     setSearchTerm("");
   };
 
-  useEffect(() => {
-    setAcadYear(acadYear);
-    console.log(acadYear);
-  }, [acadYear]);
+  // useEffect(() => {
+  //   setAcadYear(acadYear);
+  // }, [acadYear]);
 
   useEffect(() => {
-    // console.log(records);
-    // PROBLEM WITH FILTERS ACAD AND PLACMENT
-    // console.log(acadYear);
-    // alert("Academic Year is " + acadYear);
-    // console.log(placementYear);
-    // alert("Placement Year is " + placementYear);
-    // setAcadYear(acadYear);
-    // setPlacementYear(placementYear);
-    // if (acadYear != "") {
-    //   setRecords(
-    //     tableRecords.filter(function (data) {
-    //       return data.acad_year == acadYear;
-    //     })
-    //   );
-    // }
-
     console.log(filteredRecords);
     setRows(
       Object.keys(filteredRecords).map((element) =>
         createData(
           filteredRecords[element]["student_uid"],
           filteredRecords[element]["english_name"],
-          filteredRecords[element]["username"],
+          filteredRecords[element]["user_account"]["username"],
           filteredRecords[element]["curriculum"],
-          filteredRecords[element]["placement_status"]
+          filteredRecords[element]["placement_status"],
+          filteredRecords[element]["last_modified"]
         )
       )
     );
@@ -424,6 +411,20 @@ function StudentRecords({ authorized }) {
     );
   };
 
+  const IsolatedEditStudentButtonMobile = (row) => {
+    return (
+      <React.Fragment>
+        <Button
+          type="button"
+          key={row.student_uid}
+          onClick={(e) => handleStudent(e, row.student_uid)}
+        >
+          Edit Student
+        </Button>
+      </React.Fragment>
+    );
+  };
+
   const IsolatedEditPlacementButton = (row) => {
     return (
       <React.Fragment>
@@ -433,6 +434,20 @@ function StudentRecords({ authorized }) {
           onClick={(e) => handlePlacement(e, row.student_uid)}
         >
           Edit
+        </Button>
+      </React.Fragment>
+    );
+  };
+
+  const IsolatedEditPlacementButtonMobile = (row) => {
+    return (
+      <React.Fragment>
+        <Button
+          type="button"
+          key={row.student_uid}
+          onClick={(e) => handlePlacement(e, row.student_uid)}
+        >
+          Edit Placement
         </Button>
       </React.Fragment>
     );
@@ -482,7 +497,7 @@ function StudentRecords({ authorized }) {
                   onChange={handleAcadYear}
                 >
                   {Object.keys(acadYears).map((element) => (
-                    <MenuItem value={acadYears[element]}>
+                    <MenuItem key={element} value={acadYears[element]}>
                       {acadYears[element]}
                     </MenuItem>
                   ))}
@@ -512,7 +527,7 @@ function StudentRecords({ authorized }) {
                   onChange={handlePlacementYear}
                 >
                   {Object.keys(placementYears).map((element) => (
-                    <MenuItem value={placementYears[element]}>
+                    <MenuItem key={element} value={placementYears[element]}>
                       {placementYears[element]}
                     </MenuItem>
                   ))}
@@ -590,7 +605,7 @@ function StudentRecords({ authorized }) {
                       }}
                     >
                       {Object.keys(acadYears).map((element) => (
-                        <MenuItem value={acadYears[element]}>
+                        <MenuItem key={element} value={acadYears[element]}>
                           {acadYears[element]}
                         </MenuItem>
                       ))}
@@ -994,24 +1009,6 @@ function StudentRecords({ authorized }) {
                         }
                       }}
                     />
-                    {/* {Object.keys(fields[0]).map((element) => (
-                      // console.log("checked_" + element);
-                      <FormControlLabel
-                        control={<Checkbox />}
-                        label={fields[0][element]}
-                        checked={checked_placement_id}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            // const str = element;
-                            fieldsExport[0][element] = 1;
-                            console.log(fieldsExport);
-                          } else {
-                            fieldsExport[0][element] = 0;
-                            console.log(fieldsExport);
-                          }
-                        }}
-                      />
-                    ))} */}
                   </FormGroup>
                 </DialogContent>
                 <DialogActions>
@@ -1066,10 +1063,9 @@ function StudentRecords({ authorized }) {
                     <TableCell align="center">CS ID</TableCell>
                     <TableCell align="center">Curriculum</TableCell>
                     <TableCell align="center">Placement Status</TableCell>
-                    {/* <TableCell align="center">Feedback Form</TableCell> */}
                     <TableCell align="center">Edit Student Details</TableCell>
                     <TableCell align="center">Edit Placement Record</TableCell>
-                    <TableCell align="center">Status</TableCell>
+                    <TableCell align="center">Last Modified</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1097,8 +1093,12 @@ function StudentRecords({ authorized }) {
                           student_uid={row.student_uid}
                         />
                       </TableCell>
+
                       <TableCell align="center">
-                        <Button disabled>Test</Button>
+                        {moment
+                          .utc(row.last_modified)
+                          .local()
+                          .format("DD-MMM-YYYY h:mm A")}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -1170,7 +1170,7 @@ function StudentRecords({ authorized }) {
                           onChange={handleAcadYear}
                         >
                           {Object.keys(acadYears).map((element) => (
-                            <MenuItem value={acadYears[element]}>
+                            <MenuItem key={element} value={acadYears[element]}>
                               {acadYears[element]}
                             </MenuItem>
                           ))}
@@ -1200,7 +1200,10 @@ function StudentRecords({ authorized }) {
                           onChange={handlePlacementYear}
                         >
                           {Object.keys(placementYears).map((element) => (
-                            <MenuItem value={placementYears[element]}>
+                            <MenuItem
+                              key={element}
+                              value={placementYears[element]}
+                            >
                               {placementYears[element]}
                             </MenuItem>
                           ))}
@@ -1296,7 +1299,11 @@ function StudentRecords({ authorized }) {
             </Box>{" "}
             {filteredRecords.map((val, key) => {
               return (
-                <Card variant="outlined" style={{ marginBottom: "5px" }}>
+                <Card
+                  key={key}
+                  variant="outlined"
+                  style={{ marginBottom: "5px" }}
+                >
                   <CardContent style={{ display: "flex" }}>
                     <Typography variant="body2">
                       Name: {val.english_name}
@@ -1304,9 +1311,15 @@ function StudentRecords({ authorized }) {
                     <Typography variant="body2">
                       UID: {val.student_uid}
                     </Typography>
-                    <Typography variant="body2">Status: </Typography>
-                    <Button size="small">Edit Student</Button>
-                    <Button size="small">Edit Record</Button>
+                    <Typography variant="body2">
+                      Status: {val.placement_status}
+                    </Typography>
+                    <IsolatedEditStudentButtonMobile
+                      student_uid={val.student_uid}
+                    />
+                    <IsolatedEditPlacementButtonMobile
+                      student_uid={val.student_uid}
+                    />
                   </CardContent>
                 </Card>
               );
