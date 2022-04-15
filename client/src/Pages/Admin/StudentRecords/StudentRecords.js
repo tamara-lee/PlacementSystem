@@ -735,7 +735,7 @@ function StudentRecords({ authorized }) {
                           fieldsExport[0].placement_year = 0;
                         } else {
                           set_checked_placement_year(true);
-                          fieldsExport[0].placement_yeard = 1;
+                          fieldsExport[0].placement_year = 1;
                         }
                       }}
                     />
