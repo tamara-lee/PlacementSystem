@@ -147,7 +147,7 @@ function EditStudentRecord({ authorized }) {
   const confirmSubmitForm = () => {
     handleCloseConfirmation();
 
-    Axios.post("http://localhost:3001/studentrecord", {
+    Axios.put("http://localhost:3001/studentrecord", {
       user_uid: user_uid,
       studentName: studentName,
       studentNumber: studentNumber,
