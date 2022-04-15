@@ -97,19 +97,68 @@ router.post("/", validateToken, async (req, res) => {
         },
       },
     });
-    console.log("export_record", export_record[0].placement);
-    console.log("export_record.length", export_record.length);
+    // console.log("export_record", export_record[0].placement);
 
     const export_record_flatten = flatten({
       placement,
     });
-    console.log(export_record_flatten);
+    // console.log("export_record_flatten", export_record_flatten[0].placement);
+    console.log("export_record.length", export_record.length);
+    // console.log("Object.keys(export_record_flatten).length",Object.keys(export_record_flatten).length)
+
+    function countKeys(t) {
+        switch (t?.constructor) {
+          case Object:                                     // 1
+            return Object
+              .values(t)
+              .reduce((r, v) => r + 1 + countKeys(v), 0)
+          case Array:                                      // 2
+            return t
+              .reduce((r, v) => r + countKeys(v), 0)
+          default:                                         // 3
+            return 0
+        }
+      }
+      
+    console.log("countKeys(export_record)",countKeys(export_record))
+    let key_number = (countKeys(export_record)/export_record.length)-1;
+    console.log("key_number",key_number)
+    
+    
+
 
     result = [];
 
+    // const export_record_total = export_record.length;
+    // const export_report_keys_total = Object.keys(export_record_flatten).length;
+
+    // for ( i = 0; i < export_record_total; i++ ){
+    //     temp = [];
+    //     for ( j = 0; i < export_report_keys_total; i++ ){
+
+        
+    //     }
+    // }
+
+
     export_record.forEach((element) => {
+        // let i = i+1;
       element.placement.forEach((placement) => {
-          console.log(element.placement.length)
+        //   let 
+        //   console.log("element.length",element.length)
+        //   console.log("element.placement.length",element.placement)
+
+        //   let count = 0;
+        //   for (let key in placement){
+        //       if ([placement.hasOwnProperty(key)){
+        //           count++
+        //       }
+        //   }
+        //   console.log("count",count)
+        //   if (placement.placement_id){
+
+        //   }
+
 
         result.push({
           placement_id: placement.placement_id,
@@ -139,8 +188,9 @@ router.post("/", validateToken, async (req, res) => {
         });
       });
     });
+    // console.log("export_record.length",export_record.length)
 
-    console.log(result);
+    // console.log(result);
 
     const convertJsonToExcel=()=>{
         const workSheet = xlsx.utils.json_to_sheet(result);
