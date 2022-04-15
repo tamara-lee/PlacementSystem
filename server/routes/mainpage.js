@@ -25,7 +25,7 @@ router.get("/placementyears", validateToken, async (req, res) => {
     try {
         const placementyears = await placement.findMany({
             select:{
-                placementyears: true
+                placement_year: true
             }
         });
         console.log(placementyears);
@@ -43,12 +43,16 @@ router.get("/",  validateToken, async (req, res) => {
                 student_uid: true,
                 english_name: true,
                 curriculum: true,
-                placement_status: true 
+                placement_status: true,
+                last_modified: true
             },
-            user_account:{
-                select: {
-                    username: true
+            select: {
+                user_account:{
+                    select: {
+                        username: true
+                    },   
                 },
+       
             }
         });
         console.log(records)

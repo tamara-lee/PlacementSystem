@@ -109,6 +109,7 @@ router.post("/", validateToken, async (req, res) => {
 
     export_record.forEach((element) => {
       element.placement.forEach((placement) => {
+          console.log(element.placement.length)
 
         result.push({
           placement_id: placement.placement_id,

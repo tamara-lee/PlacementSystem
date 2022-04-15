@@ -44,6 +44,7 @@ app.use("/addstudents", addStudentsRouter);
 app.use("/faq", faqRouter);
 app.use("/editstudent", editStudentRouter);
 app.use("/importexcel", importExcelRouter);
+app.use("/exportexcel", exportExcelRouter);
 app.use("/mainpage", mainpageRouter);
 
 
