@@ -55,18 +55,19 @@ function EditStudentRecord({ authorized }) {
   const [courseYear, setCourseYear] = useState("");
 
   const getForm = () => {
-    Axios.get("http://localhost:3001/studentrecord", {
+    Axios.get("http://localhost:3001/placementrecord/student", {
       params: {
         studentNumber: student_uid,
       },
     })
       .then((res) => {
-        setStudentName(res.data.studentName);
-        setStudentNumber(res.data.studentNumber);
-        setStudentCurriculum(res.data.studentCurriculum);
-        setAcademicYear(res.data.acadYear);
-        setPlacementYear(res.data.placementYear);
-        setCourseYear(res.data.courseYear);
+        console.log(res.data);
+        setStudentName(res.data.english_name);
+        setStudentNumber(res.data.placement[0].student_uid);
+        setStudentCurriculum(res.data.curriculum);
+        setAcademicYear(res.data.acad_year);
+        setPlacementYear(res.data.placement[0].placement_year);
+        setCourseYear(res.data.course_year);
       })
       .catch((error) => {
         console.log(error.response);
@@ -147,7 +148,7 @@ function EditStudentRecord({ authorized }) {
   const confirmSubmitForm = () => {
     handleCloseConfirmation();
 
-    Axios.put("http://localhost:3001/studentrecord", {
+    Axios.put("http://localhost:3001/editStudent/admin", {
       user_uid: user_uid,
       studentName: studentName,
       studentNumber: studentNumber,
