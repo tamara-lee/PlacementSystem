@@ -276,6 +276,19 @@ function StudentRecords({ authorized }) {
         ? 1
         : 0;
     });
+
+    setRows(
+      Object.keys(filteredRecords).map((element) =>
+        createData(
+          filteredRecords[element]["student_uid"],
+          filteredRecords[element]["english_name"],
+          filteredRecords[element]["user_account"]["username"],
+          filteredRecords[element]["curriculum"],
+          filteredRecords[element]["placement_status"],
+          filteredRecords[element]["last_modified"]
+        )
+      )
+    );
   }
 
   const handleAcadYear = (e) => {
@@ -333,6 +346,18 @@ function StudentRecords({ authorized }) {
         ? 1
         : 0;
     });
+    setRows(
+      Object.keys(filteredRecords).map((element) =>
+        createData(
+          filteredRecords[element]["student_uid"],
+          filteredRecords[element]["english_name"],
+          filteredRecords[element]["user_account"]["username"],
+          filteredRecords[element]["curriculum"],
+          filteredRecords[element]["placement_status"],
+          filteredRecords[element]["last_modified"]
+        )
+      )
+    );
     console.log(filteredRecords);
     // alert("Recently Updated button clicked");
   };
@@ -387,6 +412,7 @@ function StudentRecords({ authorized }) {
     setFilteredRecords(records);
     sortAlphabetically();
     setSearchTerm("");
+    console.log(filteredRecords);
   };
 
   // useEffect(() => {
