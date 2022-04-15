@@ -386,7 +386,7 @@ router.post("/chatbox", validateToken, async (req, res) => {
     res.json({ status: "success", message: "Successfully sent message!" });
   } catch (error) {
     console.log(error);
-    res.json({ status: "success", message: "Failed to send message!" });
+    res.json({ status: "failed", message: "Failed to send message!" });
   }
 });
 

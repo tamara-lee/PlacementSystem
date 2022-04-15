@@ -33,6 +33,8 @@ const editStudentRouter = require("./routes/editstudent");
 const faqRouter = require("./routes/faq");
 const importExcelRouter = require("./routes/importexcel");
 const exportExcelRouter = require("./routes/exportexcel");
+const mainpageRouter = require("./routes/mainpage");
+
 
 
 //app.use("/", authRouter);
@@ -42,7 +44,7 @@ app.use("/addstudents", addStudentsRouter);
 app.use("/faq", faqRouter);
 app.use("/editstudent", editStudentRouter);
 app.use("/importexcel", importExcelRouter);
-app.use("/exportexcel", exportExcelRouter);
+app.use("/mainpage", mainpageRouter);
 
 
 app.get("/home", validateToken, (req, res) => {

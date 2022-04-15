@@ -8,6 +8,7 @@ const { remarks } = new PrismaClient();
 const prisma = new PrismaClient();
 const router = require("express").Router();
 const flatten = require("flat");
+const xlsx = require("xlsx");
 
 router.post("/", validateToken, async (req, res) => {
   console.log("req.body", req.body);
@@ -108,6 +109,7 @@ router.post("/", validateToken, async (req, res) => {
 
     export_record.forEach((element) => {
       element.placement.forEach((placement) => {
+
         result.push({
           placement_id: placement.placement_id,
           placement_year: placement.placement_year,
@@ -116,7 +118,7 @@ router.post("/", validateToken, async (req, res) => {
           student_uid: placement.student_uid,
           english_name: element.english_name,
           curriculum: element.curriculum,
-          job_title: placement.student_uid,
+          job_title: placement.job_title,
           company_name: placement.company_name,
           job_nature: placement.job_nature,
           start_date: placement.start_date,
@@ -138,6 +140,23 @@ router.post("/", validateToken, async (req, res) => {
     });
 
     console.log(result);
+
+    const convertJsonToExcel=()=>{
+        const workSheet = xlsx.utils.json_to_sheet(result);
+        const workBook = xlsx.utils.book_new();
+
+        xlsx.utils.book_append_sheet(workBook,workSheet,"result")
+
+        //generate buffer
+        xlsx.write(workBook,{bookType:'xlsx',type:'buffer'})
+
+        //binary string
+        xlsx.write(workBook,{bookType:"xlsx",type:"binary"})
+
+        xlsx.writeFile(workBook,"internship_records.xlsx")
+
+    }
+    convertJsonToExcel()
 
     // for (i = 0; i < export_record.length; i++){
     //      export_record_flatten = flatten({
