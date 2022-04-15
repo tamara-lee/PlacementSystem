@@ -178,6 +178,8 @@ function MyPlacementRecord({ authorized }) {
     );
   };
 
+  
+
   // test chat test messages
   const [msg1, setMsg1] = useState(
     "Job nature is not detailed enough. Please add more information."
