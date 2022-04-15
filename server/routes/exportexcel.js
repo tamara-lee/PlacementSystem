@@ -11,7 +11,7 @@ const flatten = require("flat");
 const xlsx = require("xlsx");
 
 router.post("/", validateToken, async (req, res) => {
-  console.log("req.body", req.body);
+  console.log("request_body", req.body);
   console.log(
     "req.body.export_fields.placement_id",
     req.body.export_fields.placement_id
@@ -120,7 +120,9 @@ router.post("/", validateToken, async (req, res) => {
       function format(obj, position) {
         for (let key in obj) {
           let val = obj[key];
-          let newKey = position ? position + "." + key : key;
+        //   let newKey = position ? position + "." + key : key;
+          let newKey = key;
+
           // console.log("val type", typeof val);
           if (val && typeof val === "object") {
             format(val, newKey);
