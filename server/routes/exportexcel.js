@@ -97,13 +97,13 @@ router.post("/", validateToken, async (req, res) => {
         },
       },
     });
-    // console.log("export_record", export_record[0].placement);
+    console.log("export_record", export_record);
 
     const export_record_flatten = flatten({
       placement,
     });
     // console.log("export_record_flatten", export_record_flatten[0].placement);
-    console.log("export_record.length", export_record.length);
+    // console.log("export_record.length", export_record.length);
     // console.log("Object.keys(export_record_flatten).length",Object.keys(export_record_flatten).length)
 
     function countKeys(t) {
@@ -120,29 +120,28 @@ router.post("/", validateToken, async (req, res) => {
         }
       }
       
-    console.log("countKeys(export_record)",countKeys(export_record))
-    let key_number = (countKeys(export_record)/export_record.length)-1;
-    console.log("key_number",key_number)
+    // console.log("countKeys(export_record)",countKeys(export_record))
+    // let key_number = (countKeys(export_record)/export_record.length)-1;
+    // console.log("key_number",key_number)
 
     result = [];
 
     // const export_record_total = export_record.length;
     // const export_report_keys_total = Object.keys(export_record_flatten).length;
 
-    for ( i = 0; i < export_record_total; i++ ){
-        temp = [];
-        // for ( j = 0; i < export_report_keys_total; i++ ){
-            if (placement_id == 1){
-                
-            }
+    // for ( i = 0; i < export_record_total; i++ ){
+    //     temp = [];
+    //     // for ( j = 0; i < export_report_keys_total; i++ ){
+    //         if (placement_id == 1){
+
+    //         }
 
         
-        // }
-    }
+    //     // }
+    // }
 
 
     export_record.forEach((element) => {
-        // let i = i+1;
       element.placement.forEach((placement) => {
         //   let 
         //   console.log("element.length",element.length)
@@ -190,7 +189,7 @@ router.post("/", validateToken, async (req, res) => {
     });
     // console.log("export_record.length",export_record.length)
 
-    // console.log(result);
+    console.log(result);
 
     const convertJsonToExcel=()=>{
         const workSheet = xlsx.utils.json_to_sheet(result);
