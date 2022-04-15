@@ -12,6 +12,7 @@ import "./style.css";
 import { styled } from "@mui/material/styles";
 import logo from "../../images/logo.png";
 import { NavLink, useHistory } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 const pages = ["My Placement Record", "FAQ"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];

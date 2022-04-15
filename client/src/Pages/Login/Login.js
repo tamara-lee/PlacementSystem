@@ -31,7 +31,11 @@ function Login() {
           localStorage.setItem("userId", response.data.account_id);
           // localStorage.setItem("admin_uid", "0000000000");
 
-          return history.push("/student/mainpage");
+          if (response.data.student_uid === "00000000000") {
+            return history.push("/admin/mainpage");
+          } else {
+            return history.push("/student/mainpage");
+          }
         }
       })
       .catch((error) => {

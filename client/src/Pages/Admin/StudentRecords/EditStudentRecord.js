@@ -8,10 +8,24 @@ import "./style.css";
 import styled from "styled-components";
 import Typography from "@mui/material/Typography";
 
+// for pop-ups
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 const Container = styled.div`
   justify-content: center;
   margin: 1.2rem 3rem 2rem 3rem;
 `;
+
+let search = window.location.search;
+let params = new URLSearchParams(search);
+const student_uid = params.get("studentNumber");
+
+const user_uid = localStorage.getItem("userUid");
 
 function EditStudentRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
@@ -29,36 +43,127 @@ function EditStudentRecord({ authorized }) {
           alert("You have been logged out. Please refresh and log in again.");
         }
       });
+    getForm();
   }, []);
 
   // sample text
-  const [studentName, setStudentName] = useState("John Doe");
-  const [studentNumber, setStudentNumber] = useState("3031110000");
-  const [studentCurriculum, setStudentCurriculum] = useState("BEng (CompSc)");
-  const [academicYear, setAcademicYear] = useState(2020);
-  const [placementYear, setPlacementYear] = useState(2021);
-  const [courseYear, setCourseYear] = useState(3);
+  const [studentName, setStudentName] = useState("");
+  const [studentNumber, setStudentNumber] = useState("");
+  const [studentCurriculum, setStudentCurriculum] = useState("BEng(CompSc)");
+  const [academicYear, setAcademicYear] = useState("");
+  const [placementYear, setPlacementYear] = useState("");
+  const [courseYear, setCourseYear] = useState("");
 
-  // Remark states
-  const dummy = useRef();
-  // const remarksRef = firestore.collection("remarks"); // get collection of messages here
-  // const query = remarksRef.orderBy("createdAt").limit(50);
-  // const [remarks] = useCollectionData(query, { idField: "id" });
-  const [remarkState, setRemarkState] = useState("");
+  const getForm = () => {
+    Axios.get("http://localhost:3001/studentrecord", {
+      params: {
+        studentNumber: student_uid,
+      },
+    })
+      .then((res) => {
+        setStudentName(res.data.studentName);
+        setStudentNumber(res.data.studentNumber);
+        setStudentCurriculum(res.data.studentCurriculum);
+        setAcademicYear(res.data.acadYear);
+        setPlacementYear(res.data.placementYear);
+        setCourseYear(res.data.courseYear);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
 
-  const sendRemark = async (e) => {
-    e.preventDefault();
+  const checkUniversityNumber = (e) => {
+    if (/^\d\d\d\d\d\d\d\d\d\d$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-    // const userId = 1;
+  const checkYear = (e) => {
+    if (/^\d\d\d\d$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-    // await remarksRef.add({
-    //   text: remarkState,
-    //   createdAt: createTime,
-    //   userId,
-    // });
+  const checkCourseYear = (e) => {
+    if (/^\d$/.test(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-    // setRemarkState("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+  const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
+  const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
+  const [showPlacementErrorMsg, setShowPlacementErrorMsg] = useState(false);
+  const [showCourseErrorMsg, setShowCourseErrorMsg] = useState(false);
+
+  const [openError, setOpenError] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFail, setOpenFail] = useState(false);
+
+  const handleCloseError = () => {
+    setOpenError(false);
+  };
+
+  const handleCloseConfirmation = () => {
+    setOpenConfirmation(false);
+  };
+
+  const handleCloseSuccess = () => {
+    setOpenSuccess(false);
+  };
+
+  const handleCloseFail = () => {
+    setOpenFail(false);
+  };
+
+  const submitForm = () => {
+    if (
+      !studentName &&
+      !studentNumber &&
+      !academicYear &&
+      !placementYear &&
+      !courseYear
+    ) {
+      setOpenError(true);
+    } else if (
+      showUidErrorMsg ||
+      showCourseErrorMsg ||
+      showAcademicErrorMsg ||
+      showPlacementErrorMsg
+    ) {
+      setOpenError(true);
+    } else {
+      setOpenConfirmation(true);
+    }
+  };
+
+  const confirmSubmitForm = () => {
+    handleCloseConfirmation();
+
+    Axios.post("http://localhost:3001/studentrecord", {
+      user_uid: user_uid,
+      studentName: studentName,
+      studentNumber: studentNumber,
+      studentCurriculum: studentCurriculum,
+      acadYear: academicYear,
+      placementYear: placementYear,
+      courseYear: courseYear,
+    })
+      .then((response) => {
+        console.log(response.data.message);
+        setOpenSuccess(true);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        setOpenFail(true);
+      });
   };
 
   if (authorized === false) {
@@ -66,51 +171,6 @@ function EditStudentRecord({ authorized }) {
     return <Redirect to="/" />;
   }
 
-  const checkEmail = (e) => {
-    if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(e)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const checkPhone = (e) => {
-    if (/^\+?\d+$/.test(e)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const getForm = () => {
-    Axios.get("http://localhost:3001/myplacementrecord")
-      .then((response) => {
-        setStudentName(response.data.studentName);
-        setStudentNumber(response.data.studentNumber);
-        setStudentCurriculum(response.data.studentCurriculum);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
-  const submitForm = () => {
-    console.log("Submit button clicked!");
-    Axios.post("http://localhost:3001/myplacementrecord", {
-      studentName: studentName,
-      studentNumber: studentNumber,
-      studentCurriculum: studentCurriculum,
-    })
-      .then((response) => {
-        console.log(response.data);
-        // if (response.data === "Successfully submitted") {
-        //   console.log(response.data);
-        // }
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
-  getForm();
   return (
     <>
       <NavigationBar />
@@ -129,48 +189,212 @@ function EditStudentRecord({ authorized }) {
               className="input"
               type="text"
               id="studentName"
-              value={studentName}
+              defaultValue={studentName}
+              onChange={(e) => {
+                setStudentName(e.target.value);
+              }}
             />
-            <label htmlFor="studentNo">UNIVERSITY NUMBER</label>
+            <label htmlFor="studentNo">
+              UNIVERSITY NUMBER
+              {showUidErrorMsg && (
+                <span className="error-message">
+                  Invalid university number. Please enter a valid university
+                  number.
+                </span>
+              )}
+            </label>
             <input
               className="input"
               type="text"
               id="studentNo"
-              value={studentNumber}
+              defaultValue={studentNumber}
+              onChange={(e) => {
+                if (e.target.value == "") {
+                  setStudentNumber(e.target.value);
+                  setShowUidErrorMsg(false);
+                } else if (checkUniversityNumber(e.target.value)) {
+                  setStudentNumber(e.target.value);
+                  setShowUidErrorMsg(false);
+                } else {
+                  setStudentNumber(e.target.value);
+                  setShowUidErrorMsg(true);
+                }
+              }}
             />
             <label htmlFor="curriculum">CURRICULUM</label>
-            <input
+            <select
               className="input"
               type="text"
               id="curriculum"
               value={studentCurriculum}
-            />
-            <label htmlFor="academicYear">ACADEMIC YEAR</label>
+              onChange={(e) => {
+                setStudentCurriculum(e.target.value);
+              }}
+            >
+              <option value="BEng(CompSc)">BEng(CompSc)</option>
+              <option value="BBA(IS)">BBA(IS)</option>
+            </select>
+            <label htmlFor="academicYear">
+              ACADEMIC YEAR{" "}
+              {showAcademicErrorMsg && (
+                <span className="error-message">
+                  Invalid academic year. Please enter a 4 digit number.
+                </span>
+              )}
+            </label>
             <input
               className="input"
               type="number"
               id="academicYear"
-              value={academicYear}
+              defaultValue={academicYear}
+              onChange={(e) => {
+                if (e.target.value == "") {
+                  setAcademicYear(e.target.value);
+                  setShowAcademicErrorMsg(false);
+                } else if (checkYear(e.target.value)) {
+                  setAcademicYear(e.target.value);
+                  setShowAcademicErrorMsg(false);
+                } else {
+                  setAcademicYear(e.target.value);
+                  setShowAcademicErrorMsg(true);
+                }
+              }}
             />
-            <label htmlFor="placementYear">PLACEMENT YEAR</label>
+            <label htmlFor="placementYear">
+              PLACEMENT YEAR{" "}
+              {showPlacementErrorMsg && (
+                <span className="error-message">
+                  Invalid placement year. Please enter a 4 digit number.
+                </span>
+              )}
+            </label>
             <input
               className="input"
               type="number"
               id="placementYear"
-              value={placementYear}
+              defaultValue={placementYear}
+              onChange={(e) => {
+                if (e.target.value == "") {
+                  setPlacementYear(e.target.value);
+                  setShowPlacementErrorMsg(false);
+                } else if (checkYear(e.target.value)) {
+                  setPlacementYear(e.target.value);
+                  setShowPlacementErrorMsg(false);
+                } else {
+                  setPlacementYear(e.target.value);
+                  setShowPlacementErrorMsg(true);
+                }
+              }}
             />
-            <label htmlFor="courseYear">COURSE YEAR</label>
+            <label htmlFor="courseYear">
+              COURSE YEAR{" "}
+              {showCourseErrorMsg && (
+                <span className="error-message">
+                  Invalid course year. Please enter a single digit value.
+                </span>
+              )}
+            </label>
             <input
               className="input"
               type="number"
               id="courseYear"
-              value={courseYear}
+              defaultValue={courseYear}
+              onChange={(e) => {
+                if (e.target.value == "") {
+                  setCourseYear(e.target.value);
+                  setShowCourseErrorMsg(false);
+                } else if (checkCourseYear(e.target.value)) {
+                  setCourseYear(e.target.value);
+                  setShowCourseErrorMsg(false);
+                } else {
+                  setCourseYear(e.target.value);
+                  setShowCourseErrorMsg(true);
+                }
+              }}
             />
           </div>
-          <button className="form-submit" onClick={submitForm}>
+          <button
+            className="form-submit"
+            onClick={(e) => {
+              e.preventDefault();
+              submitForm();
+            }}
+          >
             Save & Submit
           </button>
         </form>
+        <Dialog
+          open={openError}
+          onClose={handleCloseError}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Error(s) in form!"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Please ensure all fields are completed and correct before
+              submission.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseError} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openConfirmation}
+          onClose={handleCloseConfirmation}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Please ensure all fields are correct before submission.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseConfirmation}>
+              No
+            </Button>
+            <Button type="button" onClick={confirmSubmitForm} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openSuccess}
+          onClose={handleCloseSuccess}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Successfully submitted changes!"}
+          </DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseSuccess} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openFail}
+          onClose={handleCloseFail}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Error in submitting form!"}
+          </DialogTitle>
+          <DialogActions>
+            <Button type="button" onClick={handleCloseFail} autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );

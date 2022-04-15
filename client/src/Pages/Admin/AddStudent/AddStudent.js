@@ -40,7 +40,7 @@ function AddStudent({ authorized }) {
 
   const [name, setName] = useState("");
   const [universityNumber, setUniversityNumber] = useState("");
-  const [curriculum, setCurriculum] = useState("compsc");
+  const [curriculum, setCurriculum] = useState("BEng(CompSc)");
   const [academicYear, setAcademicYear] = useState("");
   const [placementYear, setPlacementYear] = useState("");
   const [courseYear, setCourseYear] = useState("");
