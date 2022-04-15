@@ -37,19 +37,24 @@ router.get("/", validateToken, async (req, res) => {
   try {
     records = await student.findMany({
       select: {
-        student_uid: true,
-        english_name: true,
-        curriculum: true,
-        placement_status: true,
-        last_modified: true,
-      },
-      select: {
         user_account: {
           select: {
             username: true,
           },
         },
+        placement: {
+          select: {
+            placement_year: true,
+          },
+        },
+        student_uid: true,
+        english_name: true,
+        curriculum: true,
+        acad_year: true,
+        placement_status: true,
+        last_modified: true,
       },
+      //   select: {},
     });
     console.log(records);
     res.json(records);
