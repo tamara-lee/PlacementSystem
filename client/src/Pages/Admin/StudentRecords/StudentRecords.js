@@ -1787,13 +1787,19 @@ function StudentRecords({ authorized }) {
                 >
                   <CardContent style={{ display: "flex" }}>
                     <Typography variant="body2">
-                      Name: {val.english_name}
+                      {/* Name: {val.english_name} */}
+                      {val.english_name}
+
                     </Typography>
                     <Typography variant="body2">
-                      UID: {val.student_uid}
+                      {/* UID: {val.student_uid} */}
+                      {val.student_uid}
+
                     </Typography>
                     <Typography variant="body2">
-                      Status: {val.placement_status}
+                      {/* Status: {val.placement_status} */}
+                     {val.placement_status}
+
                     </Typography>
                     <IsolatedEditStudentButtonMobile
                       student_uid={val.student_uid}

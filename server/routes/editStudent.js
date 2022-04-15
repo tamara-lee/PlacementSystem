@@ -12,7 +12,7 @@ router.put("/admin", validateToken, async (req, res) => {
   //to get name of modifier (user who is editing the student record)
     const modifier = await user_account.findUnique({
       where: {
-        username: req.body.user_uid,
+        student_uid: req.body.user_uid,
       },
     });
    
@@ -57,7 +57,7 @@ router.put("/admin", validateToken, async (req, res) => {
           },
         });
         console.log("editStudent",editStudent);
-        
+
         const editPlacmenetYear = await placement.update({
           where: {
             student_uid: req.body.studentNumber
