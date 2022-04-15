@@ -37,11 +37,8 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 
-
 const handleDownloadExcelForm = () => {
-  window.open(
-    "http://localhost:3001/exportexcel"
-  );
+  window.open("http://localhost:3001/exportexcel");
 };
 
 const username = localStorage.getItem("username");
@@ -1777,7 +1774,7 @@ function StudentRecords({ authorized }) {
                   </CardContent>
                 </Card>
               ) : null}
-            </Box>{" "}
+            </Box>
             {filteredRecords.map((val, key) => {
               return (
                 <Card
@@ -1785,28 +1782,28 @@ function StudentRecords({ authorized }) {
                   variant="outlined"
                   style={{ marginBottom: "5px" }}
                 >
-                  <CardContent style={{ display: "flex" }}>
-                    <Typography variant="body2">
-                      {/* Name: {val.english_name} */}
-                      {val.english_name}
-
-                    </Typography>
-                    <Typography variant="body2">
-                      {/* UID: {val.student_uid} */}
-                      {val.student_uid}
-
-                    </Typography>
-                    <Typography variant="body2">
-                      {/* Status: {val.placement_status} */}
-                     {val.placement_status}
-
-                    </Typography>
-                    <IsolatedEditStudentButtonMobile
-                      student_uid={val.student_uid}
-                    />
-                    <IsolatedEditPlacementButtonMobile
-                      student_uid={val.student_uid}
-                    />
+                  <CardContent
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Box>
+                      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                        {val.english_name}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                        {val.student_uid}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                        Status: {val.placement_status}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <IsolatedEditStudentButtonMobile
+                        student_uid={val.student_uid}
+                      />
+                      <IsolatedEditPlacementButtonMobile
+                        student_uid={val.student_uid}
+                      />
+                    </Box>
                   </CardContent>
                 </Card>
               );
