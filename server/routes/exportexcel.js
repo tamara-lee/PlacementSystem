@@ -123,22 +123,22 @@ router.post("/", validateToken, async (req, res) => {
     console.log("countKeys(export_record)",countKeys(export_record))
     let key_number = (countKeys(export_record)/export_record.length)-1;
     console.log("key_number",key_number)
-    
-    
-
 
     result = [];
 
     // const export_record_total = export_record.length;
     // const export_report_keys_total = Object.keys(export_record_flatten).length;
 
-    // for ( i = 0; i < export_record_total; i++ ){
-    //     temp = [];
-    //     for ( j = 0; i < export_report_keys_total; i++ ){
+    for ( i = 0; i < export_record_total; i++ ){
+        temp = [];
+        // for ( j = 0; i < export_report_keys_total; i++ ){
+            if (placement_id == 1){
+                
+            }
 
         
-    //     }
-    // }
+        // }
+    }
 
 
     export_record.forEach((element) => {
@@ -255,6 +255,7 @@ router.post("/", validateToken, async (req, res) => {
   //                     consent_form: consent_form
   //                 }
   //             },
+
   //         }
 
   //     });

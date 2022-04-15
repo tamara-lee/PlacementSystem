@@ -129,6 +129,18 @@ function StudentRecords({ authorized }) {
       // });
       setRecords(res.data);
       setFilteredRecords(res.data);
+      setRows(
+        Object.keys(res.data).map((element) =>
+          createData(
+            res.data[element]["student_uid"],
+            res.data[element]["english_name"],
+            res.data[element]["user_account"]["username"],
+            res.data[element]["curriculum"],
+            res.data[element]["placement_status"],
+            res.data[element]["last_modified"]
+          )
+        )
+      );
     });
   };
 
