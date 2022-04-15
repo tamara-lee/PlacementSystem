@@ -26,6 +26,7 @@ router.get("/placementyears", validateToken, async (req, res) => {
         placement_year: true,
       },
     });
+    console.log(placementyears);
     res.json(placementyears);
   } catch (error) {
     console.log(error);
@@ -42,9 +43,11 @@ router.get("/", validateToken, async (req, res) => {
         placement_status: true,
         last_modified: true,
       },
-      user_account: {
-        select: {
-          username: true,
+      select: {
+        user_account: {
+          select: {
+            username: true,
+          },
         },
       },
     });
