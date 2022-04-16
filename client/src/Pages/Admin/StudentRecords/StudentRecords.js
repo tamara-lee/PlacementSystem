@@ -10,6 +10,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import moment from "moment";
+import { useHistory } from "react-router-dom";
 
 // for the table
 import Table from "@mui/material/Table";
@@ -20,7 +21,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Axios from "axios";
-import { useHistory } from "react-router-dom";
 
 // for pop-up
 import Dialog from "@mui/material/Dialog";
@@ -34,12 +34,7 @@ import Checkbox from "@mui/material/Checkbox";
 
 // for card
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-
-const handleDownloadExcelForm = () => {
-  window.open("http://localhost:3001/exportexcel");
-};
 
 const username = localStorage.getItem("username");
 const student_uid = localStorage.getItem("userUid");
@@ -51,6 +46,9 @@ function StudentRecords({ authorized, access }) {
 
   Axios.defaults.withCredentials = true;
 
+  // executed when page is loaded
+  // get acad years and placement years to use in filter drop down
+  // load records and sort them
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -98,21 +96,25 @@ function StudentRecords({ authorized, access }) {
     sortAlphabetically();
   }, []);
 
+  // constants
   const [open, setOpen] = React.useState(false);
   const [acadYear, setAcadYear] = useState("");
   const [placementYear, setPlacementYear] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [recentlyUpdated, setRecentlyUpdated] = useState(false);
-  // const [records, setRecords] = useState(tableRecords);
+
   const [records, setRecords] = useState([]);
   const [filteredRecords, setFilteredRecords] = useState([]);
-  const [sortRecentlyUpdated, setSortRecentlyUpdated] = useState([]);
   const [show, setShow] = useState(false);
 
   const [fieldsExport, setFieldsExport] = useState();
   const [academicYearExport, setAcademicYearExport] = useState();
-
   const [showExportMissingYear, setShowExportMissingYear] = useState(false);
+
+  // exporting
+  const handleDownloadExcelForm = () => {
+    window.open("http://localhost:3001/exportexcel");
+  };
 
   const handleExport = () => {
     if (academicYearExport) {
@@ -121,7 +123,7 @@ function StudentRecords({ authorized, access }) {
         export_fields: fieldsExport[0],
       })
         .then((res) => {
-          console.log(res);
+          handleDownloadExcelForm();
         })
         .catch((error) => {
           console.log(error.response.data.message);
@@ -131,12 +133,9 @@ function StudentRecords({ authorized, access }) {
     }
   };
 
+  // load records
   const getRecords = () => {
     Axios.get("http://localhost:3001/mainpage/").then((res) => {
-      console.log(res.data);
-      // res.data.forEach((element) => {
-      //   console.log(element.placement[0].placement_year);
-      // });
       setRecords(res.data);
       setFilteredRecords(res.data);
       setRows(
@@ -154,6 +153,7 @@ function StudentRecords({ authorized, access }) {
     });
   };
 
+  // add to rows
   const [rows, setRows] = useState(
     Object.keys(records).map((element) =>
       createData(
@@ -167,6 +167,7 @@ function StudentRecords({ authorized, access }) {
     )
   );
 
+  // field names
   const fields = [
     {
       placement_id: "Placement ID",
@@ -196,6 +197,7 @@ function StudentRecords({ authorized, access }) {
     },
   ];
 
+  // export field boxes
   const [checked_placement_id, set_checked_placement_id] = useState(false);
   const [checked_placement_year, set_checked_placement_year] = useState(false);
   const [checked_acad_year, set_checked_acad_year] = useState(false);
@@ -229,6 +231,7 @@ function StudentRecords({ authorized, access }) {
   const [checked_placement_status, set_checked_placement_status] =
     useState(false);
 
+  // create data for table
   function createData(
     student_uid,
     english_name,
@@ -247,12 +250,16 @@ function StudentRecords({ authorized, access }) {
     };
   }
 
+  // close pop up for missing academic year
   const handleCloseExportMissingYear = () => {
     setShowExportMissingYear(false);
   };
+
+  // constants for year filters
   const [acadYears, setAcadYears] = useState([]);
   const [placementYears, setPlacementYears] = useState([]);
 
+  // get years for filtering drop down
   const getAcadYears = () => {
     Axios.get("http://localhost:3001/mainpage/acadyears").then((res) => {
       setAcadYears(
@@ -281,6 +288,7 @@ function StudentRecords({ authorized, access }) {
     });
   };
 
+  // to sort records in the table alphabetically
   function sortAlphabetically() {
     filteredRecords.sort(function (a, b) {
       return a.english_name < b.english_name
@@ -304,6 +312,7 @@ function StudentRecords({ authorized, access }) {
     );
   }
 
+  // show by selected academic year
   const handleAcadYear = (e) => {
     setAcadYear(e.target.value);
     if (placementYear == "") {
@@ -324,12 +333,9 @@ function StudentRecords({ authorized, access }) {
     }
   };
 
+  // show by selected placement year
   const handlePlacementYear = (e) => {
     setPlacementYear(e.target.value);
-    // records.forEach((data) => {
-    //   console.log(data.placement[0].placement_year);
-    //   console.log("target", e.target.value);
-    // });
     if (acadYear == "") {
       setFilteredRecords(
         records.filter(function (data) {
@@ -348,9 +354,7 @@ function StudentRecords({ authorized, access }) {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("Do something after counter has changed", placementYear);
-  // }, [placementYear]);
+  //  to sort by recently updated
   const handleRecentlyUpdated = () => {
     filteredRecords.sort(function (a, b) {
       return a.last_modified < b.last_modified
@@ -371,42 +375,32 @@ function StudentRecords({ authorized, access }) {
         )
       )
     );
-    console.log(filteredRecords);
-    // alert("Recently Updated button clicked");
   };
 
-  // const selectAll = () => {
-  //   // e.target.checked;
-  //   console.log("select all checked!");
-  // };
-
-  const [selectedUsername, setSelectedUsername] = useState("");
-
+  // go to selected student record
   const handleStudent = (e, id) => {
-    console.log("edit student clicked!");
-    console.log(id);
-
     return history.push("/admin/edit/studentrecord?studentNumber=" + id);
   };
 
+  // go to selected student placement record
   const handlePlacement = (e, id) => {
-    console.log("edit placement clicked!");
-    console.log(id);
-
     return history.push("/admin/edit/placementrecord?studentNumber=" + id);
   };
 
+  // handle click export button (show pop-up)
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  // close export pop-up
   const handleClose = () => {
     setOpen(false);
   };
 
+  // filter records by search term
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    // alert(e.target.value);
+
     setFilteredRecords(
       records.filter(function (data) {
         return (
@@ -418,20 +412,17 @@ function StudentRecords({ authorized, access }) {
     );
   };
 
+  // when default button is clicked
+  // reset all filters to show default records
   const resetFilters = () => {
-    // alert("Default button clicked! This button is used to reset the filters!");
     setAcadYear("");
     setPlacementYear("");
     setFilteredRecords(records);
     sortAlphabetically();
     setSearchTerm("");
-    console.log(filteredRecords);
   };
 
-  // useEffect(() => {
-  //   setAcadYear(acadYear);
-  // }, [acadYear]);
-
+  // set the rows again when filter is changed
   useEffect(() => {
     console.log(filteredRecords);
     setRows(
@@ -448,6 +439,7 @@ function StudentRecords({ authorized, access }) {
     );
   }, [acadYear, placementYear, recentlyUpdated, searchTerm]);
 
+  // fragment for edit student button (desktop)
   const IsolatedEditStudentButton = (row) => {
     return (
       <React.Fragment>
@@ -462,6 +454,7 @@ function StudentRecords({ authorized, access }) {
     );
   };
 
+  // fragment for edit student button (mobile)
   const IsolatedEditStudentButtonMobile = (row) => {
     return (
       <React.Fragment>
@@ -476,6 +469,7 @@ function StudentRecords({ authorized, access }) {
     );
   };
 
+  // fragment for edit student placement button (desktop)
   const IsolatedEditPlacementButton = (row) => {
     return (
       <React.Fragment>
@@ -490,6 +484,7 @@ function StudentRecords({ authorized, access }) {
     );
   };
 
+  // fragment for edit student placement button (mobile)
   const IsolatedEditPlacementButtonMobile = (row) => {
     return (
       <React.Fragment>
@@ -504,13 +499,15 @@ function StudentRecords({ authorized, access }) {
     );
   };
 
+  // check login status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
 
+  // check if user has access
   if (access !== "0000000000") {
-    console.log(authorized);
+    console.log(access);
     return <Redirect to="/student/mainpage" />;
   }
 
@@ -519,6 +516,7 @@ function StudentRecords({ authorized, access }) {
       <div>
         <NavigationBar />
         <Container>
+          {/* desktop view */}
           <Box sx={{ display: { xs: "none", md: "initial" } }}>
             <Box
               style={{
@@ -625,6 +623,7 @@ function StudentRecords({ authorized, access }) {
               >
                 Export
               </Button>
+              {/* pop-up for exporting */}
               <Dialog maxWidth="xl" open={open} onClose={handleClose}>
                 <DialogTitle>Select fields to export</DialogTitle>
                 <DialogContent>
@@ -1162,6 +1161,7 @@ function StudentRecords({ authorized, access }) {
               </Table>
             </TableContainer>
           </Box>
+          {/* mobile view */}
           <Box sx={{ display: { xs: "initial", md: "none" } }}>
             <Box style={{ paddingTop: "20px", paddingBottom: "20px" }}>
               <TextField
@@ -1814,6 +1814,7 @@ function StudentRecords({ authorized, access }) {
               );
             })}
           </Box>
+          {/* pop-up for missing year field in export pop-up */}
           <Dialog
             open={showExportMissingYear}
             onClose={handleCloseExportMissingYear}

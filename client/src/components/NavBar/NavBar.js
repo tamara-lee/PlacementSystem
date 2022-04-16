@@ -13,10 +13,8 @@ import { styled } from "@mui/material/styles";
 import logo from "../../images/logo.png";
 import { NavLink, useHistory } from "react-router-dom";
 
-const pages = ["My Placement Record", "FAQ"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 const NavigationBar = () => {
+  const history = useHistory();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -35,16 +33,14 @@ const NavigationBar = () => {
     setAnchorElNav(null);
   };
 
-  const history = useHistory();
-
   const logoutFunction = () => {
-    // console.log("Logout button clicked!");
     return history.push("/logout");
   };
 
   return (
     <StyledAppBar position="static">
       <Container maxWidth="xl">
+        {/* for desktop view */}
         <Toolbar disableGutters>
           <Typography
             variant="h5"
@@ -126,7 +122,7 @@ const NavigationBar = () => {
               </StyledNavLink>
             </Box>
           </div>
-
+          {/* for mobile view */}
           <Box
             noWrap
             sx={{

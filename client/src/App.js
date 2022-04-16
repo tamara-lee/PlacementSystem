@@ -12,6 +12,10 @@ import Logout from "./Pages/Logout/Logout";
 
 import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
 
+// specify routing for pages
+// authorized: to check if user is logged in
+// access: to check if user have access to certain pages
+
 function App() {
   return (
     <div className="App">
@@ -40,7 +44,7 @@ function App() {
             component={() => (
               <AdminFAQ
                 authorized={JSON.parse(localStorage.getItem("userState"))}
-                access={JSON.parse(localStorage.getItem("userUid"))}
+                access={localStorage.getItem("userUid")}
               />
             )}
           />
@@ -50,7 +54,7 @@ function App() {
             component={() => (
               <AddStudent
                 authorized={JSON.parse(localStorage.getItem("userState"))}
-                access={JSON.parse(localStorage.getItem("userUid"))}
+                access={localStorage.getItem("userUid")}
               />
             )}
           />
@@ -60,7 +64,7 @@ function App() {
             component={() => (
               <StudentRecords
                 authorized={JSON.parse(localStorage.getItem("userState"))}
-                access={JSON.parse(localStorage.getItem("userUid"))}
+                access={localStorage.getItem("userUid")}
               />
             )}
           />
@@ -70,7 +74,7 @@ function App() {
             component={() => (
               <EditStudentRecord
                 authorized={JSON.parse(localStorage.getItem("userState"))}
-                access={JSON.parse(localStorage.getItem("userUid"))}
+                access={localStorage.getItem("userUid")}
               />
             )}
           />
@@ -80,7 +84,7 @@ function App() {
             component={() => (
               <EditPlacementRecord
                 authorized={JSON.parse(localStorage.getItem("userState"))}
-                access={JSON.parse(localStorage.getItem("userUid"))}
+                access={localStorage.getItem("userUid")}
               />
             )}
           />

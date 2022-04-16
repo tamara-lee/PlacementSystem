@@ -4,18 +4,17 @@ import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.css";
 import "./Login.css";
 import logo from "../../images/logo.png";
-import "../../global.js";
 
 function Login() {
+  Axios.defaults.withCredentials = true;
+
   const history = useHistory();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [clickField, setClickField] = useState("");
 
-  Axios.defaults.withCredentials = true;
-
-  // for testing
+  // to store error messages when attempting to log in
   const [loginStatus, setLoginStatus] = useState("");
 
   const login = () => {
@@ -25,13 +24,14 @@ function Login() {
     })
       .then((response) => {
         if (response.data.login_status === "Logged In") {
+          // store variables to use during the session
           localStorage.setItem("userState", true);
           localStorage.setItem("userUid", response.data.student_uid);
           localStorage.setItem("username", response.data.account_username);
           localStorage.setItem("userId", response.data.account_id);
-          // localStorage.setItem("admin_uid", "0000000000");
 
-          if (response.data.student_uid === "00000000000") {
+          // check if user is the admin or student
+          if (response.data.student_uid === "0000000000") {
             return history.push("/admin/mainpage");
           } else {
             return history.push("/student/mainpage");
@@ -43,31 +43,25 @@ function Login() {
       });
   };
 
+  // to check whether user is already logged in or not
+  // if logged in, go to admin or student main page
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {
         if (response.data === "Logged In") {
-          return history.push("/student/mainpage");
+          if (response.data.student_uid === "00000000000") {
+            return history.push("/admin/mainpage");
+          } else {
+            return history.push("/student/mainpage");
+          }
         } else {
           return history.push("/");
         }
-        // if (response.data === "Logged In") {
-
-        //   // setLoginStatus(response.data.user[0].username);
-        // }
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-
-  // useEffect(() => {
-  //   console.log(global.loggedIn);
-  //   if (global.loggedIn === true) {
-  //     return history.push("/myplacementrecord");
-  //     // setLoginStatus(response.data.user[0].username);
-  //   }
-  // }, []);
 
   return (
     <div className="d-md-flex h-md-100 align-items-center">
@@ -137,7 +131,6 @@ function Login() {
             >
               Please complete all fields.
             </div>
-            {/* to test if login is successful. map to homepage later */}
             <div className="text-red">{loginStatus}</div>
           </div>
         </div>

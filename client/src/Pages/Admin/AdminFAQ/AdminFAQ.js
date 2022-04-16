@@ -34,6 +34,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
+// styling tabs
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -125,6 +126,7 @@ const StyledTabsMobile = styled((props) => (
   },
 });
 
+// styling accordions
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -207,6 +209,8 @@ const StyledMenu = styled((props) => (
 function FAQ({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
+  // executed when page is loaded
+  // load all faq
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -224,14 +228,18 @@ function FAQ({ authorized, access }) {
     getFAQ();
   }, []);
 
+  // constants for accordion, tabs, pop-ups
   const [value, setValue] = useState(0);
   const [expanded, setExpanded] = useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState(false);
 
+  // for list of faqs
   const [faqList, setFaqList] = useState([]);
+
   const username = localStorage.getItem("username");
 
+  // for new faq
   const [newQuestion, setNewQuestion] = useState(null);
   const [newAnswer, setNewAnswer] = useState(null);
   const [newCat, setNewCat] = useState("0");
@@ -298,7 +306,6 @@ function FAQ({ authorized, access }) {
   };
 
   const handleCloseEditFaq = () => {
-    // make sure when closed, the edited fields will be reset
     setOpenEditFaq(false);
   };
 
@@ -326,17 +333,16 @@ function FAQ({ authorized, access }) {
     setExpanded(newExpanded ? panel : false);
   };
 
+  // for menu in each faq for edit and delete
   const IsolatedMenu = (val) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = Boolean(anchorEl);
     const handleClickMenu = (e, val) => {
       e.stopPropagation();
-      console.log("clickmenu: " + val);
       setAnchorEl(e.currentTarget);
     };
     const handleCloseMenu = (e, val) => {
       e.stopPropagation();
-      console.log("close menu: " + val);
       setAnchorEl(null);
     };
 
@@ -409,6 +415,8 @@ function FAQ({ authorized, access }) {
     );
   };
 
+  // for delete faq
+  // delete api: pass faq_id
   const confirmHandleDeleteFaq = () => {
     handleCloseDeleteConfirmation();
 
@@ -434,6 +442,8 @@ function FAQ({ authorized, access }) {
     }
   };
 
+  // edit api
+  // put api
   const confirmHandleEditFaq = () => {
     handleCloseEditConfirmation();
 
@@ -456,11 +466,11 @@ function FAQ({ authorized, access }) {
       });
   };
 
+  // for getting all faqs
   const getFAQ = () => {
     Axios.get("http://localhost:3001/faq")
       .then((res) => {
         setFaqList(res.data);
-        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -475,6 +485,8 @@ function FAQ({ authorized, access }) {
     }
   };
 
+  // submit new faq
+  // post api
   const confirmSubmitFAQ = () => {
     handleCloseSubmitConfirmation();
 
@@ -499,11 +511,13 @@ function FAQ({ authorized, access }) {
       });
   };
 
+  // check login status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
 
+  // check user access
   if (access !== "0000000000") {
     console.log(authorized);
     return <Redirect to="/student/mainpage" />;
@@ -513,6 +527,7 @@ function FAQ({ authorized, access }) {
     <>
       <div>
         <NavigationBar />
+        {/* desktop view */}
         <Box
           sx={{
             flexGrow: 1,
@@ -536,10 +551,10 @@ function FAQ({ authorized, access }) {
               marginTop: "7rem",
             }}
           >
+            {/* fixed categories for menu */}
             <StyledTab label="General" {...a11yProps(0)} />
             <StyledTab label="Placement Documents" {...a11yProps(1)} />
-            <StyledTab label="Placement Supervisor" {...a11yProps(2)} />
-            {/* information about students; arrangment requirements... */}
+            <StyledTab label="Placement Supervisor" {...a11yProps(2)} />\
           </StyledTabs>
           <div>
             <div className="faq-header">
@@ -580,7 +595,6 @@ function FAQ({ authorized, access }) {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
             <div>
               {show ? (
                 <Card
@@ -789,6 +803,7 @@ function FAQ({ authorized, access }) {
             </div>
           </div>
         </Box>
+        {/* mobile view */}
         <Box
           sx={{
             flexGrow: 0,
@@ -932,7 +947,6 @@ function FAQ({ authorized, access }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "0") {
                       return (
                         <Accordion
@@ -972,7 +986,6 @@ function FAQ({ authorized, access }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "1") {
                       return (
                         <Accordion
@@ -1012,7 +1025,6 @@ function FAQ({ authorized, access }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "2") {
                       return (
                         <Accordion
@@ -1038,6 +1050,7 @@ function FAQ({ authorized, access }) {
             </div>
           </div>
         </Box>
+        {/* pop-ups */}
         <Dialog
           open={openSubmitConfirmation}
           onClose={handleCloseSubmitConfirmation}

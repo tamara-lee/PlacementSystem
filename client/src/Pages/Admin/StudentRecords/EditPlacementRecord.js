@@ -32,6 +32,7 @@ let search = window.location.search;
 let params = new URLSearchParams(search);
 const student_uid = params.get("studentNumber");
 
+// constants
 const username = localStorage.getItem("username");
 const user_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
@@ -39,6 +40,9 @@ const account_id = localStorage.getItem("userId");
 function EditPlacementRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
+  // executed when page is loaded
+  // get form details from server
+  // get remarks messages
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -56,6 +60,7 @@ function EditPlacementRecord({ authorized, access }) {
     getRemarks();
   }, []);
 
+  // form field states
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [studentCurriculum, setStudentCurriculum] = useState("");
@@ -77,14 +82,17 @@ function EditPlacementRecord({ authorized, access }) {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
+  // for information texts and error messages
   const [showSupervisorText, setShowSupervisorText] = useState(false);
   const [showCommentText, setShowCommentText] = useState(false);
   const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
   const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
+  // for date picker
   const [period, setPeriod] = useState([null, null]);
 
+  // for documents
   const [consentFormName, setConsentFormName] = useState("");
   const [appointmentLetterName, setAppointmentLetterName] = useState("");
   const [feedbackFormName, setFeedbackFormName] = useState("");
@@ -97,6 +105,7 @@ function EditPlacementRecord({ authorized, access }) {
   const [appointmentLetterPath, setAppointmentLetterPath] = useState("");
   const [feedbackFormPath, setFeedbackFormPath] = useState("");
 
+  // for pop-ups
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -168,16 +177,6 @@ function EditPlacementRecord({ authorized, access }) {
     console.log("download feedback form button clicked!");
   };
 
-  // test chat messages
-  const [msg1, setMsg1] = useState(
-    "Job nature is not detailed enough. Please add more information."
-  );
-  const [msg2, setMsg2] = useState(
-    "I have added more information. Is the current version ok?"
-  );
-  const [msg3, setMsg3] = useState("Looks good.");
-  const [createTime, setCreateTime] = useState(Date().toLocaleString());
-
   // error checking handlers
   const checkEmail = (e) => {
     if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(e)) {
@@ -202,7 +201,7 @@ function EditPlacementRecord({ authorized, access }) {
   const getRemarks = () => {
     Axios.get("http://localhost:3001/placementrecord/chatbox", {
       params: {
-        studentNumber: student_uid,
+        studentNumber: user_uid,
       },
     })
       .then((res) => {
@@ -229,6 +228,8 @@ function EditPlacementRecord({ authorized, access }) {
       });
   };
 
+  // get form but calling get api
+  // pass the student uid
   const getForm = () => {
     Axios.get("http://localhost:3001/placementrecord/student", {
       params: {
@@ -353,6 +354,7 @@ function EditPlacementRecord({ authorized, access }) {
       });
   };
 
+  // check no errors before submitting form
   const submitForm = () => {
     if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
@@ -361,11 +363,14 @@ function EditPlacementRecord({ authorized, access }) {
     }
   };
 
+  // handle confirm submit form
   const confirmSubmitForm = () => {
     handleCloseConfirmation();
 
+    // send data in form data
     const formData = new FormData();
 
+    // append documents if uploaded
     if (appointmentLetterSelect) {
       formData.append("appointment", appointmentLetter, appointmentLetterName);
     }
@@ -396,28 +401,7 @@ function EditPlacementRecord({ authorized, access }) {
     formData.append("placementStatus", placementStatus);
 
     try {
-      Axios.post(
-        "http://localhost:3001/placementrecord/student",
-        // username: username,
-        // studentName: studentName,
-        // studentNumber: student_uid,
-        // studentCurriculum: studentCurriculum,
-        // companyName: companyName,
-        // jobTitle: jobTitle,
-        // jobNature: jobNature,
-        // startDate: startDate,
-        // endDate: endDate,
-        // duration: duration,
-        // location: location,
-        // paymentType: paymentType,
-        // salary: salary,
-        // supervisorName: supervisorName,
-        // supervisorPhone: supervisorPhone,
-        // supervisorEmail: supervisorEmail,
-        // feedbackComment: feedbackComment,
-        // placementStatus: placementStatus,
-        formData
-      )
+      Axios.post("http://localhost:3001/placementrecord/student", formData)
         .then((res) => {
           setOpenSuccess(true);
           setCompanyName(
@@ -523,11 +507,13 @@ function EditPlacementRecord({ authorized, access }) {
     }
   };
 
+  // check login status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
 
+  // check if user had access
   if (access !== "0000000000") {
     console.log(authorized);
     return <Redirect to="/student/mainpage" />;
@@ -536,6 +522,7 @@ function EditPlacementRecord({ authorized, access }) {
   return (
     <>
       <NavigationBar />
+      {/* desktop and mobile view */}
       <Container>
         <form>
           <div className="row">
@@ -974,6 +961,7 @@ function EditPlacementRecord({ authorized, access }) {
           <button type="button" className="form-submit" onClick={submitForm}>
             Save & Submit
           </button>
+          {/* pop-ups */}
           <Dialog
             open={openError}
             onClose={handleCloseError}
@@ -1052,6 +1040,7 @@ function EditPlacementRecord({ authorized, access }) {
   );
 }
 
+// for remarks messages in the chatbox
 function RemarkMessage(props) {
   let messageClass = "sent";
 
