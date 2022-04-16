@@ -47,9 +47,9 @@ router.put("/admin", validateToken, async (req, res) => {
           student_uid: student_record.student_uid,
         },
         data: {
-          english_name: req.body.studentName,
+          // english_name: req.body.studentName,
           acad_year: req.body.acadYear,
-          course_year: req.body.courseYear,
+          course_year: parseInt(req.body.courseYear),
           curriculum: req.body.studentCurriculum,
           modified_by: modifier.username,
           // user_account : {
