@@ -49,7 +49,7 @@ function Login() {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {
         if (response.data === "Logged In") {
-          if (response.data.student_uid === "0000000000") {
+          if (localStorage.getItem("userUid") === "0000000000") {
             return history.push("/admin/mainpage");
           } else {
             return history.push("/student/mainpage");

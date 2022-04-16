@@ -6,9 +6,8 @@ const router = require("express").Router();
 const flatten = require("flat");
 const xlsx = require("xlsx");
 
-//export excel file with dynamically generated columns which are generated based on the admin's selection of fields 
+//export excel file with dynamically generated columns which are generated based on the admin's selection of fields
 router.post("/", validateToken, async (req, res) => {
- 
   const academic_year = req.body.academic_year;
 
   const placement_id = req.body.export_fields.placement_id == 1 ? true : false;
@@ -125,19 +124,23 @@ router.post("/", validateToken, async (req, res) => {
 
       xlsx.writeFile(workBook, "internship_records.xlsx");
     };
+
     convertJsonToExcel();
+
+    res.json({ status: "success" });
   } catch (error) {
     console.log(error);
+    res.status(400).json({ status: "Error in exporting file!" });
   }
 });
 
 router.get("/", validateToken, async (req, res) => {
-    try {
-      res.download("internship_records.xlsx");
-    } catch (error) {
-      console.log(error);
-      res.json({ status: "error", message: "excel not found!" });
-    }
-  });
+  try {
+    res.download("internship_records.xlsx");
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: "File not found!" });
+  }
+});
 
 module.exports = router;

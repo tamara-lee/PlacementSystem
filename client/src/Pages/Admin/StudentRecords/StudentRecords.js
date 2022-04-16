@@ -118,12 +118,14 @@ function StudentRecords({ authorized, access }) {
 
   const handleExport = () => {
     if (academicYearExport) {
+      console.log("yes");
       Axios.post("http://localhost:3001/exportexcel", {
         academic_year: academicYearExport,
         export_fields: fieldsExport[0],
       })
         .then((res) => {
-          handleDownloadExcelForm();
+          window.open("http://localhost:3001/exportexcel");
+          // handleDownloadExcelForm();
         })
         .catch((error) => {
           console.log(error.response.data.message);
