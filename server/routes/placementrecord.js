@@ -310,6 +310,8 @@ router.get("/chatbox", validateToken, async (req, res) => {
         placement: true,
       },
     });
+    console.log(student_info)
+    console.log(student_info.placement)
 
     const chatRecords = await remarks.findMany({
       where: {

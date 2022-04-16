@@ -94,16 +94,6 @@ model remarks {
   @@index([placement_id], map: "placement_id")
 }
 
-model test_acad_year {
-  acad_test_id   Int  @id @default(autoincrement())
-  acad_test_year Int?
-}
-
-model test_placement_year {
-  placement_test_id   Int  @id @default(autoincrement())
-  placement_test_year Int?
-}
-
 enum student_placement_status {
   NA
   Waiting

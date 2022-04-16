@@ -48,6 +48,12 @@ You may change the provider according to the database you are using in the **sch
 
 Ensure to not directly configure the database url in **schema.prisma**, instead, change it in the **.env** file.
 
+## schema.prisma Configurations
+- Run the command *npx prisma generate* if changes are made to the schema.prisma file.
+- To migrate the changes from schema.prisma to the database, run the command *npx prisma migrate dev --name init*
+- To introspect changes from the database to schema.prisma run the command *npx prisma db pull*
+- Database information can be edited using Prisma's provided GUI. Run the command *npx prisma studio* to access the GUI.
+
 ## Deployment Configurations
 
 Before deployment, ensure that the **.env** and **node_modules** under the _server_ and _client_ folder are added to the _.gitignore_ file.
