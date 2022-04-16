@@ -63,18 +63,39 @@ function EditPlacementRecord({ authorized, access }) {
   }, []);
 
   // form field states
+  // const [studentName, setStudentName] = useState("");
+  // const [studentNumber, setStudentNumber] = useState("");
+  // const [studentCurriculum, setStudentCurriculum] = useState("");
+  // const [companyName, setCompanyName] = useState("");
+  // const [jobTitle, setJobTitle] = useState("");
+  // const [jobNature, setJobNature] = useState("");
+  // const [startDate, setStartDate] = useState(null);
+  // const [endDate, setEndDate] = useState(null);
+  // const [duration, setDuration] = useState("");
+  // const [location, setLocation] = useState("");
+  // const [paymentType, setPaymentType] = useState("");
+  // const [salary, setSalary] = useState(undefined);
+  // const [supervisorName, setSupervisorName] = useState("");
+  // const [supervisorPhone, setSupervisorPhone] = useState("");
+  // const [supervisorEmail, setSupervisorEmail] = useState("");
+  // const [consentForm, setConsentForm] = useState();
+  // const [appointmentLetter, setAppointmentLetter] = useState();
+  // const [feedbackForm, setFeedbackForm] = useState();
+  // const [feedbackComment, setFeedbackComment] = useState("");
+  // const [placementStatus, setPlacementStatus] = useState("");
+
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [studentCurriculum, setStudentCurriculum] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobNature, setJobNature] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [salary, setSalary] = useState(undefined);
+  const [salary, setSalary] = useState("");
   const [supervisorName, setSupervisorName] = useState("");
   const [supervisorPhone, setSupervisorPhone] = useState("");
   const [supervisorEmail, setSupervisorEmail] = useState("");
@@ -95,9 +116,9 @@ function EditPlacementRecord({ authorized, access }) {
   const [period, setPeriod] = useState([null, null]);
 
   // for documents
-  const [consentFormName, setConsentFormName] = useState("");
-  const [appointmentLetterName, setAppointmentLetterName] = useState("");
-  const [feedbackFormName, setFeedbackFormName] = useState("");
+  const [consentFormName, setConsentFormName] = useState(false);
+  const [appointmentLetterName, setAppointmentLetterName] = useState(false);
+  const [feedbackFormName, setFeedbackFormName] = useState(false);
 
   const [consentFormSelect, setConsentFormSelect] = useState(false);
   const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
@@ -245,55 +266,55 @@ function EditPlacementRecord({ authorized, access }) {
     })
       .then((res) => {
         setStudentName(
-          res.data.english_name == null ? undefined : res.data.english_name
+          res.data.english_name == null ? "" : res.data.english_name
         );
         setStudentNumber(
-          res.data.student_uid == null ? undefined : res.data.student_uid
+          res.data.student_uid == null ? "" : res.data.student_uid
         );
         setStudentCurriculum(
-          res.data.curriculum == null ? undefined : res.data.curriculum
+          res.data.curriculum == null ? "" : res.data.curriculum
         );
         setCompanyName(
           res.data.placement[0].company_name == null
-            ? undefined
+            ? ""
             : res.data.placement[0].company_name
         );
         setJobTitle(
           res.data.placement[0].job_title == null
-            ? undefined
+            ? ""
             : res.data.placement[0].job_title
         );
         setJobNature(
           res.data.placement[0].job_nature == null
-            ? undefined
+            ? ""
             : res.data.placement[0].job_nature
         );
         setStartDate(
           res.data.placement[0].start_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].start_date
         );
         setEndDate(
           res.data.placement[0].end_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].end_date
         );
         setPeriod([
           res.data.placement[0].start_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].start_date,
           res.data.placement[0].end_date == null
-            ? undefined
+            ? ""
             : res.data.placement[0].end_date,
         ]);
         setDuration(
           res.data.placement[0].employment_duration == null
-            ? undefined
+            ? ""
             : res.data.placement[0].employment_duration
         );
         setLocation(
           res.data.placement[0].working_location == null
-            ? undefined
+            ? ""
             : res.data.placement[0].working_location
         );
         setPaymentType(
@@ -303,22 +324,22 @@ function EditPlacementRecord({ authorized, access }) {
         );
         setSalary(
           res.data.placement[0].salary == null
-            ? undefined
+            ? ""
             : res.data.placement[0].salary
         );
         setSupervisorName(
           res.data.placement[0].supervisor_name == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_name
         );
         setSupervisorPhone(
           res.data.placement[0].supervisor_telephone == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_telephone
         );
         setSupervisorEmail(
           res.data.placement[0].supervisor_email == null
-            ? undefined
+            ? ""
             : res.data.placement[0].supervisor_email
         );
         setConsentFormSelect(
@@ -347,7 +368,7 @@ function EditPlacementRecord({ authorized, access }) {
         );
         setFeedbackComment(
           res.data.placement[0].feedback_comment == null
-            ? undefined
+            ? ""
             : res.data.placement[0].feedback_comment
         );
         setPlacementStatus(

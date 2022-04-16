@@ -403,6 +403,8 @@ function MyPlacementRecord({ authorized }) {
     formData.append("feedbackComment", feedbackComment);
     formData.append("placementStatus", placementStatus);
 
+    console.log("test", formData.get(supervisorName));
+
     Axios.post("http://localhost:3001/placementrecord/student", formData)
       .then((res) => {
         setOpenSuccess(true);

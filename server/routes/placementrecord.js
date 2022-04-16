@@ -69,7 +69,7 @@ router.post(
   ]),
   validateToken,
   async (req, res) => {
-    console.log("req.body",req.body)
+    console.log("req.body", req.body);
 
     let appoint_letter;
     if (req.files.appointment) {
@@ -111,12 +111,9 @@ router.post(
     const consentForm = consent_letter;
     const feedbackForm = feedback_letter;
     const feedbackComment = req.body.feedbackComment;
-    const placementStatus = 
-    req.body.placementStatus == "null" ? "NA" : req.body.placementStatus;
+    const placementStatus =
+      req.body.placementStatus == "null" ? "NA" : req.body.placementStatus;
 
-    console.log("placementStatus",placementStatus)
-
-    console.log(studentNumber);
     const student_acc = await user_account.findUnique({
       where: {
         student_uid: studentNumber,
@@ -126,17 +123,17 @@ router.post(
     const user = await user_account.findUnique({
       where: {
         username: req.body.username,
-
       },
     });
-
-    console.log("student_acc",student_acc)
 
     if (!student_acc) {
       res
         .status(400)
-        .json({ error: "Student account does not exist in the Placement System." });
+        .json({
+          error: "Student account does not exist in the Placement System.",
+        });
     }
+
     if (res !== undefined) {
       try {
         const placementRecord = await placement.update({
@@ -176,7 +173,7 @@ router.post(
           },
           data: {
             placement_status: placementStatus,
-            modified_by: user.username
+            modified_by: user.username,
           },
         });
 
@@ -310,8 +307,8 @@ router.get("/chatbox", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    console.log(student_info)
-    console.log(student_info.placement)
+    console.log(student_info);
+    console.log(student_info.placement);
 
     const chatRecords = await remarks.findMany({
       where: {
