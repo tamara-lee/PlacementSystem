@@ -357,9 +357,9 @@ function StudentRecords({ authorized, access }) {
   //  to sort by recently updated
   const handleRecentlyUpdated = () => {
     filteredRecords.sort(function (a, b) {
-      return a.last_modified < b.last_modified
+      return a.last_modified > b.last_modified
         ? -1
-        : a.last_modified > b.last_modified
+        : a.last_modified < b.last_modified
         ? 1
         : 0;
     });
