@@ -503,7 +503,9 @@ function MyPlacementRecord({ authorized }) {
       })
       .catch((error) => {
         // show fail pop up when there is an error in submitting the form
-        setOpenFail(true);
+        if (error) {
+          setOpenFail(true);
+        }
       });
   };
 
