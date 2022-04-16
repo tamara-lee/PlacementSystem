@@ -19,15 +19,15 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
-// get student number from url
-let search = window.location.search;
-let params = new URLSearchParams(search);
-const student_uid = params.get("studentNumber");
-
 const user_uid = localStorage.getItem("userUid");
 
 function EditStudentRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
+
+  // get student number from url
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  const student_uid = params.get("studentNumber");
 
   // executed when page is loaded
   // details in form from server

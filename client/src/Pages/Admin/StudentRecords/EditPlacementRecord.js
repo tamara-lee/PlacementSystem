@@ -27,18 +27,19 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
-// get query value from url
-let search = window.location.search;
-let params = new URLSearchParams(search);
-const student_uid = params.get("studentNumber");
-
 // constants
-const username = localStorage.getItem("username");
-const user_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
 
 function EditPlacementRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
+
+  const username = localStorage.getItem("username");
+  const user_uid = localStorage.getItem("userUid");
+
+  // get query value from url
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  const student_uid = params.get("studentNumber");
 
   // executed when page is loaded
   // get form details from server
@@ -201,7 +202,8 @@ function EditPlacementRecord({ authorized, access }) {
   const getRemarks = () => {
     Axios.get("http://localhost:3001/placementrecord/chatbox", {
       params: {
-        studentNumber: user_uid,
+        adminNumber: user_uid,
+        studentNumber: student_uid,
       },
     })
       .then((res) => {

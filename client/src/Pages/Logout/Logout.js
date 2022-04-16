@@ -12,7 +12,10 @@ function Logout() {
     Axios.get("http://localhost:3001/auth/logout")
       .then((response) => {
         if (response.data === "Logged Out") {
-          localStorage.setItem("userState", false);
+          localStorage.removeItem("userState");
+          localStorage.removeItem("userUid");
+          localStorage.removeItem("username");
+          localStorage.removeItem("userId");
           return history.push("/");
         }
       })

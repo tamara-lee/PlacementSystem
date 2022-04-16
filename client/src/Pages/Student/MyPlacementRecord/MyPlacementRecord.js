@@ -27,16 +27,18 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
-const username = localStorage.getItem("username");
-const student_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
 
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
 
+  const username = localStorage.getItem("username");
+  const student_uid = localStorage.getItem("userUid");
+
   // executed when page is loaded
   // check if user is still logged in
   // load form details and remarks
+
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login").catch((error) => {
       console.log(error.response);
