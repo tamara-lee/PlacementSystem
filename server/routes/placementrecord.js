@@ -32,7 +32,6 @@ const storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 const { empty } = require("@prisma/client/runtime");
-const { redirect } = require("express/lib/response");
 
 //return Placement Record information of student logged in
 router.get("/student", validateToken, async (req, res) => {
