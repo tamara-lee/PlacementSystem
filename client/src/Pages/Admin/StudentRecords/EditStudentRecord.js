@@ -27,7 +27,7 @@ const student_uid = params.get("studentNumber");
 
 const user_uid = localStorage.getItem("userUid");
 
-function EditStudentRecord({ authorized }) {
+function EditStudentRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
   useEffect(() => {
@@ -170,6 +170,11 @@ function EditStudentRecord({ authorized }) {
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
+  }
+
+  if (access !== "0000000000") {
+    console.log(authorized);
+    return <Redirect to="/student/mainpage" />;
   }
 
   return (

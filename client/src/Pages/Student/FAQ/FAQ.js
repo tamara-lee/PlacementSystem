@@ -190,7 +190,6 @@ function FAQ({ authorized }) {
         console.log(error);
       });
   };
-
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;

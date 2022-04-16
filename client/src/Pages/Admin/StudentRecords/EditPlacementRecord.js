@@ -36,7 +36,7 @@ const username = localStorage.getItem("username");
 const user_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
 
-function EditPlacementRecord({ authorized }) {
+function EditPlacementRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
   useEffect(() => {
@@ -526,6 +526,11 @@ function EditPlacementRecord({ authorized }) {
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
+  }
+
+  if (access !== "0000000000") {
+    console.log(authorized);
+    return <Redirect to="/student/mainpage" />;
   }
 
   return (

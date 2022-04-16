@@ -20,7 +20,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-function AddStudent({ authorized }) {
+function AddStudent({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
   useEffect(() => {
@@ -215,6 +215,11 @@ function AddStudent({ authorized }) {
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
+  }
+
+  if (access !== "0000000000") {
+    console.log(authorized);
+    return <Redirect to="/student/mainpage" />;
   }
 
   return (

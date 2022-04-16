@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./App.css";
 import Login from "./Pages/Login/Login";
-import Home from "./Home";
 import FAQ from "./Pages/Student/FAQ/FAQ";
+import MyPlacementRecord from "./Pages/Student/MyPlacementRecord/MyPlacementRecord";
 import AdminFAQ from "./Pages/Admin/AdminFAQ/AdminFAQ";
 import AddStudent from "./Pages/Admin/AddStudent/AddStudent";
 import StudentRecords from "./Pages/Admin/StudentRecords/StudentRecords";
 import EditPlacementRecord from "./Pages/Admin/StudentRecords/EditPlacementRecord";
 import EditStudentRecord from "./Pages/Admin/StudentRecords/EditStudentRecord";
 import Logout from "./Pages/Logout/Logout";
-import MyPlacementRecord from "./Pages/Student/MyPlacementRecord/MyPlacementRecord";
-import TestFileUpload from "./Pages/Admin/StudentRecords/TestFileUpload";
+
 import { BrowserRouter as Routes, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -19,16 +18,6 @@ function App() {
       <Routes>
         <Switch>
           <Route exact path="/" component={Login} />
-          {/* <Route exact path="/home" component={Home} /> */}
-          {/* <Route
-            exact
-            path="/home"
-            component={() => (
-              <Home
-                authorized={JSON.parse(localStorage.getItem("userState"))}
-              />
-            )}
-          /> */}
           <Route
             exact
             path="/student/mainpage"
@@ -38,14 +27,52 @@ function App() {
               />
             )}
           />
-          <Route exact path="/student/faq" component={FAQ} />
-          <Route exact path="/admin/faq" component={AdminFAQ} />
-          <Route exact path="/admin/addstudents" component={AddStudent} />
-          <Route exact path="/admin/mainpage" component={StudentRecords} />
+          <Route
+            exact
+            path="/student/faq"
+            component={() => (
+              <FAQ authorized={JSON.parse(localStorage.getItem("userState"))} />
+            )}
+          />
+          <Route
+            exact
+            path="/admin/faq"
+            component={() => (
+              <AdminFAQ
+                authorized={JSON.parse(localStorage.getItem("userState"))}
+                access={JSON.parse(localStorage.getItem("userUid"))}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/admin/addstudents"
+            component={() => (
+              <AddStudent
+                authorized={JSON.parse(localStorage.getItem("userState"))}
+                access={JSON.parse(localStorage.getItem("userUid"))}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/admin/mainpage"
+            component={() => (
+              <StudentRecords
+                authorized={JSON.parse(localStorage.getItem("userState"))}
+                access={JSON.parse(localStorage.getItem("userUid"))}
+              />
+            )}
+          />
           <Route
             exact
             path="/admin/edit/studentrecord"
-            component={EditStudentRecord}
+            component={() => (
+              <EditStudentRecord
+                authorized={JSON.parse(localStorage.getItem("userState"))}
+                access={JSON.parse(localStorage.getItem("userUid"))}
+              />
+            )}
           />
           <Route
             exact
@@ -53,10 +80,10 @@ function App() {
             component={() => (
               <EditPlacementRecord
                 authorized={JSON.parse(localStorage.getItem("userState"))}
+                access={JSON.parse(localStorage.getItem("userUid"))}
               />
             )}
           />
-          <Route exact path="/testfileupload" component={TestFileUpload} />
           <Route exact path="/logout" component={Logout} />
         </Switch>
       </Routes>
