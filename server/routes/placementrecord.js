@@ -1,17 +1,18 @@
 const express = require("express");
-const { createTokens, validateToken } = require("../JWT");
+// const { createTokens, validateToken } = require("../JWT");
+const { validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
 const { remarks } = new PrismaClient();
-const { test_acad_year } = new PrismaClient();
-const { test_placement_year } = new PrismaClient();
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 const router = require("express").Router();
 const cors = require("cors");
 const multer = require("multer");
+const fs = require("fs");
 
+//to store Appointment Letter, Consent Form and Feedback Form to server
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     if (file.fieldname === "appointment") {
@@ -26,61 +27,14 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, callback) {
-    //callback(null, file.originalname);
+    //to ensure every pdf name is unique
     callback(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
-    // callback(null, file.fieldname + "-undefined-" + file.originalname);
   },
 });
 var upload = multer({ storage: storage });
-const fs = require("fs");
 const { empty } = require("@prisma/client/runtime");
 
-router.post(
-  "/testpage",
-  upload.fields([
-    {
-      name: "appointment",
-      maxCount: 1,
-    },
-    {
-      name: "consent",
-      maxCount: 1,
-    },
-    {
-      name: "feedback",
-      maxCount: 1,
-    },
-  ]),
-  async (req, res) => {
-    // console.log(req.files["consent"]);
-    // console.log(req.file, req.body);
-    console.log(req);
-    // console.log(req.files);
-  }
-);
-/*router.post("/student/info", validateToken, async (req, res) => {
- // console.log(req.body);
-
-  //https://stackoverflow.com/questions/67410788/invalid-prisma-user-findunique-invocation
-  const studentNumber = req.body.studentNumber;
-
-  try {
-    const student_info = await student.findUnique({
-      where: {
-        student_uid: studentNumber,
-      },
-      include: {
-        placement: true,
-      },
-    });
-    res.json(student_info);
-	}
-	catch (error) {
-    console.error("Student not found!")
-		console.log(error);
-	}
-});*/
-
+//return Placement Record information of student logged in
 router.get("/student", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
@@ -91,34 +45,7 @@ router.get("/student", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    // const consentPDF = JSON.stringify(    {
-    //   fieldname: student_info.placement[0].consent_form,
-    // });
-
-    // const appointmentPDF = JSON.stringify(    {
-    //   fieldname: student_info.placement[0].appointment_letter,
-    //
-    //   // mimetype: 'application/pdf',
-    //   // destination: './upload/appointment',
-    //   // filename: 'appointment-1649750316368-中文.pdf',
-    //   // path: 'upload\\appointment\\appointment-1649750316368-中文.pdf',
-    //   // size: 1197183
-    // });
-
-    // const feedbackPDF = JSON.stringify(    {
-    //   fieldname: student_info.placement[0].feedback_form,
-    // });
-
-    // console.log("student_info.placement[0]",student_info.placement[0]),
     res.json(student_info);
-    // res.sendFile(placement.appointment_letter)
-
-    //  res.json({
-    //   student_info: student_info,
-    //   consent: consentPDF,
-    //   appointment: appointmentPDF,
-    //   feedback: feedbackPDF,
-    // });
   } catch (error) {
     console.error("Student not found!");
     console.log(error);
@@ -126,6 +53,7 @@ router.get("/student", validateToken, async (req, res) => {
   }
 });
 
+//update Placement Information of student logged in to database
 router.post(
   "/student",
   upload.fields([
@@ -144,50 +72,22 @@ router.post(
   ]),
   validateToken,
   async (req, res) => {
-    // upload(req, res, function (err) {
-    //fs.renameSync(req.files.appointment[0].path, req.files.appointment[0].path.replace('undefined', req.body.studentNumber));
-    //fs.renameSync(req.files.appointment[0].filename, req.files.appointment[0].filename.replace('undefined', req.body.studentNumber));
 
-    // This get the file and replace "undefined" with the req.body field.
-    // });
-    console.log(req);
-    console.log("___________________________________________-");
-    console.log("files");
-    console.log(req.files);
-    console.log("___________________________________________-");
-
-    console.log("files.appointment");
     let appoint_letter;
     if (req.files.appointment) {
-      console.log(req.files.appointment[0].path);
       appoint_letter = req.files.appointment[0].path;
     }
-    console.log("___________________________________________-");
-
-    console.log("files.feedback");
+   
     let feedback_letter;
     if (req.files.feedback) {
-      console.log(req.files.feedback[0].path);
       feedback_letter = req.files.feedback[0].path;
     }
-    console.log("___________________________________________-");
-
-    console.log("files.consent");
+    
     let consent_letter;
     if (req.files.consent) {
-      console.log(req.files.consent[0].path);
       consent_letter = req.files.consent[0].path;
     }
-    console.log("___________________________________________-");
 
-    // let salary_paid = null;
-    // if (req.body.salary != "") {
-    //   console.log(req.body.salary);
-    //   consent_letter = salary_paid;
-    // }
-    console.log("___________________________________________-");
-
-    //  console.log(req.files["consent"][0]);
     const studentName = req.body.studentName;
     const studentNumber = req.body.studentNumber;
     const studentCurriculum = req.body.studentCurriculum;
@@ -215,7 +115,6 @@ router.post(
     const feedbackComment = req.body.feedbackComment;
     const placementStatus = "null" ? "NA" : req.body.placementStatus;
 
-    //const username = await placement.findUnique({
     const user = await user_account.findUnique({
       where: {
         username: req.body.username,
@@ -249,8 +148,8 @@ router.post(
             job_title: jobTitle,
             job_nature: jobNature,
             employment_duration: employmentDuration,
-            start_date: startDate,
-            end_date: endDate,
+            start_date: new Date(startDate),
+            end_date: new Date(endDate),
             working_location: location,
             salary: salary,
             payment_type: paymentType,
@@ -264,23 +163,17 @@ router.post(
             consent_form: consentForm,
           },
         });
-        console.log(placementRecord);
         res.json(placementRecord);
       } catch (error) {
         console.error("Student does not exist in placement system!");
         console.log(error);
       }
     }
-
-    //to handle pdf upload
-    //https://stackoverflow.com/questions/23710355/store-the-uploaded-files-into-file-system-in-express-js
-
-    //to hand accessing of pdf files in express
-    //https://expressjs.com/en/starter/static-files.html
   }
 );
-//to hand accessing of pdf files in express
-//https://expressjs.com/en/starter/static-files.html
+
+//query Appointment Letter path (stored in the database) of a student based on their UID
+//send Appointment Letter as response to frontend for download
 router.get("/appointment_pdf", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
@@ -299,6 +192,8 @@ router.get("/appointment_pdf", validateToken, async (req, res) => {
   }
 });
 
+//query Consent Form path (stored in the database) of a student based on their UID
+//send  Consent Form as response to frontend for download
 router.get("/consent_pdf", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
@@ -317,6 +212,8 @@ router.get("/consent_pdf", validateToken, async (req, res) => {
   }
 });
 
+//query Feedback Form path (stored in the database) of a student based on their UID
+//send  Feedback Form as response to frontend for download
 router.get("/feedback_pdf", validateToken, async (req, res) => {
   try {
     const student_info = await student.findUnique({
@@ -335,6 +232,8 @@ router.get("/feedback_pdf", validateToken, async (req, res) => {
   }
 });
 
+//store remarks sent by user logged in (could be student or admin) to the database
+//user account the remark is sent to will also be stored
 router.post("/chatbox", validateToken, async (req, res) => {
   console.log("req.body", req.body);
   try {
@@ -347,28 +246,16 @@ router.post("/chatbox", validateToken, async (req, res) => {
         username: true,
       },
     });
-    console.log("sender_account", sender_account);
 
-    // } catch (error){
-    //   console.log(error)
-
-    // }
-
-    // try {
     const student_info = await student.findUnique({
       where: {
-        // student_uid: req.query.studentNumber,
         student_uid: req.body.student_uid,
       },
       include: {
         placement: true,
       },
     });
-    console.log(student_info.placement[0].placement_id);
-    // } catch (error){
-    //   console.log(error)
-    // }
-    // try {
+ 
     const newRemark = await remarks.create({
       data: {
         user_account: {
@@ -390,13 +277,10 @@ router.post("/chatbox", validateToken, async (req, res) => {
   }
 });
 
-//if req.body.account_id matches admin_account's account_id,
-//then store admin_account's account_id in account_id field && sent_to: student_account's uid or username
-//else store student_account's account_id in account_field && sent_to: admin_account's uid or username
-
-// either way store student's placement_id in placement_id field
-
+//get all remarks sent between a student and the admin 
+//and pass all queried remarks as a response to the frontend
 router.get("/chatbox", validateToken, async (req, res) => {
+  console.log("req.query",req.query)
   try {
     const student_info = await student.findUnique({
       where: {
@@ -406,12 +290,7 @@ router.get("/chatbox", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    console.log(student_info.placement[0].placement_id);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    // try {
+    
     const chatRecords = await remarks.findMany({
       where: {
         placement_id: student_info.placement[0].placement_id,
@@ -423,4 +302,5 @@ router.get("/chatbox", validateToken, async (req, res) => {
     res.json({ status: "success", message: "Failed to retrieve messages!" });
   }
 });
+
 module.exports = router;

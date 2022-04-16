@@ -1,13 +1,16 @@
 const express = require("express");
-const { createTokens, validateToken } = require("../JWT");
+// const { createTokens, validateToken } = require("../JWT");
+const { validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 const router = require("express").Router();
-const cors = require("cors");
+// const cors = require("cors");
 
+//for admin to add individual student records manually 
+//placement record is automatically created for the student when the student record is added to the database
 router.post("/admin", validateToken, async (req, res) => {
   console.log(req.body);
   //to get name of modifier (user who is adding the student record(s))
@@ -32,15 +35,12 @@ router.post("/admin", validateToken, async (req, res) => {
   // console.log(student_account)
 
   //create placement record here
-  //if (res !== undefined) {
   if (req !== undefined) {
     try {
       const newStudent = await student.create({
         data: {
           user_account: {
            connect: { account_id: student_account.account_id },
-            // connect: { username: student_account.username },
-
           },
           student_uid: req.body.universityNumber,
           english_name: req.body.name,
@@ -55,8 +55,6 @@ router.post("/admin", validateToken, async (req, res) => {
         data: {
           user_account: {
            connect: { account_id: student_account.account_id },
-          //  connect: { username: student_account.username },
-
           },
           student: {
             connect: { student_uid: req.body.universityNumber },
@@ -68,7 +66,7 @@ router.post("/admin", validateToken, async (req, res) => {
           creation_time: new Date(Date.now()),
         },
       });
-      console.log("newPlacementRecord",newPlacementRecord);
+      // console.log("newPlacementRecord",newPlacementRecord);
       res.json({
         status: "success",
         message: "Successfully added student record!",
@@ -81,26 +79,6 @@ router.post("/admin", validateToken, async (req, res) => {
           "Failed to upload student record! Student's user account does not exist in the system!",
       });
     }
-
-    //   try {
-    //     const newPlacementRecord = await placement.create({
-    //       data: {
-    //         user_account: {
-    //           connect: { account_id: student_account.account_id },
-    //         },
-    //         student: {
-    //           connect: { student_uid: req.body.universityNumber },
-    //         },
-    //         placement_year: req.body.placementYear,
-    //         created_by: modifier.username,
-    //         modified_by: modifier.username,
-    //         creation_time: new Date(Date.now()),
-    //       },
-    //     });
-    //     console.log(newPlacementRecord);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
   }
 });
 
