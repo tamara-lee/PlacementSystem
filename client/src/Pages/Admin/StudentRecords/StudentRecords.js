@@ -46,7 +46,7 @@ const student_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
 const admin_id = localStorage.getItem("admin_uid");
 
-function StudentRecords({ authorized }) {
+function StudentRecords({ authorized, access }) {
   const history = useHistory();
 
   Axios.defaults.withCredentials = true;
@@ -507,6 +507,11 @@ function StudentRecords({ authorized }) {
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
+  }
+
+  if (access !== "0000000000") {
+    console.log(authorized);
+    return <Redirect to="/student/mainpage" />;
   }
 
   return (

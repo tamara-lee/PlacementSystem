@@ -204,7 +204,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-function FAQ({ authorized }) {
+function FAQ({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
   useEffect(() => {
@@ -502,6 +502,11 @@ function FAQ({ authorized }) {
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
+  }
+
+  if (access !== "0000000000") {
+    console.log(authorized);
+    return <Redirect to="/student/mainpage" />;
   }
 
   return (
