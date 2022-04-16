@@ -3,20 +3,20 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
-const multer = require("multer");
-const fs = require("fs");
-
+// const multer = require("multer");
+// const fs = require("fs");
 const cookieParser = require("cookie-parser");
-const { createTokens, validateToken } = require("./JWT");
-//const session = require("express-session");
+// const { createTokens, validateToken } = require("./JWT");
 
 //automatically parse every json object from the frontend
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//app.use(multer().any());
 
+//Cross-Origin Resource Sharing (cors): HTTP-header based mechanism 
+//that allows a server to indicate any origins (domain, scheme, or port) other than its own 
+//from which a browser should permit loading resources.
 app.use(
   cors({
     origin: ["http://localhost:3000"],
@@ -35,9 +35,7 @@ const importExcelRouter = require("./routes/importexcel");
 const exportExcelRouter = require("./routes/exportexcel");
 const mainpageRouter = require("./routes/mainpage");
 
-
-
-//app.use("/", authRouter);
+//each app.use(middleware) is called every time a request is sent to the server.
 app.use("/auth", authRouter);
 app.use("/placementrecord", placementRouter);
 app.use("/addstudents", addStudentsRouter);
@@ -47,10 +45,6 @@ app.use("/importexcel", importExcelRouter);
 app.use("/exportexcel", exportExcelRouter);
 app.use("/mainpage", mainpageRouter);
 
-
-app.get("/home", validateToken, (req, res) => {
-  res.json("home");
-});
 
 app.listen(3001, () => {
   console.log("Server running on port 3001");

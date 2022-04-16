@@ -1,15 +1,16 @@
 const express = require("express");
-const { createTokens, validateToken } = require("../JWT");
+// const { createTokens, validateToken } = require("../JWT");
+const { validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
-const router = require("express").Router();
-const cors = require("cors");
+// const cors = require("cors");
 const { user_account } = new PrismaClient();
 const { faq } = new PrismaClient();
+const router = require("express").Router();
 
+//create new FAQ which includes both questions and answers
 router.post("/admin", validateToken, async (req, res) => {
   const modifier = await user_account.findUnique({
     where: {
-      //find record req.body.username in username foreign key field in placement model
       username: req.body.username,
     },
   });
@@ -30,11 +31,10 @@ router.post("/admin", validateToken, async (req, res) => {
     res
       .status(400)
       .json({ status: "success", message: "Failed to submit new FAQ!" });
-    // console.log(error);
   }
 });
 
-//returns all existing FAQ fields
+//returns all existing FAQs to the frontend
 router.get("/", validateToken, async (req, res) => {
   try {
     const allFAQs = await faq.findMany();
@@ -44,8 +44,8 @@ router.get("/", validateToken, async (req, res) => {
   }
 });
 
+//to edit or update a specific FAQ
 router.put("/admin", validateToken, async (req, res) => {
-  // console.log(req.body);
   const modifier = await user_account.findUnique({
     where: {
       username: req.body.username,
@@ -67,7 +67,6 @@ router.put("/admin", validateToken, async (req, res) => {
         cat: req.body.cat,
       },
     });
-    // console.log(updatedFAQ);
     res.json({ status: "success", message: "FAQ successfully edited!" });
   } catch (error) {
     console.log(error);
@@ -75,6 +74,7 @@ router.put("/admin", validateToken, async (req, res) => {
   }
 });
 
+//to delete a specific FAQ
 router.delete("/admin", validateToken, async (req, res) => {
   try {
     const deletedFAQ = await faq.delete({

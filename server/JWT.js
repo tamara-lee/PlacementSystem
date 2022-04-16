@@ -1,5 +1,4 @@
 var jwtsecretkey = process.env.JWT_SECRET_KEY;
-//var jwtsecretkey = ${process.env.JWT_SECRET_KEY};
 const { sign, verify } = require("jsonwebtoken");
 
 const createTokens = (user) => {
@@ -9,8 +8,6 @@ const createTokens = (user) => {
       username: user.username,
       id: user.id,
     },
-    //"tempjwtsecretkey",
-    //jwtsecretkey,
     process.env.JWT_SECRET_KEY,
     { expiresIn: "5h" }
   );
@@ -18,7 +15,7 @@ const createTokens = (user) => {
   return accessToken;
 };
 
-//middleware: func that runs before a request
+//middleware: function that runs before all requests made to the server to ensure user is logged in and authenticated
 const validateToken = (req, res, next) => {
   const accessToken = req.cookies["access-token-cookie"];
 
@@ -29,7 +26,6 @@ const validateToken = (req, res, next) => {
   }
 
   try {
-    //const validToken = verify(accessToken, "tempjwtsecretkey")
     const validToken = verify(accessToken, process.env.JWT_SECRET_KEY);
     if (validToken) {
       //create authenticate variable, and set it to true

@@ -2,19 +2,19 @@ const express = require("express");
 const { createTokens, validateToken } = require("../JWT");
 const { PrismaClient } = require('@prisma/client');
 const { user_account } = new PrismaClient();
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 const router = require("express").Router();
-const cors = require("cors");
+// const cors = require("cors");
 
+    //notifies the frontend that user is authenticated and logged in
     router.get("/login", validateToken, (req, res) => {
     res.json("Logged In");
   });
 
+  //when a user logs into the Placement System, first check if the username exists
+  //if yes, then verify their password in the database 
+  //and create a JWT Token for the user session
     router.post("/login", async (req, res) => {
-
-    //const username = req.body.username;
-    //const password = req.body.password;
-
     const user = await user_account.findUnique({ 
       where: { 
         username: req.body.username,
@@ -27,7 +27,7 @@ const cors = require("cors");
        const systemPassword = user.password;
        const studentId = user.student_uid;
   
-    //compared entered password vs db password
+    //compared entered password vs password stored in database
     if (req.body.password != systemPassword) {
       res.status(400).json({
         error:
@@ -52,6 +52,8 @@ const cors = require("cors");
     }
   });
 
+  //expires the cookie holding JWT Token 
+  //so that an user session ends when a user logs out of the Placement System
   router.get("/logout", validateToken, (req, res) => {
     res.cookie("access-token-cookie", "", { maxAge: 1 });
     res.json("Logged Out"); 
