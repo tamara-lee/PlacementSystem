@@ -29,6 +29,7 @@ const Container = styled.div`
 
 // constants
 const account_id = localStorage.getItem("userId");
+const user_uid = localStorage.getItem("userUid");
 
 function EditPlacementRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
@@ -222,7 +223,7 @@ function EditPlacementRecord({ authorized, access }) {
       remark: remarkState,
     })
       .then((res) => {
-        console.log(res.data.message);
+        setRemarkState("");
         getRemarks();
       })
       .catch((error) => {
@@ -1046,7 +1047,8 @@ function EditPlacementRecord({ authorized, access }) {
 function RemarkMessage(props) {
   let messageClass = "sent";
 
-  if (account_id === props.remark.sent_to) {
+  console.log(props);
+  if (user_uid === props.remark.sent_to) {
     messageClass = "received";
   } else {
     messageClass = "sent";

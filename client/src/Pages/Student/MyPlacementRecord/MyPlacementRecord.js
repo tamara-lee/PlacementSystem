@@ -28,6 +28,7 @@ const Container = styled.div`
 `;
 
 const account_id = localStorage.getItem("userId");
+const student_uid = localStorage.getItem("userUid");
 
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
@@ -1037,7 +1038,7 @@ function MyPlacementRecord({ authorized }) {
 function RemarkMessage(props) {
   let messageClass = "sent";
 
-  if (account_id === props.remark.sent_to) {
+  if (student_uid === props.remark.sent_to) {
     messageClass = "received";
   } else {
     messageClass = "sent";
