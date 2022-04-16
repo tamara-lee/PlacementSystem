@@ -32,6 +32,7 @@ const storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 const { empty } = require("@prisma/client/runtime");
+// const { redirect } = require("express/lib/response");
 
 //return Placement Record information of student logged in
 router.get("/student", validateToken, async (req, res) => {
@@ -77,12 +78,12 @@ router.post(
     if (req.files.appointment) {
       appoint_letter = req.files.appointment[0].path;
     }
-   
+
     let feedback_letter;
     if (req.files.feedback) {
       feedback_letter = req.files.feedback[0].path;
     }
-    
+
     let consent_letter;
     if (req.files.consent) {
       consent_letter = req.files.consent[0].path;
@@ -115,19 +116,20 @@ router.post(
     const feedbackComment = req.body.feedbackComment;
     const placementStatus = "null" ? "NA" : req.body.placementStatus;
 
+    console.log(studentNumber);
+    const student_acc = await user_account.findUnique({
+      where: {
+        student_uid: studentNumber,
+      },
+    });
+
     const user = await user_account.findUnique({
       where: {
         username: req.body.username,
 
       },
     });
-    const student_acc = await user_account.findUnique({
-      where: {
-        // username: req.body.username,
-        student_uid: studentNumber,
 
-      },
-    });
     console.log("student_acc",student_acc)
 
     if (!student_acc) {
@@ -135,20 +137,19 @@ router.post(
         .status(400)
         .json({ error: "Student account does not exist in the Placement System." });
     }
-
-    if (req !== undefined) {
+    // console.log(student_acc);
+    if (res !== undefined) {
       try {
         // do parse
+        console.log(student_acc);
+        console.log(user);
         const placementRecord = await placement.update({
           where: {
-            student_uid: student_acc.student_uid,
+            username: student_acc.username,
           },
           data: {
             student: {
-              connect: { student_uid: studentNumber },
-              // update: {
-              //   placement_status: placementStatus,
-              // },
+              connect: { student_uid: student_acc.student_uid },
             },
             appointment_letter: appointmentLetter,
             feedback_form: feedbackForm,
@@ -166,29 +167,31 @@ router.post(
             supervisor_telephone: supervisorPhone,
             supervisor_email: supervisorEmail,
             user_account: {
-              connect: { account_id: user.account_id },
+              connect: { account_id: student_acc.account_id },
             },
             modified_by: user.username,
             consent_form: consentForm,
           },
         });
-        res.json(placementRecord);
-        console.log("placementRecord",placementRecord)
+        // res.json(placementRecord);
 
         const student_placement_status = await student.update({
-          where:{
+          where: {
             student_uid: student_acc.student_uid,
           },
           data: {
-            placement_status: placementStatus
+            placement_status: placementStatus,
           },
-
         });
 
+        res.json({
+          status: "success",
+          message: "Successfully updated record!",
+        });
       } catch (error) {
         console.error("Student does not exist in placement system!");
         console.log(error);
-        res.status(400).json(error)
+        res.status(400).json(error);
       }
     }
   }
@@ -277,7 +280,7 @@ router.post("/chatbox", validateToken, async (req, res) => {
         placement: true,
       },
     });
- 
+
     const newRemark = await remarks.create({
       data: {
         user_account: {
@@ -299,7 +302,7 @@ router.post("/chatbox", validateToken, async (req, res) => {
   }
 });
 
-//get all remarks sent between a student and the admin 
+//get all remarks sent between a student and the admin
 //and pass all queried remarks as a response to the frontend
 router.get("/chatbox", validateToken, async (req, res) => {
   try {
@@ -311,7 +314,7 @@ router.get("/chatbox", validateToken, async (req, res) => {
         placement: true,
       },
     });
-    
+
     const chatRecords = await remarks.findMany({
       where: {
         placement_id: student_info.placement[0].placement_id,

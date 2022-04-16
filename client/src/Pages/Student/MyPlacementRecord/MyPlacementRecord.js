@@ -406,104 +406,12 @@ function MyPlacementRecord({ authorized }) {
     Axios.post("http://localhost:3001/placementrecord/student", formData)
       .then((res) => {
         setOpenSuccess(true);
-        setCompanyName(
-          res.data.placement[0].company_name == null
-            ? undefined
-            : res.data.placement[0].company_name
-        );
-        setJobTitle(
-          res.data.placement[0].job_title == null
-            ? undefined
-            : res.data.placement[0].job_title
-        );
-        setJobNature(
-          res.data.placement[0].job_nature == null
-            ? undefined
-            : res.data.placement[0].job_nature
-        );
-        setStartDate(
-          res.data.placement[0].start_date == null
-            ? undefined
-            : res.data.placement[0].start_date
-        );
-        setEndDate(
-          res.data.placement[0].end_date == null
-            ? undefined
-            : res.data.placement[0].end_date
-        );
-        setPeriod([
-          res.data.placement[0].start_date == null
-            ? undefined
-            : res.data.placement[0].start_date,
-          res.data.placement[0].end_date == null
-            ? undefined
-            : res.data.placement[0].end_date,
-        ]);
-        setDuration(
-          res.data.placement[0].employment_duration == null
-            ? undefined
-            : res.data.placement[0].employment_duration
-        );
-        setLocation(
-          res.data.placement[0].working_location == null
-            ? undefined
-            : res.data.placement[0].working_location
-        );
-        setPaymentType(
-          res.data.placement[0].payment_type == "n"
-            ? "unpaid"
-            : res.data.placement[0].payment_type
-        );
-        setSalary(
-          res.data.placement[0].salary == null
-            ? undefined
-            : res.data.placement[0].salary
-        );
-        setSupervisorName(
-          res.data.placement[0].supervisor_name == null
-            ? undefined
-            : res.data.placement[0].supervisor_name
-        );
-        setSupervisorPhone(
-          res.data.placement[0].supervisor_telephone == null
-            ? undefined
-            : res.data.placement[0].supervisor_telephone
-        );
-        setSupervisorEmail(
-          res.data.placement[0].supervisor_email == null
-            ? undefined
-            : res.data.placement[0].supervisor_email
-        );
-        setConsentForm(
-          res.data.placement[0].consent_form == null
-            ? undefined
-            : res.data.placement[0].consent_form
-        );
-        setAppointmentLetter(
-          res.data.placement[0].appointment_letter == null
-            ? undefined
-            : res.data.placement[0].appointment_letter
-        );
-        setFeedbackForm(
-          res.data.placement[0].feedback_form == null
-            ? undefined
-            : res.data.placement[0].feedback_form
-        );
-        setFeedbackComment(
-          res.data.placement[0].feedback_comment == null
-            ? undefined
-            : res.data.placement[0].feedback_comment
-        );
-        setPlacementStatus(
-          res.data.placement_status == null
-            ? "waiting"
-            : res.data.placement_status
-        );
         getForm();
       })
       .catch((error) => {
         // show fail pop up when there is an error in submitting the form
         if (error) {
+          console.log(error);
           setOpenFail(true);
         }
       });
