@@ -211,6 +211,7 @@ function EditStudentRecord({ authorized, access }) {
               onChange={(e) => {
                 setStudentName(e.target.value);
               }}
+              disabled
             />
             <label htmlFor="studentNo">
               UNIVERSITY NUMBER
@@ -238,6 +239,7 @@ function EditStudentRecord({ authorized, access }) {
                   setShowUidErrorMsg(true);
                 }
               }}
+              disabled
             />
             <label htmlFor="curriculum">CURRICULUM</label>
             <select
