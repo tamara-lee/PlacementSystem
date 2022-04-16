@@ -3,10 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
-// const multer = require("multer");
-// const fs = require("fs");
 const cookieParser = require("cookie-parser");
-// const { createTokens, validateToken } = require("./JWT");
 
 //automatically parse every json object from the frontend
 app.use(express.json());
