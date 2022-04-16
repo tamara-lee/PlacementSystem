@@ -48,6 +48,12 @@ You may change the provider according to the database you are using in the **sch
 
 Ensure to not directly configure the database url in **schema.prisma**, instead, change it in the **.env** file.
 
+## Deployment Configurations
+
+Before deployment, ensure that the **.env** and **node_modules** under the _server_ and _client_ folder are added to the _.gitignore_ file.
+
+- Ensure that the **JWT_SECRET_KEY** in the **.env** file is modified for security reasons.
+
 ## How to Use
 
 #### Login as Admin
