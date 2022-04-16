@@ -1,5 +1,4 @@
 const express = require("express");
-// const { createTokens, validateToken } = require("../JWT");
 const { validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
@@ -8,7 +7,7 @@ const { student } = new PrismaClient();
 const { remarks } = new PrismaClient();
 // const prisma = new PrismaClient();
 const router = require("express").Router();
-const cors = require("cors");
+// const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 
@@ -167,6 +166,7 @@ router.post(
       } catch (error) {
         console.error("Student does not exist in placement system!");
         console.log(error);
+        res.status(400).json(error)
       }
     }
   }
@@ -280,7 +280,6 @@ router.post("/chatbox", validateToken, async (req, res) => {
 //get all remarks sent between a student and the admin 
 //and pass all queried remarks as a response to the frontend
 router.get("/chatbox", validateToken, async (req, res) => {
-  console.log("req.query",req.query)
   try {
     const student_info = await student.findUnique({
       where: {

@@ -1,26 +1,22 @@
 const express = require("express");
-const { createTokens, validateToken } = require("../JWT");
+// const { createTokens, validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
-const { user_account } = new PrismaClient();
-const { placement } = new PrismaClient();
+const { validateToken } = require("../JWT");
+// const { user_account } = new PrismaClient();
+// const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 const router = require("express").Router();
 const flatten = require("flat");
 const xlsx = require("xlsx");
 
+//export excel file with dynamically generated columns which are generated based on the admin's selection of fields 
 router.post("/", validateToken, async (req, res) => {
   console.log("request_body", req.body);
   console.log(
     "req.body.export_fields.placement_id",
     req.body.export_fields.placement_id
   );
-
-  // const {  placement_id, placement_year, acad_year, username, student_uid, english_name
-  //     ,curriculum, job_title, company_name, job_nature, start_date, end_date, employment_duration,
-  //     working_location, payment_type, salary, supervisor_name, supervisor_telephone, supervisor_email,
-  //     consent_form, appointment_letter, feedback_form, feedback_comment, placement_status
-  // } = req.body
 
   const academic_year = req.body.academic_year;
 
@@ -96,21 +92,9 @@ router.post("/", validateToken, async (req, res) => {
         },
       },
     });
-    // console.log("export_record", export_record[0].placement);
-    // console.log("export_record.length", export_record.length);
-
-    // const export_record_flatten = flatten({
-    //   placement,
-    // });
-    // console.log(export_record_flatten);
 
     result = [];
     filtered = [];
-    // export_record[0].forEach((element) => {
-    //   console.log(element);
-    // });
-
-    console.log(flatten(export_record[0]));
 
     let totalResult = [];
 
@@ -119,10 +103,8 @@ router.post("/", validateToken, async (req, res) => {
       function format(obj, position) {
         for (let key in obj) {
           let val = obj[key];
-        //   let newKey = position ? position + "." + key : key;
           let newKey = key;
 
-          // console.log("val type", typeof val);
           if (val && typeof val === "object") {
             format(val, newKey);
           } else {
@@ -137,43 +119,6 @@ router.post("/", validateToken, async (req, res) => {
     for (let i = 0; i < export_record.length; i++) {
       totalResult.push(formatter(export_record[i]));
     }
-
-    console.log(totalResult);
-
-    // export_record.forEach((element) => {
-    //   element.placement.forEach((placement) => {
-    //     console.log(element.placement.length);
-
-    //     result.push({
-    //       placement_id: placement.placement_id,
-    //       placement_year: placement.placement_year,
-    //       acad_year: element.acad_year,
-    //       username: placement.username,
-    //       student_uid: placement.student_uid,
-    //       english_name: element.english_name,
-    //       curriculum: element.curriculum,
-    //       job_title: placement.job_title,
-    //       company_name: placement.company_name,
-    //       job_nature: placement.job_nature,
-    //       start_date: placement.start_date,
-    //       end_date: placement.end_date,
-    //       employment_duration: placement.employment_duration,
-    //       working_location: placement.working_location,
-    //       payment_type: placement.payment_type,
-    //       salary: placement.salary,
-    //       supervisor_name: placement.supervisor_name,
-    //       supervisor_telephone: placement.supervisor_telephone,
-    //       supervisor_email: placement.supervisor_email,
-    //       consent_form: placement.consent_form,
-    //       appointment_letter: placement.appointment_letter,
-    //       feedback_form: placement.feedback_form,
-    //       feedback_comment: placement.feedback_comment,
-    //       placement_status: element.placement_status,
-    //     });
-    //   });
-    // });
-
-    // console.log(result);
 
     const convertJsonToExcel = () => {
       const workSheet = xlsx.utils.json_to_sheet(totalResult);
