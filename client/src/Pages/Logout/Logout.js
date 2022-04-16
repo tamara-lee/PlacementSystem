@@ -6,10 +6,11 @@ function Logout() {
   const history = useHistory();
 
   Axios.defaults.withCredentials = true;
+
+  // logs user out when executed
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/logout")
       .then((response) => {
-        console.log(response);
         if (response.data === "Logged Out") {
           localStorage.setItem("userState", false);
           return history.push("/");

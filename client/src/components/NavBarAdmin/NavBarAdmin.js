@@ -12,12 +12,10 @@ import "./style.css";
 import { styled } from "@mui/material/styles";
 import logo from "../../images/logo.png";
 import { NavLink, useHistory } from "react-router-dom";
-import Button from "@mui/material/Button";
-
-const pages = ["My Placement Record", "FAQ"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const NavigationBar = () => {
+  const history = useHistory();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -36,21 +34,15 @@ const NavigationBar = () => {
     setAnchorElNav(null);
   };
 
-  const history = useHistory();
-
   const logoutFunction = () => {
-    // console.log("Logout button clicked!");
     return history.push("/logout");
-  };
-
-  const toggleFunction = () => {
-    alert("Switch button clicked!");
   };
 
   return (
     <StyledAppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* for desktop view */}
           <Typography
             variant="h5"
             noWrap
@@ -159,7 +151,7 @@ const NavigationBar = () => {
               </StyledNavLink>
             </Box>
           </div>
-
+          {/* for mobile view */}
           <Box
             noWrap
             sx={{
@@ -235,21 +227,6 @@ const NavigationBar = () => {
                   </Typography>
                 </StyledNavLink>
               </MenuItem>
-              {/* <MenuItem>
-                <StyledNavLink to="/faq" sx={{ textDecoration: "none" }}>
-                  <Typography
-                    textAlign="center"
-                    onClick={toggleFunction}
-                    sx={{
-                      display: { xs: "flex", md: "none" },
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                  >
-                    Switch to Student View
-                  </Typography>
-                </StyledNavLink>
-              </MenuItem> */}
             </Menu>
           </Box>
           <div className="mobile-header">
@@ -276,24 +253,6 @@ const NavigationBar = () => {
               Internship Placement System
             </Typography>
           </div>
-          {/* <Box>
-            <Typography
-              textAlign="center"
-              onClick={toggleFunction}
-              sx={{
-                display: { xs: "none", md: "flex" },
-                position: "relative",
-                right: "0rem",
-                width: "auto",
-                marginTop: "-2rem",
-                "&:hover": {
-                  color: "black",
-                },
-              }}
-            >
-              Switch to Student View
-            </Typography>
-          </Box> */}
           <Box sx={{ flexGrow: 0 }}>
             <Typography
               textAlign="center"

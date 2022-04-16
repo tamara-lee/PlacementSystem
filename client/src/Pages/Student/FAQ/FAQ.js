@@ -4,16 +4,15 @@ import "./style.css";
 import { Tab, Tabs, Typography, Box } from "@mui/material";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import { MdExpandMore } from "react-icons/md";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import faqList from "../../../mock data/MOCK_DATA.json";
 import TextField from "@mui/material/TextField";
 import Axios from "axios";
 
+// function for tabs in faq (for each category in the menu)
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -48,6 +47,7 @@ function a11yProps(index) {
   };
 }
 
+// styling of tabs and accordion
 const StyledTab = styled(Tab)(({ theme }) => ({
   minWidth: "15rem",
   "&.Mui-selected": {
@@ -144,6 +144,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 function FAQ({ authorized }) {
   Axios.defaults.withCredentials = true;
 
+  // check if user is authenticated and load all faqs
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -161,44 +162,44 @@ function FAQ({ authorized }) {
     getFAQ();
   }, []);
 
+  // constants
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState("panel1");
   const [searchTerm, setSearchTerm] = useState("");
-  // const faqList = [{}];
-
-  // handle search
-
   const [faqList, setFaqList] = useState([]);
-  const username = localStorage.getItem("username");
-  const account_id = localStorage.getItem("userId");
 
+  // handle tab change
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  // handle accordion change
   const handleAccordionChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
+  // get all faqs
   const getFAQ = () => {
     Axios.get("http://localhost:3001/faq")
       .then((res) => {
         setFaqList(res.data);
-        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+  // check log in status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
-  console.log(faqList);
+
   return (
     <>
       <div>
         <NavigationBar />
+        {/* desktop view */}
         <Box
           sx={{
             flexGrow: 1,
@@ -222,6 +223,7 @@ function FAQ({ authorized }) {
               marginTop: "7rem",
             }}
           >
+            {/* fixed number of categories in the menu */}
             <StyledTab label="General" {...a11yProps(0)} />
             <StyledTab label="Uploading Documents" {...a11yProps(1)} />
             <StyledTab label="Placement Supervisor" {...a11yProps(2)} />
@@ -229,6 +231,7 @@ function FAQ({ authorized }) {
           <div>
             <div className="faq-header">
               <p>Frequently Asked Questions</p>
+              {/* search field */}
               <TextField
                 id="filled-search"
                 label="Search..."
@@ -246,6 +249,7 @@ function FAQ({ authorized }) {
               />
             </div>
             <div>
+              {/* tabs */}
               <TabPanel value={value} index={0}>
                 {faqList
                   .filter((val) => {
@@ -263,7 +267,6 @@ function FAQ({ authorized }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "0") {
                       return (
                         <Accordion
@@ -302,7 +305,6 @@ function FAQ({ authorized }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "1") {
                       return (
                         <Accordion
@@ -341,7 +343,6 @@ function FAQ({ authorized }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "2") {
                       return (
                         <Accordion
@@ -366,6 +367,7 @@ function FAQ({ authorized }) {
             </div>
           </div>
         </Box>
+        {/* mobile view */}
         <Box
           sx={{
             flexGrow: 0,
@@ -395,6 +397,7 @@ function FAQ({ authorized }) {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+            {/* fixed categories in menu */}
             <StyledTabsMobile value={value} onChange={handleTabChange} centered>
               <StyledTabMobile label="General" {...a11yProps(0)} />
               <StyledTabMobile label="Uploading Documents" {...a11yProps(1)} />
@@ -418,7 +421,6 @@ function FAQ({ authorized }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "0") {
                       return (
                         <Accordion
@@ -457,7 +459,6 @@ function FAQ({ authorized }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "1") {
                       return (
                         <Accordion
@@ -496,7 +497,6 @@ function FAQ({ authorized }) {
                     }
                   })
                   .map((val, key) => {
-                    //faqList must be sorted in the backend
                     while (val.cat === "2") {
                       return (
                         <Accordion

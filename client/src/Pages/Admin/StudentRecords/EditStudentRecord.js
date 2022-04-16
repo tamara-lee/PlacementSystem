@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import Axios from "axios";
-import "react-toastify/dist/ReactToastify.css";
 import NavigationBar from "../../../components/NavBarAdmin/NavBarAdmin";
 import { Redirect } from "react-router-dom";
 import "./style.css";
@@ -21,6 +19,7 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
+// get student number from url
 let search = window.location.search;
 let params = new URLSearchParams(search);
 const student_uid = params.get("studentNumber");
@@ -30,6 +29,8 @@ const user_uid = localStorage.getItem("userUid");
 function EditStudentRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
+  // executed when page is loaded
+  // details in form from server
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -46,7 +47,7 @@ function EditStudentRecord({ authorized, access }) {
     getForm();
   }, []);
 
-  // sample text
+  // student fields
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [studentCurriculum, setStudentCurriculum] = useState("BEng(CompSc)");
@@ -54,6 +55,7 @@ function EditStudentRecord({ authorized, access }) {
   const [placementYear, setPlacementYear] = useState("");
   const [courseYear, setCourseYear] = useState("");
 
+  // get form details by calling api
   const getForm = () => {
     Axios.get("http://localhost:3001/placementrecord/student", {
       params: {
@@ -74,6 +76,7 @@ function EditStudentRecord({ authorized, access }) {
       });
   };
 
+  // field checking
   const checkUniversityNumber = (e) => {
     if (/^\d\d\d\d\d\d\d\d\d\d$/.test(e)) {
       return true;
@@ -98,16 +101,19 @@ function EditStudentRecord({ authorized, access }) {
     }
   };
 
+  // constants for error messages
   const [showUidErrorMsg, setShowUidErrorMsg] = useState(false);
   const [showAcademicErrorMsg, setShowAcademicErrorMsg] = useState(false);
   const [showPlacementErrorMsg, setShowPlacementErrorMsg] = useState(false);
   const [showCourseErrorMsg, setShowCourseErrorMsg] = useState(false);
 
+  // constants for pop-ups
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFail, setOpenFail] = useState(false);
 
+  // handle pop-ups
   const handleCloseError = () => {
     setOpenError(false);
   };
@@ -124,6 +130,7 @@ function EditStudentRecord({ authorized, access }) {
     setOpenFail(false);
   };
 
+  // check no errors before submit form
   const submitForm = () => {
     if (
       !studentName &&
@@ -145,6 +152,8 @@ function EditStudentRecord({ authorized, access }) {
     }
   };
 
+  // confirm to submit form
+  // call put api to update record
   const confirmSubmitForm = () => {
     handleCloseConfirmation();
 
@@ -167,11 +176,13 @@ function EditStudentRecord({ authorized, access }) {
       });
   };
 
+  // check login status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
 
+  // check if user has access
   if (access !== "0000000000") {
     console.log(authorized);
     return <Redirect to="/student/mainpage" />;
@@ -180,6 +191,7 @@ function EditStudentRecord({ authorized, access }) {
   return (
     <>
       <NavigationBar />
+      {/* desktop and mobile view */}
       <Container>
         <form>
           <Typography
@@ -241,7 +253,7 @@ function EditStudentRecord({ authorized, access }) {
               <option value="BBA(IS)">BBA(IS)</option>
             </select>
             <label htmlFor="academicYear">
-              ACADEMIC YEAR{" "}
+              ACADEMIC YEAR
               {showAcademicErrorMsg && (
                 <span className="error-message">
                   Invalid academic year. Please enter a 4 digit number.
@@ -293,7 +305,7 @@ function EditStudentRecord({ authorized, access }) {
               }}
             />
             <label htmlFor="courseYear">
-              COURSE YEAR{" "}
+              COURSE YEAR
               {showCourseErrorMsg && (
                 <span className="error-message">
                   Invalid course year. Please enter a single digit value.
@@ -329,6 +341,7 @@ function EditStudentRecord({ authorized, access }) {
             Save & Submit
           </button>
         </form>
+        {/* pop-ups */}
         <Dialog
           open={openError}
           onClose={handleCloseError}

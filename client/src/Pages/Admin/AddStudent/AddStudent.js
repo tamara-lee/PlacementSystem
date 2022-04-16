@@ -23,6 +23,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 function AddStudent({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
+  // executed when page is loaded
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login")
       .then((response) => {})
@@ -38,6 +39,7 @@ function AddStudent({ authorized, access }) {
       });
   }, []);
 
+  // constants for fields in form
   const [name, setName] = useState("");
   const [universityNumber, setUniversityNumber] = useState("");
   const [curriculum, setCurriculum] = useState("BEng(CompSc)");
@@ -45,6 +47,7 @@ function AddStudent({ authorized, access }) {
   const [placementYear, setPlacementYear] = useState("");
   const [courseYear, setCourseYear] = useState("");
 
+  // for pop-ups and error messages
   const [openUploadError, setOpenUploadError] = useState(false);
   const [openFieldError, setOpenFieldError] = useState(false);
   const [openImportError, setOpenImportError] = useState(false);
@@ -67,12 +70,14 @@ function AddStudent({ authorized, access }) {
   const [showPlacementErrorMsg, setShowPlacementErrorMsg] = useState(false);
   const [showCourseErrorMsg, setShowCourseErrorMsg] = useState(false);
 
+  // for import file
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
 
   const username = localStorage.getItem("username");
   const account_id = localStorage.getItem("userId");
 
+  // handle pop-ups
   const handleCloseUploadError = () => {
     setOpenUploadError(false);
   };
@@ -109,6 +114,7 @@ function AddStudent({ authorized, access }) {
     setOpenUploadFail(false);
   };
 
+  // handle error checking
   const checkUniversityNumber = (e) => {
     if (/^\d\d\d\d\d\d\d\d\d\d$/.test(e)) {
       return true;
@@ -133,6 +139,7 @@ function AddStudent({ authorized, access }) {
     }
   };
 
+  // for importing
   const handleImport = (e) => {
     if (file === "") {
       setOpenImportError(true);
@@ -144,28 +151,24 @@ function AddStudent({ authorized, access }) {
   const confirmHandleImport = (e) => {
     handleCloseImportConfirmation();
 
+    // send file in formdata
     const formData = new FormData();
 
     formData.append("studentRecordsFile", file, fileName);
     formData.append("username", username);
 
-    // console.log(formData.get("studentRecordsFile"));
-
     Axios.post("http://localhost:3001/importexcel", formData)
       .then((res) => {
         setImportSuccessMsg(res.data.message);
         setOpenImportSuccess(true);
-        // console.log(res);
       })
       .catch((error) => {
         setImportFailMsg(error.response.data.message);
         setOpenImportFail(true);
-        // console.log(error.response.data.message);
       });
-
-    // alert(`File to be uploaded is ${fileName}. Add API call to upload to DB`);
   };
 
+  // for uploading student record individually
   const handleUpload = () => {
     if (
       !name &&
@@ -212,11 +215,13 @@ function AddStudent({ authorized, access }) {
       });
   };
 
+  // check login status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
   }
 
+  // check user access
   if (access !== "0000000000") {
     console.log(authorized);
     return <Redirect to="/student/mainpage" />;
@@ -290,9 +295,6 @@ function AddStudent({ authorized, access }) {
               >
                 Import
               </Button>
-
-              {/* Import
-            </input> */}
               <Box
                 textAlign="left"
                 sx={{
@@ -360,7 +362,6 @@ function AddStudent({ authorized, access }) {
                     type="number"
                     id="studentUniversityNumber"
                     value={universityNumber}
-                    // placeholder="Enter university number here..."
                     maxLength="50"
                     onChange={(e) => {
                       if (e.target.value == "") {
@@ -401,7 +402,6 @@ function AddStudent({ authorized, access }) {
                     type="number"
                     id="courseYear"
                     value={courseYear}
-                    // placeholder="Enter placement year here..."
                     maxLength="4"
                     onChange={(e) => {
                       if (e.target.value == "") {
@@ -429,7 +429,6 @@ function AddStudent({ authorized, access }) {
                     type="number"
                     id="academicYear"
                     value={academicYear}
-                    // placeholder="Enter academic year here..."
                     maxLength="4"
                     onChange={(e) => {
                       if (e.target.value == "") {
@@ -457,7 +456,6 @@ function AddStudent({ authorized, access }) {
                     type="number"
                     id="placementYear"
                     value={placementYear}
-                    // placeholder="Enter placement year here..."
                     maxLength="4"
                     onChange={(e) => {
                       if (e.target.value == "") {
@@ -501,6 +499,7 @@ function AddStudent({ authorized, access }) {
               </CardContent>
             </Card>
           </Box>
+          {/* pop-ups */}
           <Dialog
             open={openImportError}
             onClose={handleCloseImportError}

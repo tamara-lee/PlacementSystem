@@ -2,18 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import Axios from "axios";
 import NavigationBar from "../../../components/NavBar/NavBar";
 import { Redirect } from "react-router-dom";
-import "./style.css";
-import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { IoIosInformationCircle } from "react-icons/io";
-import moment from "moment";
-// import fileDownload from "react-file-download";
+import styled from "styled-components";
+import "./style.css";
 
 // for date picker
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateRangePicker from "@mui/lab/DateRangePicker";
+import moment from "moment";
 
 // for pop-ups
 import Button from "@mui/material/Button";
@@ -31,20 +30,19 @@ const Container = styled.div`
 const username = localStorage.getItem("username");
 const student_uid = localStorage.getItem("userUid");
 const account_id = localStorage.getItem("userId");
-// const admin_id = localStorage.getItem("admin_uid");
-
-// console.log(localStorage.getItem("admin_uid"));
-// console.log(admin_id);
 
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
 
+  // executed when page is loaded
+  // check if user is still logged in
+  // load form details and remarks
   useEffect(() => {
     Axios.get("http://localhost:3001/auth/login").catch((error) => {
       console.log(error.response);
       if (
         error.response.data.error ===
-        "User is not authenticated!\\nPlease log in."
+        "User is not authenticated!\nPlease log in."
       ) {
         localStorage.setItem("userState", false);
         alert("You have been logged out. Please refresh and log in again.");
@@ -54,9 +52,7 @@ function MyPlacementRecord({ authorized }) {
     getRemarks();
   }, []);
 
-  const getName = (path) =>
-    path.includes("-") && path.substr(path.lastIndexOf("-") + 1).split("\n")[0];
-
+  // form field states
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [studentCurriculum, setStudentCurriculum] = useState("");
@@ -78,26 +74,25 @@ function MyPlacementRecord({ authorized }) {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [placementStatus, setPlacementStatus] = useState("");
 
+  // for information texts and error messages
   const [showSupervisorText, setShowSupervisorText] = useState(false);
   const [showCommentText, setShowCommentText] = useState(false);
   const [showEmailErrorMsg, setShowEmailErrorMsg] = useState(false);
   const [showTelephoneErrorMsg, setShowTelephoneErrorMsg] = useState(false);
   const [showDurationErrorMsg, setShowDurationErrorMsg] = useState(false);
 
+  // for datepicker
   const [period, setPeriod] = useState([null, null]);
 
+  // for documents
   const [consentFormName, setConsentFormName] = useState(false);
   const [appointmentLetterName, setAppointmentLetterName] = useState(false);
   const [feedbackFormName, setFeedbackFormName] = useState(false);
-
   const [consentFormSelect, setConsentFormSelect] = useState(false);
   const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
   const [feedbackFormSelect, setFeedbackFormSelect] = useState(false);
 
-  const [consentFormPath, setConsentFormPath] = useState("");
-  const [appointmentLetterPath, setAppointmentLetterPath] = useState("");
-  const [feedbackFormPath, setFeedbackFormPath] = useState("");
-
+  // for pop ups
   const [openError, setOpenError] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -178,17 +173,9 @@ function MyPlacementRecord({ authorized }) {
     );
   };
 
-  
-
-  // test chat test messages
-  const [msg1, setMsg1] = useState(
-    "Job nature is not detailed enough. Please add more information."
-  );
-  const [msg2, setMsg2] = useState(
-    "I have added more information. Is the current version ok?"
-  );
-  const [msg3, setMsg3] = useState("Looks good.");
-  const [createTime, setCreateTime] = useState(Date().toLocaleString());
+  // function to get file name from path
+  const getName = (path) =>
+    path.includes("-") && path.substr(path.lastIndexOf("-") + 1).split("\n")[0];
 
   // error checking handlers
   const checkEmail = (e) => {
@@ -241,7 +228,9 @@ function MyPlacementRecord({ authorized }) {
       });
   };
 
+  // get form details by calling get api
   const getForm = () => {
+    // get placement record of student by passing the student uid
     Axios.get("http://localhost:3001/placementrecord/student", {
       params: {
         studentNumber: student_uid,
@@ -328,7 +317,7 @@ function MyPlacementRecord({ authorized }) {
         setConsentFormSelect(
           res.data.placement[0].consent_form == null ? false : true
         );
-        setConsentFormPath(
+        setConsentFormName(
           res.data.placement[0].consent_form == null
             ? ""
             : getName(res.data.placement[0].consent_form)
@@ -344,7 +333,7 @@ function MyPlacementRecord({ authorized }) {
         setFeedbackFormSelect(
           res.data.placement[0].feedback_form == null ? false : true
         );
-        setFeedbackFormPath(
+        setFeedbackFormName(
           res.data.placement[0].feedback_form == null
             ? ""
             : getName(res.data.placement[0].feedback_form)
@@ -365,6 +354,7 @@ function MyPlacementRecord({ authorized }) {
       });
   };
 
+  // check that there are no errors before submitting the form
   const submitForm = () => {
     if (showEmailErrorMsg || showTelephoneErrorMsg || showDurationErrorMsg) {
       setOpenError(true);
@@ -373,11 +363,14 @@ function MyPlacementRecord({ authorized }) {
     }
   };
 
+  // confirm to submit form
   const confirmSubmitForm = () => {
     handleCloseConfirmation();
 
+    // send data in a formdata
     const formData = new FormData();
 
+    // only append document to the formdata if it is uploaded
     if (appointmentLetterSelect && appointmentLetter instanceof Blob) {
       formData.append("appointment", appointmentLetter, appointmentLetterName);
     }
@@ -407,138 +400,111 @@ function MyPlacementRecord({ authorized }) {
     formData.append("feedbackComment", feedbackComment);
     formData.append("placementStatus", placementStatus);
 
-    // console.log(formData.get("consent"));
-    // console.log(formData.get("appointment"));
-    // console.log(formData.get("feedback"));
-
-    try {
-      Axios.post(
-        "http://localhost:3001/placementrecord/student",
-        // username: username,
-        // studentName: studentName,
-        // studentNumber: student_uid,
-        // studentCurriculum: studentCurriculum,
-        // companyName: companyName,
-        // jobTitle: jobTitle,
-        // jobNature: jobNature,
-        // startDate: startDate,
-        // endDate: endDate,
-        // duration: duration,
-        // location: location,
-        // paymentType: paymentType,
-        // salary: salary,
-        // supervisorName: supervisorName,
-        // supervisorPhone: supervisorPhone,
-        // supervisorEmail: supervisorEmail,
-        // feedbackComment: feedbackComment,
-        // placementStatus: placementStatus,
-        formData
-      )
-        .then((res) => {
-          setOpenSuccess(true);
-          setCompanyName(
-            res.data.placement[0].company_name == null
-              ? undefined
-              : res.data.placement[0].company_name
-          );
-          setJobTitle(
-            res.data.placement[0].job_title == null
-              ? undefined
-              : res.data.placement[0].job_title
-          );
-          setJobNature(
-            res.data.placement[0].job_nature == null
-              ? undefined
-              : res.data.placement[0].job_nature
-          );
-          setStartDate(
-            res.data.placement[0].start_date == null
-              ? undefined
-              : res.data.placement[0].start_date
-          );
-          setEndDate(
-            res.data.placement[0].end_date == null
-              ? undefined
-              : res.data.placement[0].end_date
-          );
-          setPeriod([
-            res.data.placement[0].start_date == null
-              ? undefined
-              : res.data.placement[0].start_date,
-            res.data.placement[0].end_date == null
-              ? undefined
-              : res.data.placement[0].end_date,
-          ]);
-          setDuration(
-            res.data.placement[0].employment_duration == null
-              ? undefined
-              : res.data.placement[0].employment_duration
-          );
-          setLocation(
-            res.data.placement[0].working_location == null
-              ? undefined
-              : res.data.placement[0].working_location
-          );
-          setPaymentType(
-            res.data.placement[0].payment_type == "n"
-              ? "unpaid"
-              : res.data.placement[0].payment_type
-          );
-          setSalary(
-            res.data.placement[0].salary == null
-              ? undefined
-              : res.data.placement[0].salary
-          );
-          setSupervisorName(
-            res.data.placement[0].supervisor_name == null
-              ? undefined
-              : res.data.placement[0].supervisor_name
-          );
-          setSupervisorPhone(
-            res.data.placement[0].supervisor_telephone == null
-              ? undefined
-              : res.data.placement[0].supervisor_telephone
-          );
-          setSupervisorEmail(
-            res.data.placement[0].supervisor_email == null
-              ? undefined
-              : res.data.placement[0].supervisor_email
-          );
-          setConsentForm(
-            res.data.placement[0].consent_form == null
-              ? undefined
-              : res.data.placement[0].consent_form
-          );
-          setAppointmentLetter(
-            res.data.placement[0].appointment_letter == null
-              ? undefined
-              : res.data.placement[0].appointment_letter
-          );
-          setFeedbackForm(
-            res.data.placement[0].feedback_form == null
-              ? undefined
-              : res.data.placement[0].feedback_form
-          );
-          setFeedbackComment(
-            res.data.placement[0].feedback_comment == null
-              ? undefined
-              : res.data.placement[0].feedback_comment
-          );
-          setPlacementStatus(
-            res.data.placement_status == null
-              ? "waiting"
-              : res.data.placement_status
-          );
-          getForm();
-        })
-        .catch((error) => {
-          // console.log(error);
-        });
-    } catch (error) {
-      setOpenFail(true);
-    }
+    Axios.post("http://localhost:3001/placementrecord/student", formData)
+      .then((res) => {
+        setOpenSuccess(true);
+        setCompanyName(
+          res.data.placement[0].company_name == null
+            ? undefined
+            : res.data.placement[0].company_name
+        );
+        setJobTitle(
+          res.data.placement[0].job_title == null
+            ? undefined
+            : res.data.placement[0].job_title
+        );
+        setJobNature(
+          res.data.placement[0].job_nature == null
+            ? undefined
+            : res.data.placement[0].job_nature
+        );
+        setStartDate(
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date
+        );
+        setEndDate(
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date
+        );
+        setPeriod([
+          res.data.placement[0].start_date == null
+            ? undefined
+            : res.data.placement[0].start_date,
+          res.data.placement[0].end_date == null
+            ? undefined
+            : res.data.placement[0].end_date,
+        ]);
+        setDuration(
+          res.data.placement[0].employment_duration == null
+            ? undefined
+            : res.data.placement[0].employment_duration
+        );
+        setLocation(
+          res.data.placement[0].working_location == null
+            ? undefined
+            : res.data.placement[0].working_location
+        );
+        setPaymentType(
+          res.data.placement[0].payment_type == "n"
+            ? "unpaid"
+            : res.data.placement[0].payment_type
+        );
+        setSalary(
+          res.data.placement[0].salary == null
+            ? undefined
+            : res.data.placement[0].salary
+        );
+        setSupervisorName(
+          res.data.placement[0].supervisor_name == null
+            ? undefined
+            : res.data.placement[0].supervisor_name
+        );
+        setSupervisorPhone(
+          res.data.placement[0].supervisor_telephone == null
+            ? undefined
+            : res.data.placement[0].supervisor_telephone
+        );
+        setSupervisorEmail(
+          res.data.placement[0].supervisor_email == null
+            ? undefined
+            : res.data.placement[0].supervisor_email
+        );
+        setConsentForm(
+          res.data.placement[0].consent_form == null
+            ? undefined
+            : res.data.placement[0].consent_form
+        );
+        setAppointmentLetter(
+          res.data.placement[0].appointment_letter == null
+            ? undefined
+            : res.data.placement[0].appointment_letter
+        );
+        setFeedbackForm(
+          res.data.placement[0].feedback_form == null
+            ? undefined
+            : res.data.placement[0].feedback_form
+        );
+        setFeedbackComment(
+          res.data.placement[0].feedback_comment == null
+            ? undefined
+            : res.data.placement[0].feedback_comment
+        );
+        setPlacementStatus(
+          res.data.placement_status == null
+            ? "waiting"
+            : res.data.placement_status
+        );
+        getForm();
+      })
+      .catch((error) => {
+        // show fail pop up when there is an error in submitting the form
+        setOpenFail(true);
+      });
   };
 
+  // check log in status
   if (authorized === false) {
     console.log(authorized);
     return <Redirect to="/" />;
@@ -699,8 +665,6 @@ function MyPlacementRecord({ authorized }) {
                   type="number"
                   id="salary"
                   defaultValue={salary}
-                  // defaultValue={new Intl.NumberFormat("en-US").format(salary)}
-                  // value={new Intl.NumberFormat("en-US").format(salary)}
                   placeholder="0.00"
                   onChange={(e) => {
                     setSalary(e.target.value);
@@ -872,7 +836,6 @@ function MyPlacementRecord({ authorized }) {
                     </Button>
                   ) : null}
                 </div>
-                {console.log(getName(appointmentLetterPath))}
                 <label htmlFor="feedbackForm">FEEDBACK FORM</label>
                 <div className="file-drop-area">
                   <span className="fake-btn">Choose file</span>
@@ -989,6 +952,7 @@ function MyPlacementRecord({ authorized }) {
           <button type="button" className="form-submit" onClick={submitForm}>
             Save & Submit
           </button>
+          {/* pop ups */}
           <Dialog
             open={openError}
             onClose={handleCloseError}
@@ -1067,6 +1031,7 @@ function MyPlacementRecord({ authorized }) {
   );
 }
 
+// function for showing the remarks messages in the chatbox
 function RemarkMessage(props) {
   let messageClass = "sent";
 
@@ -1086,4 +1051,5 @@ function RemarkMessage(props) {
     </>
   );
 }
+
 export default MyPlacementRecord;

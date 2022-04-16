@@ -299,7 +299,9 @@ router.get("/chatbox", validateToken, async (req, res) => {
     res.json(chatRecords);
   } catch (error) {
     console.log(error);
-    res.json({ status: "success", message: "Failed to retrieve messages!" });
+    res
+      .status(400)
+      .json({ status: "error", message: "Failed to retrieve messages!" });
   }
 });
 
