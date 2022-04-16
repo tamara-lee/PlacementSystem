@@ -114,7 +114,10 @@ router.post(
     const consentForm = consent_letter;
     const feedbackForm = feedback_letter;
     const feedbackComment = req.body.feedbackComment;
-    const placementStatus = "null" ? "NA" : req.body.placementStatus;
+    const placementStatus = 
+    req.body.placementStatus == "null" ? "NA" : req.body.placementStatus;
+
+    console.log("placementStatus",placementStatus)
 
     console.log(studentNumber);
     const student_acc = await user_account.findUnique({
@@ -181,8 +184,10 @@ router.post(
           },
           data: {
             placement_status: placementStatus,
+            modified_by: user.username
           },
         });
+        console.log("student_placement_status",student_placement_status)
 
         res.json({
           status: "success",
