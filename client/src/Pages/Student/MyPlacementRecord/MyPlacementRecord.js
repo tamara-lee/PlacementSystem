@@ -830,9 +830,9 @@ function MyPlacementRecord({ authorized }) {
                   disabled
                 >
                   <option value="NA">N/A</option>
-                  <option value="approved">Approved</option>
-                  <option value="incomplete">Incomplete</option>
-                  <option value="waiting">Waiting</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Incomplete">Incomplete</option>
+                  <option value="Waiting">Waiting</option>
                 </select>
               </div>
               <p className="container-title">REMARKS</p>
