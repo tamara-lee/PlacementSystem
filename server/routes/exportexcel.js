@@ -1,23 +1,14 @@
 const express = require("express");
-// const { createTokens, validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { validateToken } = require("../JWT");
-// const { user_account } = new PrismaClient();
-// const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
-// const prisma = new PrismaClient();
 const router = require("express").Router();
 const flatten = require("flat");
 const xlsx = require("xlsx");
 
 //export excel file with dynamically generated columns which are generated based on the admin's selection of fields 
 router.post("/", validateToken, async (req, res) => {
-  console.log("request_body", req.body);
-  console.log(
-    "req.body.export_fields.placement_id",
-    req.body.export_fields.placement_id
-  );
-
+ 
   const academic_year = req.body.academic_year;
 
   const placement_id = req.body.export_fields.placement_id == 1 ? true : false;

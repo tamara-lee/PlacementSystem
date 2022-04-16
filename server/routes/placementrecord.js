@@ -71,6 +71,7 @@ router.post(
   ]),
   validateToken,
   async (req, res) => {
+    console.log("req.body",req.body)
 
     let appoint_letter;
     if (req.files.appointment) {
@@ -117,28 +118,37 @@ router.post(
     const user = await user_account.findUnique({
       where: {
         username: req.body.username,
+
       },
     });
+    const student_acc = await user_account.findUnique({
+      where: {
+        // username: req.body.username,
+        student_uid: studentNumber,
 
-    if (!user) {
+      },
+    });
+    console.log("student_acc",student_acc)
+
+    if (!student_acc) {
       res
         .status(400)
-        .json({ error: "User does not exist in the Placement System." });
+        .json({ error: "Student account does not exist in the Placement System." });
     }
 
-    if (res !== undefined) {
+    if (req !== undefined) {
       try {
         // do parse
         const placementRecord = await placement.update({
           where: {
-            username: user.username,
+            student_uid: student_acc.student_uid,
           },
           data: {
             student: {
               connect: { student_uid: studentNumber },
-              update: {
-                placement_status: placementStatus,
-              },
+              // update: {
+              //   placement_status: placementStatus,
+              // },
             },
             appointment_letter: appointmentLetter,
             feedback_form: feedbackForm,
@@ -163,6 +173,18 @@ router.post(
           },
         });
         res.json(placementRecord);
+        console.log("placementRecord",placementRecord)
+
+        const student_placement_status = await student.update({
+          where:{
+            student_uid: student_acc.student_uid,
+          },
+          data: {
+            placement_status: placementStatus
+          },
+
+        });
+
       } catch (error) {
         console.error("Student does not exist in placement system!");
         console.log(error);
