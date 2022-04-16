@@ -2,9 +2,7 @@ const express = require("express");
 const { createTokens, validateToken } = require("../JWT");
 const { PrismaClient } = require('@prisma/client');
 const { user_account } = new PrismaClient();
-// const prisma = new PrismaClient();
 const router = require("express").Router();
-// const cors = require("cors");
 
     //notifies the frontend that user is authenticated and logged in
     router.get("/login", validateToken, (req, res) => {

@@ -1,8 +1,6 @@
 const express = require("express");
-// const { createTokens, validateToken } = require("../JWT");
 const { validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
-// const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
 const router = require("express").Router();
@@ -60,7 +58,6 @@ router.get("/", validateToken, async (req, res) => {
         last_modified: true,
       },
     });
-    // console.log(records);
     res.json(records);
   } catch (error) {
     console.log(error);

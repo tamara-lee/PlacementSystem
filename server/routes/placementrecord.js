@@ -5,9 +5,7 @@ const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
 const { remarks } = new PrismaClient();
-// const prisma = new PrismaClient();
 const router = require("express").Router();
-// const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 
@@ -32,7 +30,6 @@ const storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 const { empty } = require("@prisma/client/runtime");
-// const { redirect } = require("express/lib/response");
 
 //return Placement Record information of student logged in
 router.get("/student", validateToken, async (req, res) => {
@@ -140,12 +137,8 @@ router.post(
         .status(400)
         .json({ error: "Student account does not exist in the Placement System." });
     }
-    // console.log(student_acc);
     if (res !== undefined) {
       try {
-        // do parse
-        console.log(student_acc);
-        console.log(user);
         const placementRecord = await placement.update({
           where: {
             username: student_acc.username,
@@ -176,7 +169,6 @@ router.post(
             consent_form: consentForm,
           },
         });
-        // res.json(placementRecord);
 
         const student_placement_status = await student.update({
           where: {
@@ -187,7 +179,6 @@ router.post(
             modified_by: user.username
           },
         });
-        console.log("student_placement_status",student_placement_status)
 
         res.json({
           status: "success",

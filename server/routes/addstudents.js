@@ -1,13 +1,10 @@
 const express = require("express");
-// const { createTokens, validateToken } = require("../JWT");
 const { validateToken } = require("../JWT");
 const { PrismaClient } = require("@prisma/client");
 const { user_account } = new PrismaClient();
 const { placement } = new PrismaClient();
 const { student } = new PrismaClient();
-// const prisma = new PrismaClient();
 const router = require("express").Router();
-// const cors = require("cors");
 
 //for admin to add individual student records manually 
 //placement record is automatically created for the student when the student record is added to the database
@@ -29,10 +26,8 @@ router.post("/admin", validateToken, async (req, res) => {
     },
     select: {
       account_id: true,
-      // username: true,
     },
   });
-  // console.log(student_account)
 
   //create placement record here
   if (req !== undefined) {
@@ -66,7 +61,6 @@ router.post("/admin", validateToken, async (req, res) => {
           creation_time: new Date(Date.now()),
         },
       });
-      // console.log("newPlacementRecord",newPlacementRecord);
       res.json({
         status: "success",
         message: "Successfully added student record!",
