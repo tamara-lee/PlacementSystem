@@ -1027,14 +1027,14 @@ function StudentRecords({ authorized, access }) {
                     <FormControlLabel
                       control={<Checkbox />}
                       label="Feedback Form (Uploaded: Yes/No)"
-                      checked={checked_appointment_letter}
+                      checked={checked_feedback_form}
                       onChange={() => {
-                        if (checked_appointment_letter) {
-                          set_checked_appointment_letter(false);
-                          fieldsExport[0].appointment_letter = 0;
+                        if (checked_feedback_form) {
+                          set_checked_feedback_form(false);
+                          fieldsExport[0].feedback_form = 0;
                         } else {
-                          set_checked_appointment_letter(true);
-                          fieldsExport[0].appointment_letter = 1;
+                          set_checked_feedback_form(true);
+                          fieldsExport[0].feedback_form = 1;
                         }
                       }}
                     />
@@ -1713,14 +1713,14 @@ function StudentRecords({ authorized, access }) {
                             <FormControlLabel
                               control={<Checkbox />}
                               label="Feedback Form (Uploaded: Yes/No)"
-                              checked={checked_appointment_letter}
+                              checked={checked_feedback_form}
                               onChange={() => {
-                                if (checked_appointment_letter) {
-                                  set_checked_appointment_letter(false);
-                                  fieldsExport[0].appointment_letter = 0;
+                                if (checked_feedback_form) {
+                                  set_checked_feedback_form(false);
+                                  fieldsExport[0].feedback_form = 0;
                                 } else {
-                                  set_checked_appointment_letter(true);
-                                  fieldsExport[0].appointment_letter = 1;
+                                  set_checked_feedback_form(true);
+                                  fieldsExport[0].feedback_form = 1;
                                 }
                               }}
                             />
