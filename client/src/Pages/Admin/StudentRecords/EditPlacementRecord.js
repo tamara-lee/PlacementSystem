@@ -59,27 +59,6 @@ function EditPlacementRecord({ authorized, access }) {
   }, []);
 
   // form field states
-  // const [studentName, setStudentName] = useState("");
-  // const [studentNumber, setStudentNumber] = useState("");
-  // const [studentCurriculum, setStudentCurriculum] = useState("");
-  // const [companyName, setCompanyName] = useState("");
-  // const [jobTitle, setJobTitle] = useState("");
-  // const [jobNature, setJobNature] = useState("");
-  // const [startDate, setStartDate] = useState(null);
-  // const [endDate, setEndDate] = useState(null);
-  // const [duration, setDuration] = useState("");
-  // const [location, setLocation] = useState("");
-  // const [paymentType, setPaymentType] = useState("");
-  // const [salary, setSalary] = useState(undefined);
-  // const [supervisorName, setSupervisorName] = useState("");
-  // const [supervisorPhone, setSupervisorPhone] = useState("");
-  // const [supervisorEmail, setSupervisorEmail] = useState("");
-  // const [consentForm, setConsentForm] = useState();
-  // const [appointmentLetter, setAppointmentLetter] = useState();
-  // const [feedbackForm, setFeedbackForm] = useState();
-  // const [feedbackComment, setFeedbackComment] = useState("");
-  // const [placementStatus, setPlacementStatus] = useState("");
-
   const [studentName, setStudentName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [studentCurriculum, setStudentCurriculum] = useState("");
@@ -367,6 +346,12 @@ function EditPlacementRecord({ authorized, access }) {
             ? ""
             : getName(res.data.placement[0].consent_form)
         );
+
+        setConsentFormPath(
+          res.data.placement[0].consent_form == null
+            ? ""
+            : res.data.placement[0].consent_form
+        );
         setAppointmentLetterSelect(
           res.data.placement[0].appointment_letter == null ? false : true
         );
@@ -375,6 +360,11 @@ function EditPlacementRecord({ authorized, access }) {
             ? ""
             : getName(res.data.placement[0].appointment_letter)
         );
+        setAppointmentLetterPath(
+          res.data.placement[0].appointment_letter == null
+            ? ""
+            : res.data.placement[0].appointment_letter
+        );
         setFeedbackFormSelect(
           res.data.placement[0].feedback_form == null ? false : true
         );
@@ -382,6 +372,11 @@ function EditPlacementRecord({ authorized, access }) {
           res.data.placement[0].feedback_form == null
             ? ""
             : getName(res.data.placement[0].feedback_form)
+        );
+        setFeedbackFormPath(
+          res.data.placement[0].feedback_form == null
+            ? ""
+            : res.data.placement[0].feedback_form
         );
         setFeedbackComment(
           res.data.placement[0].feedback_comment == null
@@ -449,99 +444,6 @@ function EditPlacementRecord({ authorized, access }) {
       .then((res) => {
         console.log(res);
         setOpenSuccess(true);
-        // setCompanyName(
-        //   res.data.placement[0].company_name == null
-        //     ? undefined
-        //     : res.data.placement[0].company_name
-        // );
-        // setJobTitle(
-        //   res.data.placement[0].job_title == null
-        //     ? undefined
-        //     : res.data.placement[0].job_title
-        // );
-        // setJobNature(
-        //   res.data.placement[0].job_nature == null
-        //     ? undefined
-        //     : res.data.placement[0].job_nature
-        // );
-        // setStartDate(
-        //   res.data.placement[0].start_date == null
-        //     ? undefined
-        //     : res.data.placement[0].start_date
-        // );
-        // setEndDate(
-        //   res.data.placement[0].end_date == null
-        //     ? undefined
-        //     : res.data.placement[0].end_date
-        // );
-        // setPeriod([
-        //   res.data.placement[0].start_date == null
-        //     ? undefined
-        //     : res.data.placement[0].start_date,
-        //   res.data.placement[0].end_date == null
-        //     ? undefined
-        //     : res.data.placement[0].end_date,
-        // ]);
-        // setDuration(
-        //   res.data.placement[0].employment_duration == null
-        //     ? undefined
-        //     : res.data.placement[0].employment_duration
-        // );
-        // setLocation(
-        //   res.data.placement[0].working_location == null
-        //     ? undefined
-        //     : res.data.placement[0].working_location
-        // );
-        // setPaymentType(
-        //   res.data.placement[0].payment_type == ""
-        //     ? "unpaid"
-        //     : res.data.placement[0].payment_type
-        // );
-        // setSalary(
-        //   res.data.placement[0].salary == null
-        //     ? undefined
-        //     : res.data.placement[0].salary
-        // );
-        // setSupervisorName(
-        //   res.data.placement[0].supervisor_name == null
-        //     ? undefined
-        //     : res.data.placement[0].supervisor_name
-        // );
-        // setSupervisorPhone(
-        //   res.data.placement[0].supervisor_telephone == null
-        //     ? undefined
-        //     : res.data.placement[0].supervisor_telephone
-        // );
-        // setSupervisorEmail(
-        //   res.data.placement[0].supervisor_email == null
-        //     ? undefined
-        //     : res.data.placement[0].supervisor_email
-        // );
-        // setConsentForm(
-        //   res.data.placement[0].consent_form == null
-        //     ? undefined
-        //     : res.data.placement[0].consent_form
-        // );
-        // setAppointmentLetter(
-        //   res.data.placement[0].appointment_letter == null
-        //     ? undefined
-        //     : res.data.placement[0].appointment_letter
-        // );
-        // setFeedbackForm(
-        //   res.data.placement[0].feedback_form == null
-        //     ? undefined
-        //     : res.data.placement[0].feedback_form
-        // );
-        // setFeedbackComment(
-        //   res.data.placement[0].feedback_comment == null
-        //     ? undefined
-        //     : res.data.placement[0].feedback_comment
-        // );
-        // setPlacementStatus(
-        //   res.data.placement_status == null
-        //     ? "waiting"
-        //     : res.data.placement_status
-        // );
         getForm();
       })
       .catch((error) => {
@@ -834,7 +736,7 @@ function EditPlacementRecord({ authorized, access }) {
                     id="consentForm"
                     onChange={consentFormHandler}
                   />
-                  {consentFormName != "" ? (
+                  {consentFormPath != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -869,7 +771,7 @@ function EditPlacementRecord({ authorized, access }) {
                     id="appointmentLetter"
                     onChange={appointmentLetterHandler}
                   />
-                  {appointmentLetterName != "" ? (
+                  {appointmentLetterPath != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -904,7 +806,7 @@ function EditPlacementRecord({ authorized, access }) {
                     id="feedbackForm"
                     onChange={feedbackFormHandler}
                   />
-                  {feedbackFormName != "" ? (
+                  {feedbackFormPath != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
