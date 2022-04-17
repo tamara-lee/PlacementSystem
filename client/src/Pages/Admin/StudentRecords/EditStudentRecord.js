@@ -5,6 +5,7 @@ import { Redirect } from "react-router-dom";
 import "./style.css";
 import styled from "styled-components";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 // for pop-ups
 import Button from "@mui/material/Button";
@@ -194,14 +195,15 @@ function EditStudentRecord({ authorized, access }) {
       {/* desktop and mobile view */}
       <Container>
         <form>
-          <Typography
-            style={{
-              fontSize: "18px",
-            }}
-          >
-            STUDENT RECORD
-          </Typography>
           <div className="container">
+            <Typography
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+              }}
+            >
+              STUDENT RECORD
+            </Typography>
             <label htmlFor="studentName">NAME</label>
             <input
               className="input"

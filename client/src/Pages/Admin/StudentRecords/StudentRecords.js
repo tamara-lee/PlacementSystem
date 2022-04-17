@@ -93,7 +93,6 @@ function StudentRecords({ authorized, access }) {
     getAcadYears();
     getPlacementYears();
     getRecords();
-    sortAlphabetically();
   }, []);
 
   // constants
@@ -110,11 +109,6 @@ function StudentRecords({ authorized, access }) {
   const [fieldsExport, setFieldsExport] = useState();
   const [academicYearExport, setAcademicYearExport] = useState();
   const [showExportMissingYear, setShowExportMissingYear] = useState(false);
-
-  // exporting
-  const handleDownloadExcelForm = () => {
-    window.open("http://localhost:3001/exportexcel");
-  };
 
   const handleExport = () => {
     if (academicYearExport) {
@@ -140,6 +134,15 @@ function StudentRecords({ authorized, access }) {
     Axios.get("http://localhost:3001/mainpage/").then((res) => {
       setRecords(res.data);
       setFilteredRecords(res.data);
+
+      res.data.sort(function (a, b) {
+        return a.english_name < b.english_name
+          ? -1
+          : a.english_name > b.english_name
+          ? 1
+          : 0;
+      });
+
       setRows(
         Object.keys(res.data).map((element) =>
           createData(

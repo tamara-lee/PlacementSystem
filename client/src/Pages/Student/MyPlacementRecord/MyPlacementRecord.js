@@ -27,9 +27,6 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
-const account_id = localStorage.getItem("userId");
-const student_uid = localStorage.getItem("userUid");
-
 function MyPlacementRecord({ authorized }) {
   Axios.defaults.withCredentials = true;
 
@@ -94,6 +91,9 @@ function MyPlacementRecord({ authorized }) {
   const [consentFormSelect, setConsentFormSelect] = useState(false);
   const [appointmentLetterSelect, setAppointmentLetterSelect] = useState(false);
   const [feedbackFormSelect, setFeedbackFormSelect] = useState(false);
+  const [consentFormPath, setConsentFormPath] = useState(false);
+  const [appointmentLetterPath, setAppointmentLetterPath] = useState(false);
+  const [feedbackFormPath, setFeedbackFormPath] = useState(false);
 
   // for pop ups
   const [openError, setOpenError] = useState(false);
@@ -179,6 +179,27 @@ function MyPlacementRecord({ authorized }) {
   // function to get file name from path
   const getName = (path) =>
     path.includes("-") && path.substr(path.lastIndexOf("-") + 1).split("\n")[0];
+
+  // function for showing the remarks messages in the chatbox
+  function RemarkMessage(props) {
+    let messageClass = "sent";
+
+    if (student_uid === props.remark.sent_to) {
+      messageClass = "received";
+    } else {
+      messageClass = "sent";
+    }
+
+    const message = props.remark.remark;
+
+    return (
+      <>
+        <div className={`message ${messageClass}`}>
+          <p>{message}</p>
+        </div>
+      </>
+    );
+  }
 
   // error checking handlers
   const checkEmail = (e) => {
@@ -325,6 +346,11 @@ function MyPlacementRecord({ authorized }) {
             ? ""
             : getName(res.data.placement[0].consent_form)
         );
+        setConsentFormPath(
+          res.data.placement[0].consent_form == null
+            ? ""
+            : res.data.placement[0].consent_form
+        );
         setAppointmentLetterSelect(
           res.data.placement[0].appointment_letter == null ? false : true
         );
@@ -333,6 +359,11 @@ function MyPlacementRecord({ authorized }) {
             ? ""
             : getName(res.data.placement[0].appointment_letter)
         );
+        setAppointmentLetterPath(
+          res.data.placement[0].appointment_letter == null
+            ? ""
+            : res.data.placement[0].appointment_letter
+        );
         setFeedbackFormSelect(
           res.data.placement[0].feedback_form == null ? false : true
         );
@@ -340,6 +371,11 @@ function MyPlacementRecord({ authorized }) {
           res.data.placement[0].feedback_form == null
             ? ""
             : getName(res.data.placement[0].feedback_form)
+        );
+        setFeedbackFormPath(
+          res.data.placement[0].feedback_form == null
+            ? ""
+            : res.data.placement[0].feedback_form
         );
         setFeedbackComment(
           res.data.placement[0].feedback_comment == null
@@ -402,8 +438,6 @@ function MyPlacementRecord({ authorized }) {
     formData.append("supervisorEmail", supervisorEmail);
     formData.append("feedbackComment", feedbackComment);
     formData.append("placementStatus", placementStatus);
-
-    console.log("test", formData.get(supervisorName));
 
     Axios.post("http://localhost:3001/placementrecord/student", formData)
       .then((res) => {
@@ -695,7 +729,7 @@ function MyPlacementRecord({ authorized }) {
                     id="consentForm"
                     onChange={consentFormHandler}
                   />
-                  {consentFormName != "" ? (
+                  {consentFormPath != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -730,7 +764,7 @@ function MyPlacementRecord({ authorized }) {
                     id="appointmentLetter"
                     onChange={appointmentLetterHandler}
                   />
-                  {appointmentLetterName != "" ? (
+                  {appointmentLetterPath != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -765,7 +799,7 @@ function MyPlacementRecord({ authorized }) {
                     id="feedbackForm"
                     onChange={feedbackFormHandler}
                   />
-                  {feedbackFormName != "" ? (
+                  {feedbackFormPath != "" ? (
                     <Button
                       sx={{
                         marginLeft: "5px",
@@ -825,7 +859,7 @@ function MyPlacementRecord({ authorized }) {
                   className="input"
                   name="placementStatus"
                   id="placementStatus"
-                  defaultValue={placementStatus}
+                  value={placementStatus}
                   onChange={(e) => {
                     setPlacementStatus(e.target.value);
                   }}
@@ -848,7 +882,7 @@ function MyPlacementRecord({ authorized }) {
                     value={remarkState}
                     onChange={(e) => setRemarkState(e.target.value)}
                     placeholder="Input message here..."
-                    maxLength="50"
+                    maxLength="100"
                   />
                   <button
                     type="button"
@@ -942,27 +976,6 @@ function MyPlacementRecord({ authorized }) {
           </Dialog>
         </form>
       </Container>
-    </>
-  );
-}
-
-// function for showing the remarks messages in the chatbox
-function RemarkMessage(props) {
-  let messageClass = "sent";
-
-  if (student_uid === props.remark.sent_to) {
-    messageClass = "received";
-  } else {
-    messageClass = "sent";
-  }
-
-  const message = props.remark.remark;
-
-  return (
-    <>
-      <div className={`message ${messageClass}`}>
-        <p>{message}</p>
-      </div>
     </>
   );
 }

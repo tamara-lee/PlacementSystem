@@ -645,7 +645,7 @@ function FAQ({ authorized, access }) {
                         <option value="0" default>
                           General
                         </option>
-                        <option value="1">Uploading Documents</option>
+                        <option value="1">Placement Documents</option>
                         <option value="2">Placement Supervisor</option>
                       </select>
                     </div>
@@ -890,7 +890,7 @@ function FAQ({ authorized, access }) {
                         }}
                       >
                         <option value="0">General</option>
-                        <option value="1">Uploading Documents</option>
+                        <option value="1">Placement Documents</option>
                         <option value="2">Placement Supervisor</option>
                       </select>
                     </div>
@@ -926,7 +926,7 @@ function FAQ({ authorized, access }) {
             </div>
             <StyledTabsMobile value={value} onChange={handleTabChange} centered>
               <StyledTabMobile label="General" {...a11yProps(0)} />
-              <StyledTabMobile label="Uploading Documents" {...a11yProps(1)} />
+              <StyledTabMobile label="Placement Documents" {...a11yProps(1)} />
               <StyledTabMobile label="Placement Supervisor" {...a11yProps(2)} />
             </StyledTabsMobile>
             <div>

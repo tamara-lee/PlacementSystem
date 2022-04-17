@@ -27,10 +27,6 @@ const Container = styled.div`
   margin: 1.2rem 3rem 2rem 3rem;
 `;
 
-// constants
-const account_id = localStorage.getItem("userId");
-const user_uid = localStorage.getItem("userUid");
-
 function EditPlacementRecord({ authorized, access }) {
   Axios.defaults.withCredentials = true;
 
@@ -255,6 +251,27 @@ function EditPlacementRecord({ authorized, access }) {
         console.log(error.response.data.message);
       });
   };
+
+  // for remarks messages in the chatbox
+  function RemarkMessage(props) {
+    let messageClass = "sent";
+
+    if (user_uid === props.remark.sent_to) {
+      messageClass = "received";
+    } else {
+      messageClass = "sent";
+    }
+
+    const message = props.remark.remark;
+
+    return (
+      <>
+        <div className={`message ${messageClass}`}>
+          <p>{message}</p>
+        </div>
+      </>
+    );
+  }
 
   // get form but calling get api
   // pass the student uid
@@ -946,7 +963,7 @@ function EditPlacementRecord({ authorized, access }) {
                   className="input"
                   name="placementStatus"
                   id="placementStatus"
-                  defaultValue={placementStatus}
+                  value={placementStatus}
                   onChange={(e) => {
                     setPlacementStatus(e.target.value);
                   }}
@@ -968,7 +985,7 @@ function EditPlacementRecord({ authorized, access }) {
                     value={remarkState}
                     onChange={(e) => setRemarkState(e.target.value)}
                     placeholder="Input message here..."
-                    maxLength="50"
+                    maxLength="100"
                   />
 
                   <button
@@ -1063,27 +1080,6 @@ function EditPlacementRecord({ authorized, access }) {
           </Dialog>
         </form>
       </Container>
-    </>
-  );
-}
-
-// for remarks messages in the chatbox
-function RemarkMessage(props) {
-  let messageClass = "sent";
-
-  if (user_uid === props.remark.sent_to) {
-    messageClass = "received";
-  } else {
-    messageClass = "sent";
-  }
-
-  const message = props.remark.remark;
-
-  return (
-    <>
-      <div className={`message ${messageClass}`}>
-        <p>{message}</p>
-      </div>
     </>
   );
 }
