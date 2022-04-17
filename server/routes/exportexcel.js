@@ -3,7 +3,6 @@ const { PrismaClient } = require("@prisma/client");
 const { validateToken } = require("../JWT");
 const { student } = new PrismaClient();
 const router = require("express").Router();
-const flatten = require("flat");
 const xlsx = require("xlsx");
 
 //export excel file with dynamically generated columns which are generated based on the admin's selection of fields
@@ -82,9 +81,6 @@ router.post("/", validateToken, async (req, res) => {
         },
       },
     });
-
-    result = [];
-    filtered = [];
 
     let totalResult = [];
 

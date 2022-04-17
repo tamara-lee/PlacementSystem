@@ -83,7 +83,6 @@ router.post(
               modified_by: modifier.username,
             },
           });
-          console.log("newStudent", newStudent);
         } catch (e) {
           console.log(e);
         }

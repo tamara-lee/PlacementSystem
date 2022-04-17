@@ -37,7 +37,7 @@ Make sure you have this information at hand when getting started with Prisma.
 
     DATABASE_URL="mysql://root:password@127.0.0.1:3306/prismadb?schema=public"
 
-Please make sure to change the username (eg. root), password (eg. password), local IP address with the port number (eg. 127.0.0.1:3306) and the database schema name (eg. prismadb) to fit to your own in the **.env** file.
+Please make sure to change the username (eg. root), password (eg. password), local IP address with the port number (eg. 127.0.0.1:3306) and the database schema name (eg. prismadb) to fit to your own database and schema in the **.env** file.
 
 You may change the provider according to the database you are using in the **schema.prisma** file. For example, we are using "mysql" for MySQL as seen below. It can be changed to other databases such as "postgresql" for PostgreSQL, etc. Please refer to this link for more information: https://www.prisma.io/docs/reference/database-reference/connection-urls#:~:text=Prisma%20needs%20a%20connection%20URL,block%20in%20your%20Prisma%20schema
 
@@ -56,7 +56,7 @@ Ensure to not directly configure the database url in **schema.prisma**, instead,
 
 ## Deployment Configurations
 
-Before deployment, ensure that the **.env** and **node_modules** under the _server_ and _client_ folder are added to the _.gitignore_ file.
+Before deployment, ensure that the **.env** under the _sever_ folder and both **node_modules** under the _server_ and _client_ folders are added to their respective _.gitignore_ files.
 
 - Ensure that the **JWT_SECRET_KEY** in the **.env** file is modified for security reasons.
 
