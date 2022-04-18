@@ -49,10 +49,11 @@ You may change the provider according to the database you are using in the **sch
 Ensure to not directly configure the database url in **schema.prisma**, instead, change it in the **.env** file.
 
 ## schema.prisma Configurations
-- Run the command *npx prisma generate* if changes are made to the schema.prisma file.
-- To migrate the changes from schema.prisma to the database, run the command *npx prisma migrate dev --name init*
-- To introspect changes from the database to schema.prisma run the command *npx prisma db pull*
-- Database information can be edited using Prisma's provided GUI. Run the command *npx prisma studio* to access the GUI.
+
+- Run the command _npx prisma generate_ if changes are made to the schema.prisma file.
+- To migrate the changes from schema.prisma to the database, run the command _npx prisma migrate dev --name init_
+- To introspect changes from the database to schema.prisma run the command _npx prisma db pull_
+- Database information can be edited using Prisma's provided GUI. Run the command _npx prisma studio_ to access the GUI.
 
 ## Deployment Configurations
 
@@ -60,7 +61,19 @@ Before deployment, ensure that the **.env** under the _sever_ folder and both **
 
 - Ensure that the **JWT_SECRET_KEY** in the **.env** file is modified for security reasons.
 
+## Assumptions
+
+1. User accounts have to exist in the database system before using the placement system. Each user account should have the username, password and student UID (admin has UID of "0000000000").
+
 ## How to Use
+
+### How to try out the placement system?
+
+Mock data have been created in the database for you to test out the placement system.
+
+- Ensure that user accounts containing the student information such as UID, username and password are filled in the user_account table in the database.
+- Currently, there are 16 user accounts in the mock database. 15 student accounts and 1 admin account.
+- Please refer to the **MockDataInstruction.pdf** for more details on how to use the mock data provided.
 
 #### Login as Admin
 
@@ -85,10 +98,6 @@ Users can log out by clicking the _Log out_ button in the navigation bar.
 6. Admin FAQ: **"http://localhost:3000/admin/faq"**
 7. Student main page: **"http://localhost:3000/student/mainpage"**
 8. Student FAQ: **"http://localhost:3000/student/faq"**
-
-## Assumptions
-
-1. User accounts have to exist in the database system before using the placement system. Each user account should have the username, password and student UID (admin has UID of "0000000000").
 
 ## Limitations
 
