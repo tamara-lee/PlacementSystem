@@ -69,7 +69,6 @@ router.post(
   ]),
   validateToken,
   async (req, res) => {
-    console.log("req.body", req.body);
 
     let appoint_letter;
     if (req.files.appointment) {
