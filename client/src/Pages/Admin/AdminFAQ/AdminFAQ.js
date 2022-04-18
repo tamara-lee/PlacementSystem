@@ -618,6 +618,7 @@ function FAQ({ authorized, access }) {
                         id="question"
                         placeholder="Enter question here..."
                         maxLength="200"
+                        required
                         onChange={(e) => {
                           setNewQuestion(e.target.value);
                         }}
@@ -629,6 +630,7 @@ function FAQ({ authorized, access }) {
                         id="answer"
                         placeholder="Enter answer here..."
                         maxLength="200"
+                        required
                         onChange={(e) => {
                           setNewAnswer(e.target.value);
                         }}
@@ -638,6 +640,7 @@ function FAQ({ authorized, access }) {
                         className="input"
                         type="text"
                         id="category"
+                        required
                         onChange={(e) => {
                           setNewCat(e.target.value);
                         }}
