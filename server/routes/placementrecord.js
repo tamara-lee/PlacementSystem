@@ -69,7 +69,6 @@ router.post(
   ]),
   validateToken,
   async (req, res) => {
-
     let appoint_letter;
     if (req.files.appointment) {
       appoint_letter = req.files.appointment[0].path;
@@ -126,11 +125,9 @@ router.post(
     });
 
     if (!student_acc) {
-      res
-        .status(400)
-        .json({
-          error: "Student account does not exist in the Placement System.",
-        });
+      res.status(400).json({
+        error: "Student account does not exist in the Placement System.",
+      });
     }
 
     if (res !== undefined) {
@@ -252,7 +249,6 @@ router.get("/feedback_pdf", validateToken, async (req, res) => {
 //store remarks sent by user logged in (could be student or admin) to the database
 //user account the remark is sent to will also be stored
 router.post("/chatbox", validateToken, async (req, res) => {
-  console.log("req.body", req.body);
   try {
     const sender_account = await user_account.findUnique({
       where: {

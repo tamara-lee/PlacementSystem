@@ -25,8 +25,8 @@ const storage = multer.diskStorage({
 var upload = multer({ storage });
 const { empty } = require("@prisma/client/runtime");
 
-//parse excel file containing the information of students 
-//and automatically create student records + corresponding placemenet records in the placement 
+//parse excel file containing the information of students
+//and automatically create student records + corresponding placemenet records in the placement
 router.post(
   "/",
   upload.single("studentRecordsFile"),
@@ -43,14 +43,12 @@ router.post(
       const wb = xlsx.readFile(req.file.path);
 
       const first_sheet = wb.SheetNames[0];
-      console.log("firstSheet", first_sheet);
 
       const worksheet = wb.Sheets[first_sheet];
 
       const student_data = xlsx.utils.sheet_to_json(worksheet);
 
       for (let i = 0; i < student_data.length; i++) {
-
         const student_name = String(student_data[i]["Student Name"]);
         const university_number = String(student_data[i]["University Number"]);
         const curriculum = String(student_data[i]["Curriculum"]);
@@ -107,7 +105,7 @@ router.post(
           });
         } catch (error) {
           console.log(error);
-          res.json({
+          res.status(400).json({
             status: "error",
             message: "Failed to import excel file!",
           });

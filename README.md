@@ -64,6 +64,7 @@ Before deployment, ensure that the **.env** under the _sever_ folder and both **
 ## Assumptions
 
 1. User accounts have to exist in the database system before using the placement system. Each user account should have the username, password and student UID (admin has UID of "0000000000").
+2. No duplicate students (every student has a unique username and UID).
 
 ## How to Use
 
