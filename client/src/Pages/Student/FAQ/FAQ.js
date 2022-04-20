@@ -273,6 +273,7 @@ function FAQ({ authorized }) {
                           key={key}
                           expanded={expanded === val.faq_id}
                           onChange={handleAccordionChange(val.faq_id)}
+                          sx={{ width: "700px" }}
                         >
                           <AccordionSummary
                             aria-controls={val.faq_id + "-content"}
@@ -311,6 +312,7 @@ function FAQ({ authorized }) {
                           key={key}
                           expanded={expanded === val.faq_id}
                           onChange={handleAccordionChange(val.faq_id)}
+                          sx={{ width: "700px" }}
                         >
                           <AccordionSummary
                             aria-controls={val.faq_id + "-content"}
@@ -349,6 +351,7 @@ function FAQ({ authorized }) {
                           key={key}
                           expanded={expanded === val.faq_id}
                           onChange={handleAccordionChange(val.faq_id)}
+                          sx={{ width: "700px" }}
                         >
                           <AccordionSummary
                             aria-controls={val.faq_id + "-content"}
