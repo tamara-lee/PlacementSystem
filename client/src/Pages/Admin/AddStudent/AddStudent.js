@@ -159,11 +159,13 @@ function AddStudent({ authorized, access }) {
 
     Axios.post("http://localhost:3001/importexcel", formData)
       .then((res) => {
-        setImportSuccessMsg(res.data.message);
+        // setImportSuccessMsg(res.data.message);
+        setImportSuccessMsg("Successfully imported excel file!");
         setOpenImportSuccess(true);
       })
       .catch((error) => {
-        setImportFailMsg(error.response.data.message);
+        // setImportFailMsg(error.response.data.message);
+        setImportFailMsg("Failed to import excel file!");
         setOpenImportFail(true);
       });
   };

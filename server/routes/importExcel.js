@@ -99,16 +99,16 @@ router.post(
               creation_time: new Date(Date.now()),
             },
           });
-          res.json({
-            status: "success",
-            message: "Successfully imported excel file!",
-          });
+          // res.json({
+          //   status: "success",
+          //   message: "Successfully imported excel file!",
+          // });
         } catch (error) {
           console.log(error);
-          res.status(400).json({
-            status: "error",
-            message: "Failed to import excel file!",
-          });
+          // res.status(400).json({
+          //   status: "error",
+          //   message: "Failed to import excel file!",
+          // });
         }
       }
     }

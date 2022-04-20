@@ -7,6 +7,8 @@ const xlsx = require("xlsx");
 
 //export excel file with dynamically generated columns which are generated based on the admin's selection of fields
 router.post("/", validateToken, async (req, res) => {
+  console.log(req.body);
+
   const academic_year = req.body.academic_year;
 
   const placement_id = req.body.export_fields.placement_id == 1 ? true : false;
@@ -82,6 +84,8 @@ router.post("/", validateToken, async (req, res) => {
       },
     });
 
+    console.log(export_record);
+
     let totalResult = [];
 
     function formatter(obj) {
@@ -105,6 +109,8 @@ router.post("/", validateToken, async (req, res) => {
     for (let i = 0; i < export_record.length; i++) {
       totalResult.push(formatter(export_record[i]));
     }
+
+    console.log(totalResult);
 
     const convertJsonToExcel = () => {
       const workSheet = xlsx.utils.json_to_sheet(totalResult);
