@@ -112,7 +112,6 @@ function StudentRecords({ authorized, access }) {
 
   const handleExport = () => {
     if (academicYearExport) {
-      console.log("yes");
       Axios.post("http://localhost:3001/exportexcel", {
         academic_year: academicYearExport,
         export_fields: fieldsExport[0],
@@ -409,9 +408,13 @@ function StudentRecords({ authorized, access }) {
     setFilteredRecords(
       records.filter(function (data) {
         return (
-          String(data.student_uid).includes(e.target.value) ||
-          String(data.english_name).includes(e.target.value) ||
-          String(data.user_account.username).includes(e.target.value)
+          String(data.student_uid).includes(e.target.value.toLowerCase()) ||
+          String(data.english_name.toLowerCase()).includes(
+            e.target.value.toLowerCase()
+          ) ||
+          String(data.user_account.username.toLowerCase()).includes(
+            e.target.value.toLowerCase()
+          )
         );
       })
     );

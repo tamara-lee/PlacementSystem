@@ -17,18 +17,18 @@ model student {
   modified_by      String                   @db.VarChar(8)
   last_modified    DateTime                 @updatedAt
   user_account     user_account             @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "student_ibfk_1")
-  account_id       Int                       
+  account_id       Int                      @unique
   placement        placement[]
-  @@index([account_id], map: "account_id")
 
+  @@index([account_id], map: "account_id")
 }
 
 model user_account {
   account_id  Int         @id @default(autoincrement())
-  student_uid String?     @db.VarChar(10) @unique
+  student_uid String?     @unique @db.VarChar(10)
   username    String      @unique @db.VarChar(8)
   password    String      @db.VarChar(20)
-  student     student?     
+  student     student?
   faq         faq[]
   placement   placement[]
   remarks     remarks[]
@@ -37,7 +37,7 @@ model user_account {
 
 model placement {
   placement_id         Int                     @id @unique(map: "placement_id") @default(autoincrement())
-  username             String                  @db.VarChar(8) @unique
+  username             String                  @unique @db.VarChar(8)
   student_uid          String                  @db.VarChar(10)
   placement_year       String                  @db.VarChar(4)
   appointment_letter   String?                 @db.Text
@@ -50,7 +50,7 @@ model placement {
   start_date           DateTime?               @db.Date
   end_date             DateTime?               @db.Date
   working_location     String?                 @db.VarChar(60)
-  salary               Decimal?                @db.Decimal(8, 2)
+  salary               String?                 @db.VarChar(11)
   payment_type         placement_payment_type?
   supervisor_name      String?                 @db.VarChar(60)
   supervisor_telephone String?                 @db.VarChar(20)

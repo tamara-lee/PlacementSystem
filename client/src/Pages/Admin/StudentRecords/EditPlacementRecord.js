@@ -164,15 +164,24 @@ function EditPlacementRecord({ authorized, access }) {
   };
 
   const handleDownloadConsentForm = () => {
-    console.log("download consent form button clicked!");
+    window.open(
+      "http://localhost:3001/placementrecord/consent_pdf/?studentNumber=" +
+        student_uid
+    );
   };
 
   const handleDownloadAppointmentLetter = () => {
-    console.log("download appointment letter button clicked!");
+    window.open(
+      "http://localhost:3001/placementrecord/appointment_pdf/?studentNumber=" +
+        student_uid
+    );
   };
 
   const handleDownloadFeedbackForm = () => {
-    console.log("download feedback form button clicked!");
+    window.open(
+      "http://localhost:3001/placementrecord/feedback_pdf/?studentNumber=" +
+        student_uid
+    );
   };
 
   // function to get file name from path
